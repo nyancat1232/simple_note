@@ -56,14 +56,6 @@ _dict_col
 def create_as_foreign_key(df_input_create_foreign):
     write_to_server(df_data,input.schema,input.table+'_backup',st_connff)
     create_empty_with_id_with_column(_dict_col,input.schema,input.table+'_foreign',st_connff)
-    return
-    try:
-        read_from_server(schema_name=input_schema,table_name=input_table+'_foreign',st_conn=st_connff)
-
-        st.toast('already exist. not processing')
-        
-    except:
-        pass
-        #write_to_server(df=df_input_create_foreign,schema_name=input_schema,table_name=input_table+'_foreign',st_conn=st_connff)
+    write_to_server(df_create_foreign,input.schema,input.table+'_foreign',st_connff)
 
 st.button('write',on_click=create_as_foreign_key,args=[df_create_foreign])
