@@ -8,3 +8,4 @@ practice*.py
 *.db
 secrets.toml
 .streamlit
+requirements.txt
