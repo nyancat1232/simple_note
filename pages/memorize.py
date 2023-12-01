@@ -20,21 +20,25 @@ def selection(op,all_selection:List,_depth=0):
         return
     if type(op) != type(dict()):
         return
+    
+    op_op = op
 
 
     st.divider()
     try:
         check_terminate = st.checkbox(label=f'terminate{_depth}')
-        res = st.radio(label=f'test{_depth}',options=op)
+        filtered_op = filter(lambda key:type(op_op[key]) == dict,op_op)
+        res = st.radio(label=f'test{_depth}',options=filtered_op)
         all_selection.append(res)
         if not check_terminate:
-            selection(op[res],all_selection=all_selection,_depth=_depth+1)
+            selection(op_op[res],all_selection=all_selection,_depth=_depth+1)
     except:
         st.write('no')
         return
 
 selection(dfs,all_selection)
 
+#st.write(all_selection)
 
 i=-1
 correct_answers=dfs
