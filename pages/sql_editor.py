@@ -22,5 +22,3 @@ st.dataframe(result_expand)
     
 r_d_sql(input.schema,input.table,st_connff)
 
-if st.button('rerun'):
-    st.rerun()
