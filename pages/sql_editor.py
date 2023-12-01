@@ -3,31 +3,46 @@ import pandas as pd
 from typing import List
 from pyplus.sql.pgplus import read_from_server,get_foreign_keys,get_identity
 
-conn = st.connection(name='postgresql',type='sql')
+def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
+    result = read_from_server(schema_name=schema_name,table_name=table_name,st_conn=st_conn)
+    st.subheader(f'result of {schema_name}.{table_name}')
+    st.dataframe(result)
+    identity = get_identity(schema_name,table_name,st_conn)
+    result = result.drop(columns=identity)
+    
+    fks = get_foreign_keys(schema_name,table_name,st_conn)
+    columns_for_tab = fks.index.to_list()
+    try:
+        if expand_column:
+            columns = st.columns(len(columns_for_tab))
+            for index,row in enumerate(columns_for_tab):
+                with columns[index]:
+                    r_d_sql(schema_name=fks.loc[row,'upper_schema'],table_name=fks.loc[row,'upper_table'],st_conn=st_conn,expand_column=False)
+        else:
+            for index,row in enumerate(columns_for_tab):
+                r_d_sql(schema_name=fks.loc[row,'upper_schema'],table_name=fks.loc[row,'upper_table'],st_conn=st_conn,expand_column=False)
+    except:
+        st.write("No foreign keys")
 
-schema = st.text_input('Input of schema')
-table = st.text_input("Input of table")
 
-df_sql_read = read_from_server(schema,table,conn)
-st.dataframe(df_sql_read,hide_index=True)
+
+
+    st.subheader(f'upload {schema_name}.{table_name}')
+    result_to_append = result.copy()
+    result_to_append = result_to_append.drop(labels=result.index,axis=0)
+    result_to_append = st.data_editor(result_to_append,num_rows="dynamic",hide_index=True)
+    if st.button(f'upload {schema_name}.{table_name}'):
+        result_to_append.to_sql(name=table_name,con=st_conn.connect(),schema=schema_name,index=False,if_exists='append')
+    
+st_conn = st.connection(name='postgresql',type='sql')
+
+input_schema = st.text_input('Input of schema')
+input_table = st.text_input("Input of table")
+
 
 cols = st.tabs(['append','edit'])
 
+
+
 with cols[0]:
-    df_sql = df_sql_read.copy()
-    df_sql = df_sql.drop(labels=df_sql.index,axis=0)
-    fks = get_foreign_keys(schema,table,conn)
-    fks
-    for fki,fkr in fks.iterrows():
-        r = read_from_server(fkr['upper_schema'],fkr['upper_table'],conn)
-        r
-
-
-    identity = get_identity(schema,table,conn)
-    df_sql = df_sql.drop(columns=identity)
-    result = st.data_editor(df_sql,num_rows="dynamic",hide_index=True)
-        
-
-
-    if st.button('upload'):
-        result.to_sql(table,conn.connect(),schema=schema,index=False,if_exists='append')
+    r_d_sql(input_schema,input_table,st_conn)
