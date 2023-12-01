@@ -1,5 +1,4 @@
 *.dockimg
-requirements.txt
 __pycache__
 _private*
 practice*.py
@@ -8,4 +7,3 @@ practice*.py
 *.db
 secrets.toml
 .streamlit
-requirements.txt

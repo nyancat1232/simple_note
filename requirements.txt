@@ -1,0 +1,9 @@
+cryptography==41.0.4
+numpy==1.26.2
+opencv_python==4.8.1.78
+pdfplumber==0.10.2
+qrcode==7.4.2
+SQLAlchemy==2.0.23
+streamlit==1.28.1
+psycopg2==2.9.9
+opencv-python==4.8.1.78
