@@ -1,3 +1,5 @@
+read SERVERURL
+read MYTIMEZONE
 CONTAINER_NAME=study_container
 APP_NAME=study
 
