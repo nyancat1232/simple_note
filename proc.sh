@@ -1,7 +1,7 @@
 read SERVERURL
 read MYTIMEZONE
-CONTAINER_NAME=study_container
-APP_NAME=study
+CONTAINER_NAME=simple_note_container
+APP_NAME=simple_note
 
 #developing environment
 #pipreqs . --encoding=utf-8 --force
