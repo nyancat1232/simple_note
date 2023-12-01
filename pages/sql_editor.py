@@ -3,6 +3,13 @@ import pandas as pd
 from pandas.api.types import CategoricalDtype
 from typing import List
 from pyplus.sql.pgplus import read_from_server,get_foreign_keys,get_identity,get_default_value
+from pyplus.streamlit.external import check_password
+
+
+if not check_password():
+    st.stop()  # Do not continue if check_password is not True.
+
+
 
 def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
 
@@ -61,7 +68,11 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
     
 st_connff = st.connection(name='postgresql',type='sql')
 
+
 input_schema = st.text_input('Input of schema')
 input_table = st.text_input("Input of table")
 
-r_d_sql(input_schema,input_table,st_connff)
+try:
+    r_d_sql(input_schema,input_table,st_connff)
+except:
+    st.write('not found')
