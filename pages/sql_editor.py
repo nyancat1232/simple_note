@@ -17,8 +17,13 @@ with st.sidebar:
     input_schema = st.selectbox(label='Input of schema',options=df_list['table_schema'].unique())
     input_table = st.selectbox(label="Input of table",options=df_list['table_name'][df_list['table_schema']==input_schema])
 
+
 st.subheader('total')
 result_expand = expand_foreign_column(schema_name=input_schema,table_name=input_table,st_conn=st_connff)
 st.dataframe(result_expand)
     
 r_d_sql(input_schema,input_table,st_connff)
+
+if st.button('rerun'):
+    st.rerun()
+    
