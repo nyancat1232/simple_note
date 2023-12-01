@@ -1,0 +1,10 @@
+*.dockimg
+requirements.txt
+__pycache__
+_private*
+practice*.py
+*.csv
+.DS_Store
+*.db
+secrets.toml
+.streamlit
