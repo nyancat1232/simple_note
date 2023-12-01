@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
 
 COPY requirements.txt ./
 COPY pyplus ./pyplus
+COPY sqlutil ./sqlutil
 COPY pages ./pages
 COPY main.py ./
 COPY .streamlit ./.streamlit
