@@ -14,7 +14,7 @@ COPY pyplus ./pyplus
 COPY sqlutil ./sqlutil
 COPY pages ./pages
 COPY main.py ./
-COPY .streamlit ~/.streamlit
+COPY .streamlit ./.streamlit
 
 RUN pip3 install -r requirements.txt
 
