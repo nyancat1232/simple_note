@@ -30,10 +30,13 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
     st.subheader(f'upload {schema_name}.{table_name}')
     df_default_values = get_default_value(schema_name,table_name,st_conn)
 
-    exclude_columns=dict(map(lambda column_name:(column_name,st.checkbox(f'{column_name}',value=True)),df_default_values.index))
-    exclude_columns = dict(filter(lambda item:item[1],exclude_columns.items()))
-    exclude_columns = list(map(lambda key:key,exclude_columns.keys()))
-    exclude_columns
+    exclude_columns=[]
+    if len(df_default_values.index)>0:
+        st.subheader(f'select what you want to apply default')
+        exclude_columns=dict(map(lambda column_name:(column_name,st.checkbox(f'{column_name}',value=True)),df_default_values.index))
+        exclude_columns = dict(filter(lambda item:item[1],exclude_columns.items()))
+        exclude_columns = list(map(lambda key:key,exclude_columns.keys()))
+    
 
     result_to_append = result.copy()
     result_to_append = result_to_append.drop(labels=result.index,axis=0)
@@ -48,7 +51,7 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
 
         result_fk = read_from_server(schema_name=us,table_name=ut,st_conn=st_conn)
         result_fk['_display']=result_fk.apply(lambda columns:" ".join(list(map(str,columns))),axis=1)
-        result_fk['_display']
+        #result_fk['_display']
         config_append_col[foreign_key] = st.column_config.SelectboxColumn(options=result_fk[uc])
 
 
