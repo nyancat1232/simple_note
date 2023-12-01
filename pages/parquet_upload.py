@@ -9,14 +9,14 @@ def read_from_server(table_name,conn,schema_name):
 
 def get_direction(df_file:pd.DataFrame,df_to:pd.DataFrame):
     st.subheader("move columns")
-    with conn.connect() as conn_conn:
-        ret_dict={}
+    
+    ret_dict={}
 
-        for col_file in df_file.reset_index().columns:
-            if st.checkbox(f'move {col_file}',value=True):
-                ret_dict[col_file]=st.selectbox(f' move {col_file} to',df_to.columns)
+    for col_file in df_file.reset_index().columns:
+        if st.checkbox(f'move {col_file}',value=True):
+            ret_dict[col_file]=st.selectbox(f' move {col_file} to',df_to.columns)
 
-        return ret_dict
+    return ret_dict
 
 conn = st.connection(name='postgresql',type='sql')
 with st.sidebar:
