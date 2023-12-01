@@ -36,29 +36,33 @@ selection(dfs,all_selection)
 
 
 i=-1
-ss=dfs
+correct_answers=dfs
 while (i:=i+1) < len(all_selection):
-    ss=ss[all_selection[i]]
+    correct_answers=correct_answers[all_selection[i]]
 
 with st.expander('expand result'):
-    ss
+    correct_answers
 
-input_mem=st.text_input(label='memorize_test')
-cols=st.columns(5)
-with cols[0]:
-    st.write('match')
-    input_mem in ss
-with cols[1]:
-    co_inp = Counter(input_mem)
+input_mems=st.text_input(label='memorize_test').split(" ")
+st.subheader(f'answer counter is {len(correct_answers)}')
+st.write(f'you wrote {len(input_mems)} answer{"s" if len(input_mems)>1 else ""}')
+cols=st.columns(3)
 
-    l_res=[]
-    for res in ss:
-        co_res = Counter(res)
-        #co_res
-        co_error_left_right=len(co_inp-co_res)
-        co_error_right_left=len(co_res-co_inp)
-        l_res.append(co_error_left_right+co_error_right_left)
-    
-    st.write('error of character count')
-    st.write(min(l_res))
+for input_mem in input_mems:
+    with cols[0]:
+        st.write('match')
+        input_mem in correct_answers
+    with cols[1]:
+        co_inp = Counter(input_mem)
+
+        l_res=[]
+        for res in correct_answers:
+            co_res = Counter(res)
+            #co_res
+            co_error_left_right=len(co_inp-co_res)
+            co_error_right_left=len(co_res-co_inp)
+            l_res.append(co_error_left_right+co_error_right_left)
+        
+        st.write('error of character count')
+        st.write(min(l_res))
 
