@@ -1,11 +1,9 @@
 import streamlit as st
 import pandas as pd
-from pyplus.streamlit.streamlit_plus_utility import FileDescription,execute_file_descriptions
+from pyplus.streamlit.streamlit_plus_utility import FileDescription,FileExecutor
 from pyplus.streamlit.streamlit_plus import write_columns
 from pyplus.sql.pgplus import read_from_server,get_identity,get_foreign_keys,write_to_server
 from pyplus.streamlit.sql_util import table_selection
-from typing import List
-import re
 
 def get_direction(df_file:pd.DataFrame,df_to:pd.DataFrame):
     st.subheader("move columns")
@@ -20,9 +18,10 @@ def get_direction(df_file:pd.DataFrame,df_to:pd.DataFrame):
 
 conn = st.connection(name='postgresql',type='sql')
 with st.sidebar:
-    fds : List[FileDescription] = []
-    fds.append(FileDescription("^[A-Za-z0-9_]+.parquet$",pd.read_parquet))
-    dfs = execute_file_descriptions(fds)
+    fe = FileExecutor()
+    fe.behaviors.append(FileDescription("^[A-Za-z0-9_]+.parquet$",pd.read_parquet))
+    
+    dfs = fe.execute_file_descriptions()
 
 
 for key in dfs:
