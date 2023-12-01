@@ -3,7 +3,7 @@ import pandas as pd
 from pyplus.streamlit.streamlit_plus_utility import FileDescription,FileExecutor
 from pyplus.streamlit.streamlit_plus import write_columns
 from pyplus.sql.pgplus import read_from_server,get_identity,get_foreign_keys,write_to_server
-from pyplus.streamlit.sql_util import table_selection
+from sqlutil.sql_util import table_selection
 
 def get_direction(df_file:pd.DataFrame,df_to:pd.DataFrame):
     st.subheader("move columns")

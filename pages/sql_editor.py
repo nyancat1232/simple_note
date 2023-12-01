@@ -1,6 +1,6 @@
 import streamlit as st
 from pyplus.streamlit.external import check_password
-from pyplus.streamlit.sql_util import r_d_sql,table_selection
+from sqlutil.sql_util import r_d_sql,table_selection
 from pyplus.sql.pgplus import expand_foreign_column
 
 if not check_password():

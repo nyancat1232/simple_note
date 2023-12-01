@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from pyplus.streamlit.external import check_password
 from pyplus.sql.pgplus import read_from_server,get_columns,write_to_server,create_empty_with_id_with_column
-from pyplus.streamlit.sql_util import table_selection
+from sqlutil.sql_util import table_selection
 
 if not check_password():
     st.stop()  # Do not continue if check_password is not True.
