@@ -57,7 +57,7 @@ for key in dfs:
             df_fk_data = read_from_server(df_fk_inf['upper_schema'],df_fk_inf['upper_table'],conn)
             
 
-            df_fk_to = st.selectbox(f'{direction} to column of {df_fk_inf['upper_schema']}.{df_fk_inf['upper_table']}',options=df_fk_data.columns)
+            df_fk_to = st.selectbox(f'{direction} to column of {df_fk_inf["upper_schema"]}.{df_fk_inf["upper_table"]}',options=df_fk_data.columns)
             df_fk_data = df_fk_data[[df_fk_inf['upper_column_name'],df_fk_to]]
             df_fk_data
 
