@@ -24,17 +24,20 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
         st.write("No foreign keys")
 
     st.subheader(f'upload {schema_name}.{table_name}')
-    df_default_values = get_default_value(schema_name,table_name,st_conn)
+    df_set_default_values = get_default_value(schema_name,table_name,st_conn)
 
+    st.subheader(f'select what you want to apply default')
     exclude_columns=[]
-    key_for_checkbox=0
-    if len(df_default_values.index)>0:
-        key_for_checkbox+=1
-        st.subheader(f'select what you want to apply default')
-        exclude_columns=dict(map(lambda column_name:(column_name,st.checkbox(f'{column_name}',value=True,key=f'{schema_name}.{table_name}.{column_name}.{key_for_checkbox}')),df_default_values.index))
-        exclude_columns = dict(filter(lambda item:item[1],exclude_columns.items()))
-        exclude_columns = list(map(lambda key:key,exclude_columns.keys()))
+    for dk in df_set_default_values.index:
+        if st.checkbox(f'{dk}',value=True,key=f'{schema_name}.{table_name}.{dk}'):
+            exclude_columns.append( dk )
+
+    for fk in list_foreign_keys:
+        if st.checkbox(f'{fk}',value=True,key=f'{schema_name}.{table_name}.{fk}'):
+            exclude_columns.append( fk )
     
+    st.write(exclude_columns)
+
 
     result_to_append = result.copy()
     result_to_append = result_to_append.drop(labels=result.index,axis=0)
