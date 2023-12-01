@@ -13,6 +13,7 @@ COPY requirements.txt ./
 COPY pyplus ./pyplus
 COPY pages ./pages
 COPY main.py ./
+COPY .streamlit ./.streamlit
 
 RUN pip3 install -r requirements.txt
 

@@ -4,7 +4,8 @@ Set-Variable -Name 'APP_NAME' -Value 'study'
 
 #developing environment
 #pipreqs . --encoding=utf-8 --force
-#Write-Output "streamlit" >> requirements.txt
+#Write-Output "streamlit==1.28.1" >> requirements.txt
+#Write-Output "psycopg2==2.9.9" >> requirements.txt
 docker --host tcp://$SERVERURL`:2375 stop $CONTAINER_NAME
 docker --host tcp://$SERVERURL`:2375 rm $CONTAINER_NAME
 docker --host tcp://$SERVERURL`:2375 image rm $APP_NAME
