@@ -7,3 +7,4 @@ practice*.py
 *.db
 secrets.toml
 .streamlit
+pages/test.py
