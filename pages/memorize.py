@@ -1,11 +1,10 @@
 import streamlit as st
-import pandas as pd
-import numpy as np
-from typing import List
 import json 
+from typing import List
 from pyplus.streamlit.streamlit_plus_utility import FileExecutor,FileDescription
 
 from pyplus.streamlit.external import check_password
+from collections import Counter
 if not check_password():
     st.stop()
 
@@ -43,3 +42,23 @@ while (i:=i+1) < len(all_selection):
 
 with st.expander('expand result'):
     ss
+
+input_mem=st.text_input(label='memorize_test')
+cols=st.columns(5)
+with cols[0]:
+    st.write('match')
+    input_mem in ss
+with cols[1]:
+    co_inp = Counter(input_mem)
+
+    l_res=[]
+    for res in ss:
+        co_res = Counter(res)
+        #co_res
+        co_error_left_right=len(co_inp-co_res)
+        co_error_right_left=len(co_res-co_inp)
+        l_res.append(co_error_left_right+co_error_right_left)
+    
+    st.write('error of character count')
+    st.write(min(l_res))
+
