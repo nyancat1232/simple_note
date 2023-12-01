@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 from pyplus.streamlit import streamlit_plus as sp,streamlit_plus_utility as spu
 
 
