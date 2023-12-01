@@ -14,7 +14,4 @@ st_connff = st.connection(name='postgresql',type='sql')
 input_schema = st.text_input('Input of schema')
 input_table = st.text_input("Input of table")
 
-try:
-    r_d_sql(input_schema,input_table,st_connff)
-except:
-    st.write('not found')
+r_d_sql(input_schema,input_table,st_connff)
