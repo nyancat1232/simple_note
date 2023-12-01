@@ -24,9 +24,10 @@ def selection(op,all_selection:List,_depth=0):
 
     st.divider()
     try:
+        check_terminate = st.checkbox(label=f'terminate{_depth}')
         res = st.radio(label=f'test{_depth}',options=op)
         all_selection.append(res)
-        if not st.checkbox(label=f'terminate{_depth}'):
+        if not check_terminate:
             selection(op[res],all_selection=all_selection,_depth=_depth+1)
     except:
         st.write('no')
