@@ -10,17 +10,17 @@ if not check_password():
 
 st_connff = st.connection(name='postgresql',type='sql')
 
+
+input = None
 with st.sidebar:
-    input = table_selection(st_connff)
-    
-input_schema = input['schema']
-input_table = input['table']
+    input = table_selection(st_connff,'input')
+
 
 st.subheader('total')
-result_expand = expand_foreign_column(schema_name=input_schema,table_name=input_table,st_conn=st_connff)
+result_expand = expand_foreign_column(schema_name=input.schema,table_name=input.table,st_conn=st_connff)
 st.dataframe(result_expand)
     
-r_d_sql(input_schema,input_table,st_connff)
+r_d_sql(input.schema,input.table,st_connff)
 
 if st.button('rerun'):
     st.rerun()
