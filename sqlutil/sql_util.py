@@ -5,13 +5,19 @@ from dataclasses import dataclass
 def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
     result = read_from_server(schema_name=schema_name,table_name=table_name,st_conn=st_conn)
     st.subheader(f'result of {schema_name}.{table_name}')
-    st.dataframe(result)
     identity = get_identity(schema_name,table_name,st_conn)
-    result = result.drop(columns=identity)
+
+    result = result.set_index(identity.to_list())
+    result = result.sort_index(ascending=False)
+    #result = result.sort_index()
+    #result = result.drop(columns=identity)
+    st.dataframe(result)
     
     df_foreign_keys = get_foreign_keys(schema_name,table_name,st_conn)
     list_foreign_keys = df_foreign_keys.index.to_list()
+    st.write('v')
     try:
+        
         if expand_column:
             columns = st.columns(len(list_foreign_keys))
             for index,row in enumerate(list_foreign_keys):
@@ -38,11 +44,13 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
     
     st.write(exclude_columns)
 
+    #st.write(list_foreign_keys,df_set_default_values)
 
     result_to_append = result.copy()
     result_to_append = result_to_append.drop(labels=result.index,axis=0)
+    result_to_append = result_to_append.reset_index(drop=True)
     result_to_append = result_to_append.drop(labels=exclude_columns,axis=1)
-
+    
     #categorize foreign keys
     config_append_col = {}
     for foreign_key in df_foreign_keys.index:
@@ -56,7 +64,7 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
         config_append_col[foreign_key] = st.column_config.SelectboxColumn(options=result_fk[uc])
 
     result_to_append
-    result_to_append = st.data_editor(result_to_append,num_rows="dynamic",hide_index=True,column_config=config_append_col,)
+    result_to_append = st.data_editor(result_to_append,num_rows="dynamic",column_config=config_append_col,)
     if st.button(f'upload {schema_name}.{table_name}'):
         result_to_append.to_sql(name=table_name,con=st_conn.connect(),schema=schema_name,index=False,if_exists='append')
         st.rerun()
