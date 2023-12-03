@@ -18,9 +18,8 @@ with st.sidebar:
 
 st.subheader('total')
 result_expand = expand_foreign_column(schema_name=input.schema,table_name=input.table,st_conn=st_connff)
-id = get_identity(schema_name=input.schema,table_name=input.table,st_conn=st_connff)
 
-st.dataframe(result_expand.sort_values(id.to_list(),ascending=False))
+st.dataframe(result_expand)
     
 r_d_sql(input.schema,input.table,st_connff)
 

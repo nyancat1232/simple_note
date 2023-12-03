@@ -52,12 +52,11 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
     for foreign_key in df_foreign_keys.index:
         us = df_foreign_keys.at[foreign_key,'upper_schema']
         ut = df_foreign_keys.at[foreign_key,'upper_table']
-        uc = df_foreign_keys.at[foreign_key,'upper_column_name']
 
         result_fk = read_from_server(schema_name=us,table_name=ut,st_conn=st_conn)
         result_fk['_display']=result_fk.apply(lambda columns:" ".join(list(map(str,columns))),axis=1)
-        #result_fk['_display']
-        config_append_col[foreign_key] = st.column_config.SelectboxColumn(options=result_fk[uc])
+
+        config_append_col[foreign_key] = st.column_config.SelectboxColumn(options=result_fk.index)
 
     result_to_append
     result_to_append = st.data_editor(result_to_append,num_rows="dynamic",column_config=config_append_col,)
