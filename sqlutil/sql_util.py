@@ -5,10 +5,6 @@ from dataclasses import dataclass
 def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
     result = read_from_server(schema_name=schema_name,table_name=table_name,st_conn=st_conn)
     st.subheader(f'result of {schema_name}.{table_name}')
-    identity = get_identity(schema_name,table_name,st_conn)
-
-    result = result.set_index(identity.to_list())
-    result = result.sort_index(ascending=False)
     #result = result.sort_index()
     #result = result.drop(columns=identity)
     st.dataframe(result)
