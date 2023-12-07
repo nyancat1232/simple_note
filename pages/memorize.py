@@ -46,7 +46,7 @@ while (i:=i+1) < len(all_selection):
     correct_answers=correct_answers[all_selection[i]]
 
 with st.expander('expand result'):
-    correct_answers
+    st.json(correct_answers,expanded=False)
 
 input_mems=st.text_input(label='memorize_test').split(" ")
 st.subheader(f'answer counter is {len(correct_answers)}')
