@@ -66,7 +66,7 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
         result_to_append = st.data_editor(result_to_append,num_rows="dynamic",column_config=config_append_col,)
         if st.button(f'upload {schema_name}.{table_name}'):
             result_to_append.to_sql(name=table_name,con=st_conn.connect(),schema=schema_name,index=False,if_exists='append')
-            st.rerun()
+
     with tabs['edit']:
         result_edit=st.data_editor(result)
         diff_indexes=result.compare(result_edit).index
@@ -75,7 +75,6 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
             for diff_index in diff_indexes:
                 exclude_nones = result_edit.loc[diff_index].dropna()
                 upload_to_sql_by_id(exclude_nones,schema_name,table_name,st_conn,id_row=diff_index)
-            st.rerun()
 
 @dataclass
 class TableInput:

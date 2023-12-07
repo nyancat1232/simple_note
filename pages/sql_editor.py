@@ -14,6 +14,7 @@ st_connff = st.connection(name='postgresql',type='sql')
 input = None
 with st.sidebar:
     input = table_selection(st_connff,'input')
+    st.button('refresh',on_click=st.rerun)
 
 
 st.subheader('total')
