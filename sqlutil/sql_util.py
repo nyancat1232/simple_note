@@ -1,5 +1,7 @@
+import pandas as pd
 import streamlit as st
-from pyplus.sql.pgplus import read_from_server,get_default_value,get_foreign_keys,get_identity,get_table_list
+from pyplus.sql.pgplus import read_from_server,get_default_value,get_foreign_keys,get_table_list,upload_to_sql_by_id
+from pyplus.streamlit.streamlit_plus import TabsPlus
 from dataclasses import dataclass
 
 def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
@@ -26,43 +28,54 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
         st.write("No foreign keys")
 
     st.subheader(f'upload {schema_name}.{table_name}')
-    df_set_default_values = get_default_value(schema_name,table_name,st_conn)
+    tabs = TabsPlus(['append','edit'])
+    with tabs['append']:
+        df_set_default_values = get_default_value(schema_name,table_name,st_conn)
 
-    st.subheader(f'select what you want to apply default')
-    exclude_columns=[]
-    for dk in df_set_default_values.index:
-        if st.checkbox(f'{dk}',value=True,key=f'{schema_name}.{table_name}.{dk}'):
-            exclude_columns.append( dk )
+        st.subheader(f'select what you want to apply default')
+        exclude_columns=[]
+        for dk in df_set_default_values.index:
+            if st.checkbox(f'{dk}',value=True,key=f'{schema_name}.{table_name}.{dk}'):
+                exclude_columns.append( dk )
 
-    for fk in list_foreign_keys:
-        if st.checkbox(f'{fk}',value=True,key=f'{schema_name}.{table_name}.{fk}'):
-            exclude_columns.append( fk )
-    
-    st.write(exclude_columns)
+        for fk in list_foreign_keys:
+            if st.checkbox(f'{fk}',value=True,key=f'{schema_name}.{table_name}.{fk}'):
+                exclude_columns.append( fk )
+        
+        st.write(exclude_columns)
 
-    #st.write(list_foreign_keys,df_set_default_values)
+        #st.write(list_foreign_keys,df_set_default_values)
 
-    result_to_append = result.copy()
-    result_to_append = result_to_append.drop(labels=result.index,axis=0)
-    result_to_append = result_to_append.reset_index(drop=True)
-    result_to_append = result_to_append.drop(labels=exclude_columns,axis=1)
-    
-    #categorize foreign keys
-    config_append_col = {}
-    for foreign_key in df_foreign_keys.index:
-        us = df_foreign_keys.at[foreign_key,'upper_schema']
-        ut = df_foreign_keys.at[foreign_key,'upper_table']
+        result_to_append = result.copy()
+        result_to_append = result_to_append.drop(labels=result.index,axis=0)
+        result_to_append = result_to_append.reset_index(drop=True)
+        result_to_append = result_to_append.drop(labels=exclude_columns,axis=1)
+        
+        #categorize foreign keys
+        config_append_col = {}
+        for foreign_key in df_foreign_keys.index:
+            us = df_foreign_keys.at[foreign_key,'upper_schema']
+            ut = df_foreign_keys.at[foreign_key,'upper_table']
 
-        result_fk = read_from_server(schema_name=us,table_name=ut,st_conn=st_conn)
-        result_fk['_display']=result_fk.apply(lambda columns:" ".join(list(map(str,columns))),axis=1)
+            result_fk = read_from_server(schema_name=us,table_name=ut,st_conn=st_conn)
+            result_fk['_display']=result_fk.apply(lambda columns:" ".join(list(map(str,columns))),axis=1)
 
-        config_append_col[foreign_key] = st.column_config.SelectboxColumn(options=result_fk.index)
+            config_append_col[foreign_key] = st.column_config.SelectboxColumn(options=result_fk.index)
 
-    result_to_append
-    result_to_append = st.data_editor(result_to_append,num_rows="dynamic",column_config=config_append_col,)
-    if st.button(f'upload {schema_name}.{table_name}'):
-        result_to_append.to_sql(name=table_name,con=st_conn.connect(),schema=schema_name,index=False,if_exists='append')
-        st.rerun()
+        result_to_append
+        result_to_append = st.data_editor(result_to_append,num_rows="dynamic",column_config=config_append_col,)
+        if st.button(f'upload {schema_name}.{table_name}'):
+            result_to_append.to_sql(name=table_name,con=st_conn.connect(),schema=schema_name,index=False,if_exists='append')
+            st.rerun()
+    with tabs['edit']:
+        result_edit=st.data_editor(result)
+        diff_indexes=result.compare(result_edit).index
+        st.dataframe(result_edit.loc[diff_indexes])
+        if st.button(f'upload edit {schema_name}.{table_name}'):
+            for diff_index in diff_indexes:
+                exclude_nones = result_edit.loc[diff_index].dropna()
+                upload_to_sql_by_id(exclude_nones,schema_name,table_name,st_conn,id_row=diff_index)
+            st.rerun()
 
 @dataclass
 class TableInput:
