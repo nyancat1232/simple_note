@@ -6,14 +6,12 @@ from dataclasses import dataclass
 
 def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
     result = read_from_server(schema_name=schema_name,table_name=table_name,st_conn=st_conn)
-    st.subheader(f'result of {schema_name}.{table_name}')
-    #result = result.sort_index()
-    #result = result.drop(columns=identity)
-    st.dataframe(result)
+    #st.subheader(f'result of {schema_name}.{table_name}')
+    #st.dataframe(result)
     
     df_foreign_keys = get_foreign_keys(schema_name,table_name,st_conn)
     list_foreign_keys = df_foreign_keys.index.to_list()
-    st.write('v')
+
     try:
         
         if expand_column:
@@ -27,12 +25,11 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
     except:
         st.write("No foreign keys")
 
-    st.subheader(f'upload {schema_name}.{table_name}')
     tabs = TabsPlus(['append','edit'])
     with tabs['append']:
         df_set_default_values = get_default_value(schema_name,table_name,st_conn)
 
-        st.subheader(f'select what you want to apply default')
+        st.subheader(f'Apply default values')
         exclude_columns=[]
         for dk in df_set_default_values.index:
             if st.checkbox(f'{dk}',value=True,key=f'{schema_name}.{table_name}.{dk}'):
