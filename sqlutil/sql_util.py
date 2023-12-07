@@ -82,6 +82,10 @@ def table_selection(st_conn,label:str):
 
     with st.sidebar:
         input = table_selection(st_conn)
+    > input of  schema
+    > _________________ 
+    > input of table
+    > __________________
     '''
     df_list=get_table_list(st_conn)
     st.dataframe(df_list)
