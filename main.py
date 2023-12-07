@@ -14,12 +14,12 @@ summaries=read_from_server(cur_sch,cur_tab,conn)
 summaries
 for summary_idx in summaries.index:
     cur_row = summaries.loc[summary_idx]
-    cur_tab = read_from_server(cur_row['schema'],cur_row['table'],conn)
+    cur_tab = read_from_server(cur_row['schema_name'],cur_row['table_name'],conn)
 
     di_func={
         'max':max,
         'min':min
     }
 
-    res = di_func[cur_row['function']](cur_tab[cur_row['column']])
+    res = di_func[cur_row['function']](cur_tab[cur_row['column_name']])
     res
