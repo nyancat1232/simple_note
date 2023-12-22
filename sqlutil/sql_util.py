@@ -6,24 +6,23 @@ from dataclasses import dataclass
 
 def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
     result = read_from_server(schema_name=schema_name,table_name=table_name,st_conn=st_conn)
-    #st.subheader(f'result of {schema_name}.{table_name}')
-    #st.dataframe(result)
     
     df_foreign_keys = get_foreign_keys(schema_name,table_name,st_conn)
     list_foreign_keys = df_foreign_keys.index.to_list()
 
-    try:
+    #try:
         
-        if expand_column:
+    if expand_column:
+        if len(list_foreign_keys)>0:
             columns = st.columns(len(list_foreign_keys))
             for index,row in enumerate(list_foreign_keys):
                 with columns[index]:
                     r_d_sql(schema_name=df_foreign_keys.loc[row,'upper_schema'],table_name=df_foreign_keys.loc[row,'upper_table'],st_conn=st_conn,expand_column=False)
-        else:
-            for index,row in enumerate(list_foreign_keys):
-                r_d_sql(schema_name=df_foreign_keys.loc[row,'upper_schema'],table_name=df_foreign_keys.loc[row,'upper_table'],st_conn=st_conn,expand_column=False)
-    except:
-        st.write("No foreign keys")
+    else:
+        for index,row in enumerate(list_foreign_keys):
+            r_d_sql(schema_name=df_foreign_keys.loc[row,'upper_schema'],table_name=df_foreign_keys.loc[row,'upper_table'],st_conn=st_conn,expand_column=False)
+    #except:
+    #    st.write("No foreign keys")
 
     tabs = TabsPlus(['append','edit'])
     with tabs['append']:
@@ -51,8 +50,8 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
         #categorize foreign keys
         config_append_col = {}
         for foreign_key in df_foreign_keys.index:
-            us = df_foreign_keys.at[foreign_key,'upper_schema']
-            ut = df_foreign_keys.at[foreign_key,'upper_table']
+            us = df_foreign_keys.loc[foreign_key,'upper_schema']
+            ut = df_foreign_keys.loc[foreign_key,'upper_table']
 
             result_fk = read_from_server(schema_name=us,table_name=ut,st_conn=st_conn)
             result_fk['_display']=result_fk.apply(lambda columns:" ".join(list(map(str,columns))),axis=1)
@@ -60,7 +59,7 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
             config_append_col[foreign_key] = st.column_config.SelectboxColumn(options=result_fk.index)
 
         result_to_append
-        result_to_append = st.data_editor(result_to_append,num_rows="dynamic",column_config=config_append_col,)
+        result_to_append = st.data_editor(result_to_append,num_rows="dynamic",column_config=config_append_col,key=f'{schema_name}_{table_name}')
         if st.button(f'upload {schema_name}.{table_name}'):
             result_to_append.to_sql(name=table_name,con=st_conn.connect(),schema=schema_name,index=False,if_exists='append')
 
