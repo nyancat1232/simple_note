@@ -4,12 +4,13 @@ from pyplus.sql.pgplus import read_from_server,get_default_value,get_foreign_key
 from pyplus.streamlit.streamlit_plus import TabsPlus
 from dataclasses import dataclass
 
-def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
+def r_d_sql(schema_name,table_name,st_conn,expand_column=True,current_col=0):
     result = read_from_server(schema_name=schema_name,table_name=table_name,st_conn=st_conn)
-    
+
     df_foreign_keys = get_foreign_keys(schema_name,table_name,st_conn)
     list_foreign_keys = df_foreign_keys.index.to_list()
 
+    identifier_str = f'{schema_name}.{table_name}_{current_col}'
     #try:
         
     if expand_column:
@@ -17,10 +18,10 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
             columns = st.columns(len(list_foreign_keys))
             for index,row in enumerate(list_foreign_keys):
                 with columns[index]:
-                    r_d_sql(schema_name=df_foreign_keys.loc[row,'upper_schema'],table_name=df_foreign_keys.loc[row,'upper_table'],st_conn=st_conn,expand_column=False)
+                    r_d_sql(schema_name=df_foreign_keys.loc[row,'upper_schema'],table_name=df_foreign_keys.loc[row,'upper_table'],st_conn=st_conn,expand_column=False,current_col=index)
     else:
         for index,row in enumerate(list_foreign_keys):
-            r_d_sql(schema_name=df_foreign_keys.loc[row,'upper_schema'],table_name=df_foreign_keys.loc[row,'upper_table'],st_conn=st_conn,expand_column=False)
+            r_d_sql(schema_name=df_foreign_keys.loc[row,'upper_schema'],table_name=df_foreign_keys.loc[row,'upper_table'],st_conn=st_conn,expand_column=False,current_col=index)
     #except:
     #    st.write("No foreign keys")
 
@@ -31,11 +32,11 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
         st.subheader(f'Apply default values')
         exclude_columns=[]
         for dk in df_set_default_values.index:
-            if st.checkbox(f'{dk}',value=True,key=f'{schema_name}.{table_name}.{dk}'):
+            if st.checkbox(f'exclude default value: {dk}',value=True,key=f'button0_{identifier_str}.{dk}'):
                 exclude_columns.append( dk )
 
         for fk in list_foreign_keys:
-            if st.checkbox(f'{fk}',value=True,key=f'{schema_name}.{table_name}.{fk}'):
+            if st.checkbox(f'exclude foreign value: {fk}',value=True,key=f'button1_{identifier_str}.{fk}'):
                 exclude_columns.append( fk )
         
         st.write(exclude_columns)
@@ -59,15 +60,15 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
             config_append_col[foreign_key] = st.column_config.SelectboxColumn(options=result_fk.index)
 
         result_to_append
-        result_to_append = st.data_editor(result_to_append,num_rows="dynamic",column_config=config_append_col,key=f'{schema_name}_{table_name}')
-        if st.button(f'upload {schema_name}.{table_name}'):
+        result_to_append = st.data_editor(result_to_append,num_rows="dynamic",column_config=config_append_col,key=f'append_{identifier_str}')
+        if st.button(f'upload {identifier_str}'):
             result_to_append.to_sql(name=table_name,con=st_conn.connect(),schema=schema_name,index=False,if_exists='append')
 
     with tabs['edit']:
-        result_edit=st.data_editor(result)
+        result_edit=st.data_editor(result,key=f'edit_{identifier_str}')
         diff_indexes=result.compare(result_edit).index
         st.dataframe(result_edit.loc[diff_indexes])
-        if st.button(f'upload edit {schema_name}.{table_name}'):
+        if st.button(f'upload edit {identifier_str}'):
             for diff_index in diff_indexes:
                 exclude_nones = result_edit.loc[diff_index].dropna()
                 upload_to_sql_by_id(exclude_nones,schema_name,table_name,st_conn,id_row=diff_index)
