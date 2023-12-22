@@ -8,7 +8,7 @@ if not check_password():
 
 
 
-st_connff = st.connection(name='postgresql',type='sql')
+st_connff = st.connection(name='simple_note',type='sql')
 
 
 input = None

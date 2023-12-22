@@ -19,7 +19,7 @@ def select_foreign_column(df) -> dict:
     return df_new_foreign, _dict_col
 
     
-st_connff = st.connection(name='postgresql',type='sql')
+st_connff = st.connection(name='simple_note',type='sql')
 
 
 with st.sidebar:

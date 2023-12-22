@@ -12,7 +12,7 @@ from simple_note_funcs.summary import *
 
 cur_sch=st.secrets['summary']['schema']
 cur_tab=st.secrets['summary']['table']
-conn = st.connection(name='postgresql',type='sql')
+conn = st.connection(name='simple_note',type='sql')
 summaries=read_from_server(cur_sch,cur_tab,conn)
 summaries
 for summary_idx in summaries.index:

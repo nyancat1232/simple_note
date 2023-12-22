@@ -8,7 +8,7 @@ if not check_password():
 
 
     
-st_conn = st.connection(name='postgresql',type='sql')
+st_conn = st.connection(name='simple_note',type='sql')
 
 columns = st.columns(2)
 with columns[0]:

@@ -16,7 +16,7 @@ def get_direction(df_file:pd.DataFrame,df_to:pd.DataFrame):
 
     return ret_dict
 
-conn = st.connection(name='postgresql',type='sql')
+conn = st.connection(name='simple_note',type='sql')
 with st.sidebar:
     fe = FileExecutor()
     fe.behaviors.append(FileDescription("^[A-Za-z0-9_]+.parquet$",pd.read_parquet))
