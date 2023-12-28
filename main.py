@@ -20,8 +20,8 @@ for summary_idx in summaries.index:
     cur_tab = read_from_server(cur_row['schema_name'],cur_row['table_name'],conn)
     
     try:
-        res = sumhandler[cur_row['function']](cur_tab,cur_row['function_arg1'],cur_row['function_arg2'],cur_row['function_arg3'])
-        st.subheader(f"{cur_row['schema_name']}.{cur_row['table_name']} {cur_row['function_arg1']} {cur_row['function_arg2']}")
+        res = sumhandler[cur_row['function']](cur_tab,*cur_row['function_args'])
+        st.subheader(f"{cur_row['schema_name']}.{cur_row['table_name']} {cur_row['function_args']}")
         res
         st.slider(**res,disabled=True)
     except:
