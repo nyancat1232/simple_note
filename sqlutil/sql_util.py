@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 from pyplus.sql.pgplus import read_from_server,get_default_value,get_foreign_keys,get_table_list,upload_to_sql_by_id
-from pyplus.streamlit.streamlit_plus import TabsPlus
+from pyplus.streamlit import TabsPlus
 from dataclasses import dataclass
 
 def r_d_sql(schema_name,table_name,st_conn,expand_column=True,current_col=0):
@@ -25,7 +25,7 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True,current_col=0):
     #except:
     #    st.write("No foreign keys")
 
-    tabs = TabsPlus(['append','edit'])
+    tabs = TabsPlus('append','edit')
     with tabs['append']:
         df_set_default_values = get_default_value(schema_name,table_name,st_conn)
 
