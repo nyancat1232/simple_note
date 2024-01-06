@@ -72,34 +72,3 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True,current_col=0):
             for diff_index in diff_indexes:
                 exclude_nones = result_edit.loc[diff_index].dropna()
                 upload_to_sql_by_id(exclude_nones,schema_name,table_name,st_conn,id_row=diff_index)
-
-@dataclass
-class TableInput:
-    schema : str
-    table : str
-
-def table_selection(st_conn,label:str):
-    '''
-    table selection by using streamlit library.
-    ## Parameters:
-    st_conn : SQLconnection
-    (arg_description).
-    ## Examples:
-    import streamlit as st
-
-    st_conn = st.connection(name='postgresql',type='sql')
-
-    with st.sidebar:
-        input = table_selection(st_conn)
-    > input of  schema
-    > _________________ 
-    > input of table
-    > __________________
-    '''
-    df_list=get_table_list(st_conn)
-    st.dataframe(df_list)
-
-    
-    schema = st.selectbox(label=f'{label} of schema',options=df_list['table_schema'].unique())
-    table = st.selectbox(label=f"{label} of table",options=df_list['table_name'][df_list['table_schema']==schema])
-    return TableInput(schema,table)

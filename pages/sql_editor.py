@@ -1,6 +1,7 @@
 import streamlit as st
 from pyplus.streamlit.external import check_password
-from sqlutil.sql_util import r_d_sql,table_selection
+from sqlutil.sql_util import r_d_sql
+from sqlutil.sql_util_new import table_selector
 from pyplus.sql.pgplus import expand_foreign_column,get_identity
 
 if not check_password():
@@ -11,16 +12,15 @@ if not check_password():
 st_connff = st.connection(name='simple_note',type='sql')
 
 
-input = None
 with st.sidebar:
-    input = table_selection(st_connff,'input')
+    schema,table = table_selector(st_connff,'input')
     st.button('refresh',on_click=st.rerun)
 
 
 st.subheader('total')
-result_expand = expand_foreign_column(schema_name=input.schema,table_name=input.table,st_conn=st_connff)
+result_expand = expand_foreign_column(schema_name=schema,table_name=table,st_conn=st_connff)
 
 st.dataframe(result_expand)
     
-r_d_sql(input.schema,input.table,st_connff)
+r_d_sql(schema,table,st_connff)
 
