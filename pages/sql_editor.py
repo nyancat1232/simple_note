@@ -32,28 +32,74 @@ for child in children:
     except:
         gen[child.generation] = []
         gen[child.generation].append(child)
+gen
+
+def in_a_table(current_ts:TableStructure):
+    with st.expander(f'expand {current_ts.schema_name}.{current_ts.table_name}'):
+        try:
+            res_df = current_ts.read()
+            res_df
+
+            tabs = pps.TabsPlus('append','edit')
+            with tabs['append']:
+                                        
+                tsr = current_ts.read()
+                st.write(current_ts.expand_read())
+
+                tt = current_ts.get_types()
+                tt
+                tf = current_ts.get_foreign_table()
+                td = current_ts.get_default_value()
+                cur_cols = tsr.columns.copy()
+                exclude_defaults = st.multiselect(label=f'exclude {current_ts.schema_name}.{current_ts.table_name}',options=td.index)
+                exclude_foreigns = st.multiselect(label=f'exclude foreign {current_ts.schema_name}.{current_ts.table_name}',options=tf.index)
+                cur_cols = cur_cols.drop(exclude_defaults)
+                cur_cols = cur_cols.drop(exclude_foreigns)
+                up_value = {}
+
+                stcols = st.columns(len(cur_cols))
+                for ind,cur_col in enumerate(cur_cols):
+                    with stcols[ind]:
+                        ckey = f'{current_ts.schema_name}.{current_ts.table_name} {cur_col}'
+                        match tt.loc[cur_col]['data_type']:
+                            case 'text':
+                                up_value[cur_col] = st.text_input(cur_col,key=ckey)
+                            case 'bigint':
+                                up_value[cur_col] = int(st.number_input(cur_col,step=1,key=ckey))
+                            case 'integer':
+                                up_value[cur_col] = int(st.number_input(cur_col,step=1,key=ckey))
+                            case 'double precision':
+                                up_value[cur_col] = st.number_input(cur_col,key=ckey)
+                            case 'boolean':
+                                up_value[cur_col] = st.checkbox(cur_col,key=ckey)
+                            case 'ARRAY':
+                                raise NotImplementedError(tt.loc[cur_col]['data_type'] )
+                                up_value[cur_col] = st.data_editor([''],num_rows='dynamic')
+                            case _:
+                                raise NotImplementedError(tt.loc[cur_col]['data_type'] )
+                if st.button(f'upload {current_ts.schema_name}.{current_ts.table_name}'):
+
+                    rr=current_ts.upload_append(**up_value)
+                    rr
+
+                                        
+            with tabs['edit']:
+                edit_df = st.data_editor(res_df) 
+                new_df = edit_df.compare(res_df)
+                new_df
+                if st.button(f'{current_ts.schema_name}.{current_ts.table_name}'):
+                    for i in new_df.index:
+                        current_row=edit_df.loc[i].to_dict()
+                        current_row
+                        current_ts.upload(i,**current_row)
+        except Exception as e:
+            st.write(e)
 
 for g in gen:
     length = len(gen[g])
     cols = st.columns(length)
-    for col in range(length):
-        with cols[col]:
-            current_ts = gen[g][col]
-            with st.expander(f'expand {current_ts.schema_name}.{current_ts.table_name}'):
-                try:
-                    res_df = current_ts.read()
-                    res_df
+    for ind,col in enumerate(cols):
 
-                    tabs = pps.TabsPlus('append','edit')
-
-                    with tabs['edit']:
-                        edit_df = st.data_editor(res_df) 
-                        new_df = edit_df.compare(res_df)
-                        new_df
-                        if st.button(f'{current_ts.schema_name}.{current_ts.table_name}'):
-                            for i in new_df.index:
-                                current_row=edit_df.loc[i].to_dict()
-                                current_row
-                                current_ts.upload(i,**current_row)
-                except:
-                    st.write('duplicated')
+        with col:
+            current_ts = gen[g][ind]
+            in_a_table(current_ts)
