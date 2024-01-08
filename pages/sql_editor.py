@@ -63,7 +63,7 @@ def in_a_table(current_ts:TableStructure):
                         ckey = f'{current_ts.schema_name}.{current_ts.table_name} {cur_col}'
                         match tt.loc[cur_col]['data_type']:
                             case 'text':
-                                up_value[cur_col] = st.text_input(cur_col,key=ckey)
+                                up_value[cur_col] = st.text_area(cur_col,key=ckey)
                             case 'bigint':
                                 up_value[cur_col] = int(st.number_input(cur_col,step=1,key=ckey))
                             case 'integer':

@@ -1,6 +1,6 @@
 import streamlit as st
 import sqlalchemy
-from pyplus.sql.oopgplus import TableStructure,get_table_list
+from pyplus.sql import get_table_list
 
 def table_selector(engine:sqlalchemy.Engine,label:str):
     df_list=get_table_list(engine)
