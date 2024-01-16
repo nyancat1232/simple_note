@@ -72,8 +72,9 @@ def in_a_table(current_ts:TableStructure):
                                 up_value[cur_col] = st.number_input(cur_col,key=ckey)
                             case 'boolean':
                                 up_value[cur_col] = st.checkbox(cur_col,key=ckey)
+                            case 'date':
+                                up_value[cur_col] = st.date_input(cur_col,key=ckey)
                             case 'ARRAY':
-                                raise NotImplementedError(tt.loc[cur_col]['data_type'] )
                                 up_value[cur_col] = st.data_editor([''],num_rows='dynamic')
                             case _:
                                 raise NotImplementedError(tt.loc[cur_col]['data_type'] )
