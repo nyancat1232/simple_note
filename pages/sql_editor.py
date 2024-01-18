@@ -88,15 +88,16 @@ def in_a_table(current_ts:TableStructure):
                 edit_df = st.data_editor(res_df) 
                 new_df = edit_df.compare(res_df)
                 new_df
-                for i in new_df.index:
-                    current_row=edit_df.loc[i].to_dict()
-                    current_row
+                def iter_row(upload:bool=False):
+                    for i in new_df.index:
+                        current_row=edit_df.loc[i].dropna().to_dict()
+                        current_row
+                        if upload:
+                            current_ts.upload(i,**current_row)
+                iter_row()
 
                 if st.button(f'{current_ts.schema_name}.{current_ts.table_name}'):
-                    for i in new_df.index:
-                        current_row=edit_df.loc[i].to_dict()
-                        current_row
-                        current_ts.upload(i,**current_row)
+                    iter_row(upload=True)
         except Exception as e:
             st.write(e)
 
