@@ -39,6 +39,7 @@ def in_a_table(current_ts:TableStructure):
         try:
             res_df = current_ts.read()
             res_df
+            st.write(res_df.dtypes)
 
             tabs = pps.TabsPlus('append','edit')
             with tabs['append']:
