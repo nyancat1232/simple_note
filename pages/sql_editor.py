@@ -60,25 +60,28 @@ def in_a_table(current_ts:TableStructure):
 
                 stcols = st.columns(len(cur_cols))
                 for ind,cur_col in enumerate(cur_cols):
-                    with stcols[ind]:
-                        ckey = f'{current_ts.schema_name}.{current_ts.table_name} {cur_col}'
-                        match tt.loc[cur_col]['data_type']:
-                            case 'text':
-                                up_value[cur_col] = st.text_area(cur_col,key=ckey)
-                            case 'bigint':
-                                up_value[cur_col] = int(st.number_input(cur_col,step=1,key=ckey))
-                            case 'integer':
-                                up_value[cur_col] = int(st.number_input(cur_col,step=1,key=ckey))
-                            case 'double precision':
-                                up_value[cur_col] = st.number_input(cur_col,key=ckey)
-                            case 'boolean':
-                                up_value[cur_col] = st.checkbox(cur_col,key=ckey)
-                            case 'date':
-                                up_value[cur_col] = st.date_input(cur_col,key=ckey)
-                            case 'ARRAY':
-                                up_value[cur_col] = st.data_editor([''],num_rows='dynamic')
-                            case _:
-                                raise NotImplementedError(tt.loc[cur_col]['data_type'] )
+                    try:
+                        with stcols[ind]:
+                            ckey = f'{current_ts.schema_name}.{current_ts.table_name} {cur_col}'
+                            match tt.loc[cur_col]['data_type']:
+                                case 'text':
+                                    up_value[cur_col] = st.text_area(cur_col,key=ckey)
+                                case 'bigint':
+                                    up_value[cur_col] = int(st.number_input(cur_col,step=1,key=ckey))
+                                case 'integer':
+                                    up_value[cur_col] = int(st.number_input(cur_col,step=1,key=ckey))
+                                case 'double precision':
+                                    up_value[cur_col] = st.number_input(cur_col,key=ckey)
+                                case 'boolean':
+                                    up_value[cur_col] = st.checkbox(cur_col,key=ckey)
+                                case 'date':
+                                    up_value[cur_col] = st.date_input(cur_col,key=ckey)
+                                case 'ARRAY':
+                                    up_value[cur_col] = st.data_editor([''],num_rows='dynamic')
+                                case _:
+                                    raise NotImplementedError(tt.loc[cur_col]['data_type'] )
+                    except NotImplementedError as e:
+                        st.error(e)
                 if st.button(f'upload {current_ts.schema_name}.{current_ts.table_name}'):
 
                     rr=current_ts.upload_append(**up_value)
