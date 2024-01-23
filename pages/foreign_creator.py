@@ -1,33 +1,44 @@
 import streamlit as st
 import pandas as pd
 from pyplus.streamlit.external import check_password
-from pyplus.sql.pgplus import read_from_server,get_columns,write_to_server,create_empty_with_id_with_column,create_columns
-from sqlutil.sql_util import table_selection
+from pyplus.sql import TableStructure
+from sqlutil.sql_util_new import table_selector
 
 if not check_password():
     st.stop()  # Do not continue if check_password is not True.
 
 
-def select_foreign_column(df) -> dict:
-    df_data_columns = get_columns(schema_name=input.schema,table_name=input.table,st_conn=st_connff)
-    foreign_column = st.multiselect(label='create as foreign key of',options=df.columns)
-    st.write('rr')
+def create_new_foreign(ts:TableStructure) -> pd.DataFrame:
+    df = ts.read()
+    df_data_columns = df.columns
+    st.write(df,df_data_columns)
+    
+    foreign_column = st.multiselect(label='create as foreign key of',options=df_data_columns)
 
-    df_new_foreign = df[foreign_column].drop_duplicates()
+    df_new_foreign = df[foreign_column].drop_duplicates().reset_index(drop=True)
     df_new_foreign
-    _dict_col=df_data_columns.loc[foreign_column].to_dict()['data_type']
-    return df_new_foreign, _dict_col
+    return df_new_foreign
 
     
 st_connff = st.connection(name='simple_note',type='sql')
 
-
 with st.sidebar:
-    input = table_selection(st_connff,'input')
+    input_schema,input_table = table_selector(st_connff,'input')
+
 
 st.subheader('total')
-df_data = read_from_server(schema_name=input.schema,table_name=input.table,st_conn=st_connff)
-st.dataframe(df_data)
+ts  = TableStructure(schema_name=input_schema,table_name=input_table,
+                     engine=st_connff)
+df_foreign_columns = create_new_foreign(ts)
+ts_foreign = TableStructure(schema_name=input_schema,
+                            table_name=f'{input_table}_foreign',
+                            engine=st_connff)
+if st.button('create_new_foreign'):
+    df_foreign_columns.to_sql(schema=input_schema,
+                              name=f'{input_table}_foreign',
+                              con=st_connff.engine,index=True)
+
+st.stop()
 df_foreign, foreign_columns = select_foreign_column(df_data)
 foreign_columns
 if st.button('write'):
