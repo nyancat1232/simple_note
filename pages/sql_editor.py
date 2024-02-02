@@ -44,7 +44,7 @@ def in_a_table(current_ts:TableStructure):
             tabs = pps.TabsPlus('append','edit')
             with tabs['append']:
                                         
-                tsr = current_ts.read()
+                tsr = res_df.copy()
                 st.write(current_ts.expand_read())
 
                 tt = current_ts.get_types()
