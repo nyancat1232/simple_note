@@ -37,7 +37,10 @@ gen
 def in_a_table(current_ts:TableStructure):
     with st.expander(f'expand {current_ts.schema_name}.{current_ts.table_name}'):
         try:
-            res_df = current_ts.read()
+            @st.cache_data
+            def cache_res_df():
+                return current_ts.read()
+            res_df = cache_res_df()
             res_df
             st.write(res_df.dtypes)
 
