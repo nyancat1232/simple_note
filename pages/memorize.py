@@ -1,16 +1,14 @@
 import streamlit as st
 import json 
 from typing import List
-from pyplus.streamlit.streamlit_plus_utility import FileExecutor,FileDescription
-
-from pyplus.streamlit.external import check_password
+import pyplus.streamlit as stp
 from collections import Counter
-if not check_password():
+if not stp.check_password():
     st.stop()
 
 
-fe = FileExecutor()
-fe.behaviors.append(FileDescription('[A-Za-z0-9]*.json',json.load))
+fe = stp.FileExecutor()
+fe.append_behavior('[A-Za-z0-9]*.json',json.load)
 dfs = fe.execute_file_descriptions(label='jsons')
 
 

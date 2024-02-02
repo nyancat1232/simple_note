@@ -1,10 +1,10 @@
 import streamlit as st
 import pandas as pd
-from pyplus.streamlit.external import check_password
+import pyplus.streamlit as stp
 from pyplus.sql import TableStructure
 from sqlutil.sql_util_new import table_selector
 
-if not check_password():
+if not stp.check_password():
     st.stop()  # Do not continue if check_password is not True.
 
 

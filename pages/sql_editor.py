@@ -1,10 +1,9 @@
 import streamlit as st
-from pyplus.streamlit.external import check_password
+import pyplus.streamlit as stp
 from sqlutil.sql_util_new import table_selector
 from pyplus.sql import TableStructure 
-import pyplus.streamlit as pps
 
-if not check_password():
+if not stp.check_password():
     st.stop()  # Do not continue if check_password is not True.
 
 
@@ -41,7 +40,7 @@ def in_a_table(current_ts:TableStructure):
             res_df
             st.write(res_df.dtypes)
 
-            tabs = pps.TabsPlus('append','edit')
+            tabs = stp.TabsPlus('append','edit')
             with tabs['append']:
                                         
                 tsr = res_df.copy()

@@ -1,10 +1,9 @@
 import streamlit as st
-from pyplus.streamlit.external import check_password
 from sqlutil.sql_util_new import table_selector
 import pyplus.sql as sqlp
 import pyplus.streamlit as stp
 
-if not check_password():
+if not stp.check_password():
     st.stop()  # Do not continue if check_password is not True.
 
 
