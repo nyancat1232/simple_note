@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
-from pyplus.streamlit import streamlit_plus as sp,streamlit_plus_utility as spu
-
+import pyplus.streamlit as stp
 
 tab_name = ['new','open']
 file_tab = st.tabs(tab_name)
@@ -61,7 +60,7 @@ with file_tab[1]:
 
     with process[0]:
         try:
-            input = sp.list_checkbox(*file_df.columns.values)
+            input = stp.list_checkbox(*file_df.columns.values)
             remove_select = [key for key,value in input.items() if value==True]
             file_df = file_df.drop(remove_select,axis=1)
         except:
@@ -69,7 +68,7 @@ with file_tab[1]:
 
     with process[1]:
         try:
-            changer = sp.list_text_input_by_vals(*file_df.columns.values)
+            changer = stp.list_text_input_by_vals(*file_df.columns.values)
             changer = {key : value for key,value in changer.items() if len(value)>0 }
             changer
             file_df = file_df.rename(mapper=changer,axis=1)
