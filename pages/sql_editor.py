@@ -61,15 +61,16 @@ def in_a_table(current_ts:TableStructure):
 
 
                 
-                def ite_row():
-                    def get_row_count():
-                        for col in up_value:
-                            return len(up_value[col])
-                    for row in range(get_row_count()):
-                        yield {col:up_value[col][row] for col in up_value}
+
 
 
                 if st.button(f'upload {current_ts.schema_name}.{current_ts.table_name}'):
+                    def ite_row():
+                        def get_row_count():
+                            for col in up_value:
+                                return len(up_value[col])
+                        for row in range(get_row_count()):
+                            yield {col:up_value[col][row] for col in up_value}
                     for cur_row in ite_row():
                         rr=current_ts.upload_append(**cur_row)
                         rr
