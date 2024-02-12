@@ -44,7 +44,6 @@ def in_a_table(current_ts:TableStructure):
             with tabs['append']:
                                         
                 tsr = res_df.copy()
-                st.write(current_ts.expand_read())
 
                 tt = current_ts.get_types()
                 tt
@@ -55,36 +54,24 @@ def in_a_table(current_ts:TableStructure):
                 exclude_foreigns = st.multiselect(label=f'exclude foreign {current_ts.schema_name}.{current_ts.table_name}',options=tf.index)
                 cur_cols = cur_cols.drop(exclude_defaults)
                 cur_cols = cur_cols.drop(exclude_foreigns)
-                up_value = {}
+                cur_cols
+                up_value = {col:[None] for col in cur_cols}
+                up_col_config = {col:st.column_config.TextColumn() for col in cur_cols}
+                up_value = st.data_editor(up_value,num_rows='dynamic',column_config=up_col_config)
 
-                stcols = st.columns(len(cur_cols))
-                for ind,cur_col in enumerate(cur_cols):
-                    try:
-                        with stcols[ind]:
-                            ckey = f'{current_ts.schema_name}.{current_ts.table_name} {cur_col}'
-                            match tt.loc[cur_col]['data_type']:
-                                case 'text':
-                                    up_value[cur_col] = st.text_area(cur_col,key=ckey)
-                                case 'bigint':
-                                    up_value[cur_col] = int(st.number_input(cur_col,step=1,key=ckey))
-                                case 'integer':
-                                    up_value[cur_col] = int(st.number_input(cur_col,step=1,key=ckey))
-                                case 'double precision':
-                                    up_value[cur_col] = st.number_input(cur_col,key=ckey)
-                                case 'boolean':
-                                    up_value[cur_col] = st.checkbox(cur_col,key=ckey)
-                                case 'date':
-                                    up_value[cur_col] = st.date_input(cur_col,key=ckey)
-                                case 'ARRAY':
-                                    up_value[cur_col] = st.data_editor([''],num_rows='dynamic')
-                                case _:
-                                    raise NotImplementedError(tt.loc[cur_col]['data_type'] )
-                    except NotImplementedError as e:
-                        st.error(e)
+                def get_row_count():
+                    for col in up_value:
+                        return len(up_value[col])
+                
+                def ite_row():
+                    for row in range(get_row_count()):
+                        yield {col:up_value[col][row] for col in up_value}
+
+
                 if st.button(f'upload {current_ts.schema_name}.{current_ts.table_name}'):
-
-                    rr=current_ts.upload_append(**up_value)
-                    rr
+                    for cur_row in ite_row():
+                        rr=current_ts.upload_append(**cur_row)
+                        rr
 
                                         
             with tabs['edit']:
