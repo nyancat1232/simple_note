@@ -59,11 +59,12 @@ def in_a_table(current_ts:TableStructure):
                 up_col_config = {col:st.column_config.TextColumn() for col in cur_cols}
                 up_value = st.data_editor(up_value,num_rows='dynamic',column_config=up_col_config)
 
-                def get_row_count():
-                    for col in up_value:
-                        return len(up_value[col])
+
                 
                 def ite_row():
+                    def get_row_count():
+                        for col in up_value:
+                            return len(up_value[col])
                     for row in range(get_row_count()):
                         yield {col:up_value[col][row] for col in up_value}
 
