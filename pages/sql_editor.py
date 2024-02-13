@@ -55,8 +55,29 @@ def in_a_table(current_ts:TableStructure):
                 cur_cols = cur_cols.drop(exclude_defaults)
                 cur_cols = cur_cols.drop(exclude_foreigns)
                 cur_cols
+
+                cur_cols_dtype = {col:tsr.dtypes[col] for col in cur_cols}
+                cur_cols_dtype
+
                 up_value = {col:[None] for col in cur_cols}
-                up_col_config = {col:st.column_config.TextColumn() for col in cur_cols}
+                def define_streamlit_column(pd_type:str):
+                    match pd_type:
+                        case "datetime64[ns]":
+                            return st.column_config.DatetimeColumn()
+                        case "datetime64[ns, UTC]":
+                            return st.column_config.DatetimeColumn(timezone="UTC")
+                        case "Int64":
+                            return st.column_config.NumberColumn(step=1)
+                        case "Float64":
+                            return st.column_config.NumberColumn()
+                        case "string":
+                            return st.column_config.TextColumn()
+                        case "boolean":
+                            return st.column_config.CheckboxColumn()
+                        case _:
+                            raise NotImplementedError(f"{pd_type} Not implemented. Report this error.")
+
+                up_col_config = {col:define_streamlit_column(cur_cols_dtype[col]) for col in cur_cols}
                 up_value = st.data_editor(up_value,num_rows='dynamic',column_config=up_col_config)
 
 
