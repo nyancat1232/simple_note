@@ -16,7 +16,7 @@ def init_schema():
 
 schema_list = init_schema(refresh=True)
 
-types=['bigint','double precision','text']
+types=['bigint','double precision','text','timestamp with time zone']
 
 schema_list
 schema_name = st.text_input('schema name')
