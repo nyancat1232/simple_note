@@ -68,7 +68,15 @@ def in_a_table(current_ts:TableStructure):
                             return st.column_config.DatetimeColumn(timezone="UTC")
                         case "Int64":
                             return st.column_config.NumberColumn(step=1)
+                        case "Int32":
+                            return st.column_config.NumberColumn(step=1)
+                        case "Int16":
+                            return st.column_config.NumberColumn(step=1)
+                        case "Int8":
+                            return st.column_config.NumberColumn(step=1)
                         case "Float64":
+                            return st.column_config.NumberColumn()
+                        case "Float32":
                             return st.column_config.NumberColumn()
                         case "string":
                             return st.column_config.TextColumn()
