@@ -8,3 +8,4 @@ practice*.py
 secrets.toml
 .streamlit
 pages/test.py
+.venv
