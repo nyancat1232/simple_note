@@ -1,10 +1,9 @@
 import streamlit as st
 
 import pyplus.streamlit as stp
-if not stp.check_password():
-    st.stop()
 
-conn=st.connection('simple_note',type='sql')
+from pre import ex,conn
+ex()
 
 import pyplus.sql as sqlp
 from sqlutil.sql_util_new import table_selector

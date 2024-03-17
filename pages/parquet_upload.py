@@ -5,6 +5,10 @@ from pyplus.streamlit.streamlit_plus import write_columns
 from pyplus.sql.pgplus import read_from_server,get_identity,get_foreign_keys,write_to_server
 from sqlutil.sql_util import table_selection
 
+
+from pre import ex,conn
+ex()
+
 def get_direction(df_file:pd.DataFrame,df_to:pd.DataFrame):
     st.subheader("move columns")
     
@@ -16,7 +20,6 @@ def get_direction(df_file:pd.DataFrame,df_to:pd.DataFrame):
 
     return ret_dict
 
-conn = st.connection(name='simple_note',type='sql')
 with st.sidebar:
     fe = FileExecutor()
     fe.behaviors.append(FileDescription("^[A-Za-z0-9_]+.parquet$",pd.read_parquet))

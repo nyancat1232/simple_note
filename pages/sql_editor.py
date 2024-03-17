@@ -3,12 +3,9 @@ import pyplus.streamlit as stp
 from sqlutil.sql_util_new import table_selector
 from pyplus.sql import TableStructure 
 
-if not stp.check_password():
-    st.stop()  # Do not continue if check_password is not True.
-
-
-
-st_connff = st.connection(name='simple_note',type='sql')
+from pre import ex
+from pre import conn as st_connff
+ex()
 
 
 with st.sidebar:

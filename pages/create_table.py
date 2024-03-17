@@ -3,11 +3,8 @@ from sqlutil.sql_util_new import table_selector
 import pyplus.sql as sqlp
 import pyplus.streamlit as stp
 
-if not stp.check_password():
-    st.stop()  # Do not continue if check_password is not True.
-
-
-conn=st.connection('simple_note',type='sql')
+from pre import ex,conn
+ex()
 
 @stp.init_session('list_of_schema')
 def init_schema():

@@ -3,9 +3,9 @@ import json
 from typing import List
 import pyplus.streamlit as stp
 from collections import Counter
-if not stp.check_password():
-    st.stop()
 
+from pre import ex
+ex()
 
 fe = stp.FileExecutor()
 fe.append_behavior('[A-Za-z0-9]*.json',json.load)

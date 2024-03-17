@@ -4,9 +4,9 @@ import pyplus.streamlit as stp
 from pyplus.sql import TableStructure
 from sqlutil.sql_util_new import table_selector
 
-if not stp.check_password():
-    st.stop()  # Do not continue if check_password is not True.
-
+from pre import ex
+from pre import conn as st_connff
+ex()
 
 def create_new_foreign(ts:TableStructure) -> pd.DataFrame:
     df = ts.read()
@@ -20,7 +20,6 @@ def create_new_foreign(ts:TableStructure) -> pd.DataFrame:
     return df_new_foreign
 
     
-st_connff = st.connection(name='simple_note',type='sql')
 
 with st.sidebar:
     input_schema,input_table = table_selector(st_connff,'input')

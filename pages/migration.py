@@ -3,12 +3,11 @@ import pandas as pd
 from pyplus.streamlit.external import check_password
 from pyplus.sql.pgplus import read_from_server
 from sqlutil.sql_util import table_selection
-if not check_password():
-    st.stop()  # Do not continue if check_password is not True.
 
-
+from pre import ex
+from pre import conn as st_conn
+ex()
     
-st_conn = st.connection(name='simple_note',type='sql')
 
 columns = st.columns(2)
 with columns[0]:

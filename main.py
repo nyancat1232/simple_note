@@ -2,8 +2,9 @@ import streamlit as st
 import pandas as pd
 from pyplus.streamlit.external import check_password
 from pyplus.sql.pgplus import read_from_server
-if not check_password():
-    st.stop()  # Do not continue if check_password is not True.
+
+from pre import ex,conn
+ex()
 
 
 from simple_note_funcs.summary import *
@@ -12,7 +13,7 @@ from simple_note_funcs.summary import *
 
 cur_sch=st.secrets['summary']['schema']
 cur_tab=st.secrets['summary']['table']
-conn = st.connection(name='simple_note',type='sql')
+
 summaries=read_from_server(cur_sch,cur_tab,conn)
 summaries
 for summary_idx in summaries.index:

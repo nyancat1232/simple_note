@@ -2,6 +2,10 @@ import streamlit as st
 import pandas as pd
 import pyplus.streamlit as stp
 
+
+from pre import ex,conn
+ex()
+
 tab_name = ['new','open']
 file_tab = st.tabs(tab_name)
 with file_tab[0]:
