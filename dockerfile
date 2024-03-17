@@ -15,6 +15,7 @@ COPY sqlutil ./sqlutil
 COPY pages ./pages
 COPY simple_note_funcs ./simple_note_funcs
 COPY main.py ./
+COPY pre.py ./
 COPY .streamlit ./.streamlit
 
 RUN pip3 install -r requirements.txt
