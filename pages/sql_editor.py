@@ -16,7 +16,7 @@ with st.sidebar:
 st.subheader('total')
 first_ts = TableStructure(schema_name=schema,table_name=table,
                     engine=st_connff.engine)
-st.dataframe(first_ts.expand_read())
+st.dataframe(first_ts.read_expand())
 
 children = first_ts.get_all_children()
 
