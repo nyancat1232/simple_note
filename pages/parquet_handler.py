@@ -44,9 +44,9 @@ with file_tab['open']:
         st.markdown("---")
 
 
-        process = st.tabs(['drop','rename','set_index','dtype'])
+        process = stp.TabsPlus('drop','rename','set_index','dtype')
 
-        with process[0]:
+        with process['drop']:
             try:
                 input = stp.list_checkbox(*file_df.columns.values)
                 remove_select = [key for key,value in input.items() if value==True]
@@ -54,7 +54,7 @@ with file_tab['open']:
             except:
                 pass
 
-        with process[1]:
+        with process['rename']:
             try:
                 changer = stp.list_text_input_by_vals(*file_df.columns.values)
                 changer = {key : value for key,value in changer.items() if len(value)>0 }
@@ -63,7 +63,7 @@ with file_tab['open']:
             except:
                 pass
         
-        with process[2]:
+        with process['set_index']:
             try:
                 index = st.text_input('setting index')
                 file_df = file_df.set_index([index])
