@@ -36,42 +36,22 @@ with file_tab['new']:
 
 with file_tab['open']:
     new_df=None
-    try:
-        file = st.file_uploader('parquet test',type='parquet')
-        file_df = pd.read_parquet(path=file,)
-        file_df=st.data_editor(file_df,num_rows="dynamic")
-
-        st.markdown("---")
-
-
-        process = stp.TabsPlus('drop','rename','set_index','dtype')
-
-        with process['drop']:
-            try:
-                input = stp.list_checkbox(*file_df.columns.values)
-                remove_select = [key for key,value in input.items() if value==True]
-                file_df = file_df.drop(remove_select,axis=1)
-            except:
-                pass
-
-        with process['rename']:
-            try:
-                changer = stp.list_text_input_by_vals(*file_df.columns.values)
-                changer = {key : value for key,value in changer.items() if len(value)>0 }
-                changer
-                file_df = file_df.rename(mapper=changer,axis=1)
-            except:
-                pass
-        
-        with process['set_index']:
-            try:
-                index = st.text_input('setting index')
-                file_df = file_df.set_index([index])
-            except:
-                st.error("Index error")
-
-        st.dataframe(file_df)
-        st.download_button(label=f'download parquet',data=file_df.to_parquet(),file_name='out.parquet')
-    except:
-        pass
     
+    file = st.file_uploader('parquet test',type='parquet')
+    file_df = pd.read_parquet(path=file,)
+    file_df=st.data_editor(file_df,num_rows="dynamic")
+
+    st.markdown("---")
+
+
+    process = stp.TabsPlus('set_index','dtype')
+
+    
+    with process['set_index']:
+        try:
+            file_df = file_df.set_index(st.selectbox('setting index',file_df.columns))
+        except:
+            st.error("Index error")
+
+    st.dataframe(file_df)
+    st.download_button(label=f'download parquet',data=file_df.to_parquet(),file_name='out.parquet')
