@@ -42,10 +42,6 @@ with file_tab['open']:
     file_df=st.data_editor(file_df,num_rows="dynamic")
 
     st.markdown("---")
-
-
-    process = stp.TabsPlus('set_index','dtype')
-
     
     if col_for_index := st.selectbox('setting index',file_df.columns.to_list()+[None]):
         file_df = file_df.set_index(col_for_index)
