@@ -3,7 +3,7 @@ import pandas as pd
 from pyplus.streamlit.streamlit_plus_utility import FileDescription,FileExecutor
 from pyplus.streamlit.streamlit_plus import write_columns
 from pyplus.sql.pgplus import read_from_server,get_identity,get_foreign_keys,write_to_server
-from sqlutil.sql_util import table_selection
+from sqlutil.sql_util_new import table_selector
 
 
 from pre import ex,conn
@@ -28,7 +28,7 @@ with st.sidebar:
 
 
 for key in dfs:
-    input = table_selection(st_conn=conn,label='input')
+    input = table_selector(engine=conn.engine,label='input')
     schema = input.schema
     table = input.table
 
