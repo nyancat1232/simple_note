@@ -10,11 +10,8 @@ tab_name = ['new','open']
 file_tab = stp.TabsPlus(*tab_name)
 with file_tab['new']:
 
-    new_df_dtype = pd.DataFrame(columns=['name','dtype','index'])
-    new_df_dtype['index'] = new_df_dtype['index'].astype("boolean")
     #all_dtype=pd.read_html("https://pandas.pydata.org/docs/user_guide/basics.html#basics-dtypes")[3]["String Aliases"]
-    #all_dtype = all_dtype.apply(lambda s:s.split(",")).apply(lambda l:[s.strip("'`") for s in l])
-    #all_dtype
+
     all_dtype=["datetime64[ns]"\
                 ,"category"\
                 #,"period[<freq>]"\
@@ -25,23 +22,14 @@ with file_tab['new']:
                 ,'string'\
                 ,'boolean'
                 ]
-    new_df_dtype_column_config = {
-        "dtype": st.column_config.SelectboxColumn(
-            label="Set dtype",
-            options=all_dtype
-        )
-    }
-    new_df_dtype = st.data_editor(new_df_dtype,num_rows="dynamic",hide_index=True, column_config=new_df_dtype_column_config)
+    new_df_dtype = pd.DataFrame({'name':[''],'dtype':pd.Categorical([None],categories=all_dtype),'index':[False]})
+    new_df_dtype = st.data_editor(new_df_dtype,num_rows="dynamic",hide_index=True)
     
-
-    new_df = pd.DataFrame({a:pd.Series([],dtype=b) for a,b in zip(new_df_dtype['name'],new_df_dtype['dtype'])})
+    new_dict_dtypes = new_df_dtype.to_dict(orient='records')
+    new_df = pd.DataFrame({rec['name']:pd.Series([],dtype=rec['dtype']) for rec in new_dict_dtypes })
     new_df=st.data_editor(new_df,num_rows="dynamic")
-    try:
-        column_for_index = new_df_dtype[new_df_dtype['index']==True]['name'].to_list()
-        column_for_index
-        new_df = new_df.set_index(column_for_index)
-    except:
-        pass
+    new_df=new_df.set_index(new_df_dtype['name'][new_df_dtype['index']==True].to_list())
+
     st.dataframe(new_df)
     filename = st.text_input(label='filename',value='out')
     st.download_button(label='download parquet (new)',data=new_df.to_parquet(),file_name=f'{filename}.parquet')
