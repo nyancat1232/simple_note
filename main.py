@@ -1,7 +1,5 @@
 import streamlit as st
 import pandas as pd
-from pyplus.streamlit.external import check_password
-from pyplus.sql.pgplus import read_from_server
 
 from pre import ex,conn
 ex()
