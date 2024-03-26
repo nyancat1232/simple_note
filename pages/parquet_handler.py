@@ -7,8 +7,8 @@ from pre import ex,conn
 ex()
 
 tab_name = ['new','open']
-file_tab = st.tabs(tab_name)
-with file_tab[0]:
+file_tab = stp.TabsPlus(*tab_name)
+with file_tab['new']:
 
     new_df_dtype = pd.DataFrame(columns=['name','dtype','index'])
     new_df_dtype['index'] = new_df_dtype['index'].astype("boolean")
@@ -46,7 +46,7 @@ with file_tab[0]:
     filename = st.text_input(label='filename',value='out')
     st.download_button(label='download parquet (new)',data=new_df.to_parquet(),file_name=f'{filename}.parquet')
 
-with file_tab[1]:
+with file_tab['open']:
     new_df=None
     try:
         file = st.file_uploader('parquet test',type='parquet')
