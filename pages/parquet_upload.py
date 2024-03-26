@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
-from pyplus.streamlit.streamlit_plus_utility import FileDescription,FileExecutor
-from pyplus.streamlit.streamlit_plus import write_columns
+import pyplus.streamlit as stp
 from pyplus.sql.pgplus import read_from_server,get_identity,get_foreign_keys,write_to_server
 from sqlutil.sql_util_new import table_selector
 
@@ -21,10 +20,10 @@ def get_direction(df_file:pd.DataFrame,df_to:pd.DataFrame):
     return ret_dict
 
 with st.sidebar:
-    fe = FileExecutor()
-    fe.behaviors.append(FileDescription("^[A-Za-z0-9_]+.parquet$",pd.read_parquet))
+    fe = stp.FileExecutor()
+    fe += "^[A-Za-z0-9_]+.parquet$",pd.read_parquet
     
-    dfs = fe.execute_file_descriptions()
+    dfs = fe()
 
 
 for key in dfs:
