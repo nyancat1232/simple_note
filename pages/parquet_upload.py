@@ -24,6 +24,7 @@ with st.sidebar:
     fe += "^[A-Za-z0-9_]+.parquet$",pd.read_parquet
     
     dfs = fe()
+    current_timezone = st.slider('time zone from utc',min_value=-12,max_value=12,step=1)
 
 
 for key in dfs:
