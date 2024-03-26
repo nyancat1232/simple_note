@@ -1,30 +1,20 @@
 import streamlit as st
 import pandas as pd
 import pyplus.streamlit as stp
-from pyplus.sql.pgplus import read_from_server,get_identity,get_foreign_keys,write_to_server
+import pyplus.sql as sqlp
 from sqlutil.sql_util_new import table_selector
-
+from datetime import datetime
 
 from pre import ex,conn
 ex()
 
-def get_direction(df_file:pd.DataFrame,df_to:pd.DataFrame):
-    st.subheader("move columns")
-    
-    ret_dict={}
-
-    for col_file in df_file.columns:
-        if st.checkbox(f'move {col_file}',value=True):
-            ret_dict[col_file]=st.selectbox(f' move {col_file} to',df_to.columns)
-
-    return ret_dict
 
 with st.sidebar:
     fe = stp.FileExecutor()
     fe += "^[A-Za-z0-9_]+.parquet$",pd.read_parquet
     
     dfs = fe()
-    current_timezone = st.slider('time zone from utc',min_value=-12,max_value=12,step=1)
+    current_timezone = st.text_input('input time zone')
 
 
 for key in dfs:
@@ -32,43 +22,43 @@ for key in dfs:
 
     df_from = dfs[key].reset_index()
 
-    df_to = read_from_server(table_name=table,st_conn=conn,schema_name=schema)
-    to_ids = get_identity(schema_name=schema,table_name=table,st_conn=conn)
+    ts_to = sqlp.TableStructure(schema_name=schema,table_name=table,engine=conn.engine)
+    df_to = ts_to.read().reset_index()
+
+    stp.write_columns(df_from,df_to)
+
     
-    df_to=df_to.drop(columns=to_ids.to_list())
+    df_direction = pd.DataFrame({'from':df_from.columns,
+                                 'to':pd.Categorical([None for _ in df_from],categories=df_to.columns)})
 
-    write_columns(df_from,df_to)
+    st.subheader('Select a column')
+    df_direction=st.data_editor(df_direction,disabled=['from'])
+    df_direction=df_direction.dropna()
 
-    directions = get_direction(df_from,df_to)
-    not_in_directions = list(filter(lambda value:value not in directions.values(),df_to.columns))
-    default_values={}
-    for column in not_in_directions:
-        if st.checkbox(f'fill {column}',value=True):
-            default_values[column] = st.text_input(f'{column}')
-    with st.expander('direction'):
-        directions
-        default_values
+    df_foreign = ts_to.get_foreign_table()
+    df_foreign
 
-    df_to_fks = get_foreign_keys(schema_name=schema,table_name=table,st_conn=conn)
-    df_to_fks
-    for direction in directions:
-        try:
-            df_fk_inf = df_to_fks.loc[directions[direction]]
-            df_fk_data = read_from_server(df_fk_inf['upper_schema'],df_fk_inf['upper_table'],conn)
-            
+    df_converted = df_from[df_direction['from']]
+    for column_from,column_to in zip(df_direction['from'],df_direction['to']):
+        if column_to in df_foreign.index:
+            inf = df_foreign.loc[column_to].to_dict()
+            ts_foreign = sqlp.TableStructure(schema_name=inf['upper_schema'],table_name=inf['upper_table'],engine=conn.engine)
+            df_from_foreign = ts_foreign.read()
+            target = st.selectbox(f'convert {column_to} to ',df_from_foreign.columns.to_list())
+            convert_table = df_from_foreign[target].to_dict()
+            convert_table = {convert_table[key]:key for key in convert_table}
+            convert_table
 
-            df_fk_to = st.selectbox(f'{direction} to column of {df_fk_inf["upper_schema"]}.{df_fk_inf["upper_table"]}',options=df_fk_data.columns)
-            df_fk_data = df_fk_data[[df_fk_inf['upper_column_name'],df_fk_to]]
-            df_fk_data
+            df_converted[column_from] = df_converted[column_from].apply(lambda v:convert_table[v])
 
-            df_from_filter = df_from[direction]
-            df_merged=pd.merge(df_from_filter,df_fk_data,left_on=direction,right_on=df_fk_to,how='left').drop(columns=df_fk_to)
-            df_to[directions[direction]] = df_merged[df_fk_inf['upper_column_name']]
+        if df_converted.dtypes[column_from] == 'datetime64[ns]':
+            df_converted[column_from] = df_converted[column_from].dt.tz_localize(current_timezone)
+    renamer={d['from']:d['to'] for d in df_direction.to_dict('records')}
+    df_converted = df_converted.rename(columns=renamer)
+    df_converted
 
-        except:
-            st.toast(f'{directions[direction]} is not a foreign key')
-            df_to[directions[direction]] = df_from[direction]
-    
-    st.dataframe(df_to.dropna())
-
-    st.button(f'upload to server {schema}.{table}',on_click=write_to_server,args=[df_to.dropna(),schema,table,conn])
+    if st.button('upload'):
+        for row in df_converted.index:
+            if row%100 == 0:
+                st.toast(df_converted.loc[row])
+            ts_to.upload_append(**df_converted.loc[row].to_dict())
