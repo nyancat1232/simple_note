@@ -27,9 +27,7 @@ with st.sidebar:
 
 
 for key in dfs:
-    input = table_selector(engine=conn.engine,label='input')
-    schema = input.schema
-    table = input.table
+    schema,table = table_selector(engine=conn.engine,label='input')
 
     df_from = dfs[key].reset_index()
 
