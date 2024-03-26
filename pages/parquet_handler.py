@@ -47,11 +47,8 @@ with file_tab['open']:
     process = stp.TabsPlus('set_index','dtype')
 
     
-    with process['set_index']:
-        try:
-            file_df = file_df.set_index(st.selectbox('setting index',file_df.columns))
-        except:
-            st.error("Index error")
+    if col_for_index := st.selectbox('setting index',file_df.columns.to_list()+[None]):
+        file_df = file_df.set_index(col_for_index)
 
     st.dataframe(file_df)
     st.download_button(label=f'download parquet',data=file_df.to_parquet(),file_name='out.parquet')
