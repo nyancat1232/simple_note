@@ -42,7 +42,14 @@ with file_tab['open']:
     file_df=st.data_editor(file_df,num_rows="dynamic")
 
     st.markdown("---")
-    
+    file_df = file_df.reset_index()
+    df_dtypes = file_df.dtypes
+    df_dtypes = st.data_editor(df_dtypes)
+    stp.write_columns(df_dtypes.to_dict())
+    for col in df_dtypes.to_dict():
+        file_df[col] = file_df[col].astype(df_dtypes[col])
+    file_df.dtypes
+
     if col_for_index := st.selectbox('setting index',file_df.columns.to_list()+[None]):
         file_df = file_df.set_index(col_for_index)
 
