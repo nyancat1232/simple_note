@@ -21,10 +21,9 @@ def to_super_col(df:pd.DataFrame)->dict[str,str]:
     super_cols = tuple(set(s[:s.find('.')] for s in cols))
     return super_cols,m
 
-def creation(type:Literal['bool','str']):
+def creation(type:Literal['bool','str'],rows,cols)->pd.DataFrame:
     match type:
         case 'bool':
-            return pd.DataFrame({col:[False for _ in df_compare.index] for col in cols_sup}).set_index(df_compare.index)
+            return pd.DataFrame({col:[False for _ in rows] for col in cols}).set_index(rows)
         case 'str':
-            return pd.DataFrame({col:[None for _ in df_compare.index] for col in cols_sup}).set_index(df_compare.index)
-
+            return pd.DataFrame({col:[None for _ in rows] for col in cols}).set_index(rows)
