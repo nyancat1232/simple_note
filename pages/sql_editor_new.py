@@ -11,8 +11,8 @@ with st.sidebar:
 
 first_ts = sqlp.TableStructure(schema,table,conn.engine)
 
-def filter_self(df:pd.DataFrame)->pd.DataFrame:
-    d={upper_col[0]:df[upper_col[0],'self'] for upper_col in df.columns}
+def filter_new(df:pd.DataFrame,col='new')->pd.DataFrame:
+    d={upper_col[0]:df[upper_col[0],col] for upper_col in df.columns}
     return pd.DataFrame(d)
 
 def to_super_col(df:pd.DataFrame)->dict[str,str]:
