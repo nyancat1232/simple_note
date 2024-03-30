@@ -34,4 +34,6 @@ def id_repeat(df:pd.DataFrame,df_expand:pd.DataFrame):
     for col in col_sub:
         df_copy[col] = df_copy[col_sub[col]]
     return df_copy
-
+def get_foreign_id_from_value(df_read:pd.DataFrame,df_expand:pd.DataFrame,row,column):
+    df_repeat=id_repeat(df_read,df_expand)
+    return df_repeat.loc[row,column]
