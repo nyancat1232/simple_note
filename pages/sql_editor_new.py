@@ -29,6 +29,13 @@ def creation(type:Literal['bool','str'],rows,cols)->pd.DataFrame:
             return pd.DataFrame({col:[None for _ in rows] for col in cols}).set_index(rows)
 
 def get_foreign_id_from_value(df_read:pd.DataFrame,df_expand:pd.DataFrame,row,column):
+    '''
+        a.b c.d
+    30  3   4
+
+    get_foreign_id_from_value(.., .., 30, a.b)
+    result : the foreign id of (30,a.b)
+    '''
     def id_repeat(df:pd.DataFrame,df_expand:pd.DataFrame):
         df_copy = df.copy()
         col_sub = {col:col[:col.find('.')] for col in df_expand.columns if col.find('.')!=-1}
