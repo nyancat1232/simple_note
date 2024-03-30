@@ -1,5 +1,4 @@
 import streamlit as st
-from sqlutil.sql_util_new import table_selector
 import pyplus.sql as sqlp
 import pyplus.streamlit as stp
 

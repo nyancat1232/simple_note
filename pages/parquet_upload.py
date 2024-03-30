@@ -2,10 +2,9 @@ import streamlit as st
 import pandas as pd
 import pyplus.streamlit as stp
 import pyplus.sql as sqlp
-from sqlutil.sql_util_new import table_selector
 from datetime import datetime
 
-from pre import ex,conn
+from pre import ex,conn,table_selector
 ex()
 
 
@@ -18,7 +17,7 @@ with st.sidebar:
 
 
 for key in dfs:
-    schema,table = table_selector(engine=conn.engine,label='input')
+    schema,table = table_selector(label='input')
 
     df_from = dfs[key].reset_index()
 
@@ -38,6 +37,7 @@ for key in dfs:
     df_foreign = ts_to.get_foreign_table()
     df_foreign
 
+
     df_converted = df_from[df_direction['from']]
     for column_from,column_to in zip(df_direction['from'],df_direction['to']):
         if column_to in df_foreign.index:
@@ -45,8 +45,7 @@ for key in dfs:
             ts_foreign = sqlp.TableStructure(schema_name=inf['upper_schema'],table_name=inf['upper_table'],engine=conn.engine)
             df_from_foreign = ts_foreign.read()
             target = st.selectbox(f'convert {column_to} to ',df_from_foreign.columns.to_list())
-            convert_table = df_from_foreign[target].to_dict()
-            convert_table = {convert_table[key]:key for key in convert_table}
+            convert_table = ts_to.get_foreign_direction(column_to,target)
             convert_table
 
             df_converted[column_from] = df_converted[column_from].apply(lambda v:convert_table[v])

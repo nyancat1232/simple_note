@@ -2,15 +2,14 @@ import streamlit as st
 
 import pyplus.streamlit as stp
 
-from pre import ex,conn
+from pre import ex,conn,table_selector
 ex()
 
 import pyplus.sql as sqlp
-from sqlutil.sql_util_new import table_selector
 
 
 with st.sidebar:
-    schema,table = table_selector(conn,'input')
+    schema,table = table_selector('input')
     st.button('refresh',on_click=st.rerun)
 
 

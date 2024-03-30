@@ -2,9 +2,8 @@ import streamlit as st
 import pandas as pd
 import pyplus.streamlit as stp
 from pyplus.sql import TableStructure
-from sqlutil.sql_util_new import table_selector
 
-from pre import ex
+from pre import ex,table_selector
 from pre import conn as st_connff
 ex()
 
@@ -22,7 +21,7 @@ def create_new_foreign(ts:TableStructure) -> pd.DataFrame:
     
 
 with st.sidebar:
-    input_schema,input_table = table_selector(st_connff,'input')
+    input_schema,input_table = table_selector('input')
 
 
 st.subheader('total')
@@ -38,22 +37,3 @@ if st.button('create_new_foreign'):
                               con=st_connff.engine,index=True)
 
 st.stop()
-df_foreign, foreign_columns = select_foreign_column(df_data)
-foreign_columns
-if st.button('write'):
-    write_to_server(df_data,input.schema,input.table+'_backup',st_connff)
-
-    foreign_table_inf={
-        'schema_name':input.schema,
-        'table_name':input.table+'_foreign',
-        'st_conn':st_connff
-    }
-
-    create_empty_with_id_with_column(foreign_columns,**foreign_table_inf)
-    write_to_server(df_foreign,**foreign_table_inf)
-
-    df_result_foreign = read_from_server(**foreign_table_inf)
-    df_result_foreign
-
-    create_columns({input.table+'_foreign'+'_id':'bigint'},input.schema,input.table,
-                        st_conn=st_connff)
