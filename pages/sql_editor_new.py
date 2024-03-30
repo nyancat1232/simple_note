@@ -44,3 +44,18 @@ def get_foreign_id_from_value(df_read:pd.DataFrame,df_expand:pd.DataFrame,row,co
         return df_copy
     df_repeat=id_repeat(df_read,df_expand)
     return df_repeat.loc[row,column]
+
+def get_mode(df_compare:pd.DataFrame):
+    df_mode = creation('str',df_compare.index,filter_new(df_compare).columns)
+    for row in df_compare.index:
+        for column in df_compare.columns:
+            v = df_compare.loc[row,column[0]]
+            na_new = v.loc['new'] is pd.NA
+            na_old = v.loc['old'] is pd.NA
+            if not na_new and not na_old:
+                df_mode.loc[row,column[0]]='U'
+            elif not na_new and na_old:
+                df_mode.loc[row,column[0]]='A'
+            elif na_new and not na_old:
+                df_mode.loc[row,column[0]]='D'
+    return df_mode
