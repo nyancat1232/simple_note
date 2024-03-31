@@ -59,3 +59,21 @@ def get_mode(df_compare:pd.DataFrame):
             elif na_new and not na_old:
                 df_mode.loc[row,column[0]]='D'
     return df_mode
+def filter_true(split_orient:dict):
+    '''
+    filter point which data is true.
+    
+    Parameters
+    ----------
+    split_orient : dict
+        pd.to_dict(orient='split').
+    '''
+    temp = [[(split_orient['index'][ind],split_orient['columns'][col],val) 
+            for col,val in enumerate(line) 
+            if val == True] 
+            for ind,line in enumerate(split_orient['data'])]
+    ret = []
+    for ll in temp:
+        ret += ll
+    ret = [l[:-1] for l in ret]
+    return ret
