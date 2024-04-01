@@ -97,6 +97,5 @@ def get_mode_points(df_mode:pd.DataFrame,mode:Literal['U','A','D'])->list:
     split=df_temp.to_dict(orient='split')
     return filter_true(split)
 
-def get_column_address(df:pd.DataFrame):
-    return [{'address':col.split(".")[:-1], 'column_name':col.split(".")[-1]} for col in df.columns]
-
+def get_column_address(col_name:str)->dict:
+    return {'address':col_name.split(".")[:-1], 'column_name':col_name.split(".")[-1]}
