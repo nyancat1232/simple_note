@@ -64,11 +64,13 @@ def get_mode(comp:pd.DataFrame,readd:pd.DataFrame,expand:pd.DataFrame)->pd.DataF
     df_new_ids = creation('str',comp.index,comp.columns)
     for ind in df_new_ids.index:
         for col in df_new_ids.columns:
+            val_comp = comp.loc[ind,col]
             foreign_id = get_foreign_id_from_value(readd,expand,ind,col)
-            if foreign_id is pd.NA:
-                df_new_ids.loc[ind,col] = 'A'
-            else:
-                df_new_ids.loc[ind,col] = 'U'
+            if val_comp is not pd.NA:
+                if foreign_id is pd.NA:
+                    df_new_ids.loc[ind,col] = 'A'
+                else:
+                    df_new_ids.loc[ind,col] = 'U'
     return df_new_ids
 
 def filter_true(split_orient:dict):
