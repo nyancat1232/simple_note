@@ -60,8 +60,8 @@ def get_mode_by_compare_table(df_compare:pd.DataFrame):
                 df_mode.loc[row,column[0]]='D'
     return df_mode
 
-def get_mode(df:pd.DataFrame,readd:pd.DataFrame,expand:pd.DataFrame)->pd.DataFrame:
-    df_new_ids = creation('str',df.index,df.columns)
+def get_mode(comp:pd.DataFrame,readd:pd.DataFrame,expand:pd.DataFrame)->pd.DataFrame:
+    df_new_ids = creation('str',comp.index,comp.columns)
     for ind in df_new_ids.index:
         for col in df_new_ids.columns:
             foreign_id = get_foreign_id_from_value(readd,expand,ind,col)
