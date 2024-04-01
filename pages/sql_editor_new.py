@@ -100,7 +100,8 @@ def get_vals(l:list[dict],df:pd.DataFrame):
 
 def col_to_colinf(l:list[dict])->dict:
     cp = l.copy()
-    cp['col'] = get_column_address(cp['col'])
+    for di in cp:
+        di['col'] = get_column_address(di['col'])
     return cp
 
 def get_column_address(col_name:str)->dict:
