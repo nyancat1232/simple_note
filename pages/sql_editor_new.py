@@ -74,7 +74,7 @@ def get_mode(comp:pd.DataFrame,readd:pd.DataFrame,expand:pd.DataFrame)->pd.DataF
     return df_new_ids
 
 
-def get_mode_points(df_mode:pd.DataFrame,mode:Literal['U','A','D'])->dict:
+def get_mode_points(df_mode:pd.DataFrame,mode:Literal['U','A','D'])->list[dict]:
     def filter_true(split_orient:dict):
         '''
         filter point which data is true.
