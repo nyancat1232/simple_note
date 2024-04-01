@@ -73,26 +73,26 @@ def get_mode(comp:pd.DataFrame,readd:pd.DataFrame,expand:pd.DataFrame)->pd.DataF
                     df_new_ids.loc[ind,col] = 'U'
     return df_new_ids
 
-def filter_true(split_orient:dict):
-    '''
-    filter point which data is true.
-    
-    Parameters
-    ----------
-    split_orient : dict
-        pd.to_dict(orient='split').
-    '''
-    temp = [[(split_orient['index'][ind],split_orient['columns'][col],val) 
-            for col,val in enumerate(line) 
-            if val == True] 
-            for ind,line in enumerate(split_orient['data'])]
-    ret = []
-    for ll in temp:
-        ret += ll
-    ret = [l[:-1] for l in ret]
-    return ret
 
 def get_mode_points(df_mode:pd.DataFrame,mode:Literal['U','A','D'])->list:
+    def filter_true(split_orient:dict):
+        '''
+        filter point which data is true.
+        
+        Parameters
+        ----------
+        split_orient : dict
+            pd.to_dict(orient='split').
+        '''
+        temp = [[(split_orient['index'][ind],split_orient['columns'][col],val) 
+                for col,val in enumerate(line) 
+                if val == True] 
+                for ind,line in enumerate(split_orient['data'])]
+        ret = []
+        for ll in temp:
+            ret += ll
+        ret = [l[:-1] for l in ret]
+        return ret
     df_temp = df_mode==mode
     split=df_temp.to_dict(orient='split')
     return filter_true(split)
