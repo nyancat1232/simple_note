@@ -15,11 +15,6 @@ def filter_new(df:pd.DataFrame,col='new')->pd.DataFrame:
     d={upper_col[0]:df[upper_col[0],col] for upper_col in df.columns}
     return pd.DataFrame(d)
 
-def to_super_col(df:pd.DataFrame)->dict[str,str]:
-    cols=df.columns.unique().tolist()
-    m = {s:s[:s.find('.')] for s in cols}
-    super_cols = tuple(set(s[:s.find('.')] for s in cols))
-    return super_cols,m
 
 def creation(type:Literal['bool','str'],rows,cols)->pd.DataFrame:
     match type:
