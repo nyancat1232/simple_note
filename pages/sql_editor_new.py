@@ -86,7 +86,11 @@ def get_mode_points(df_mode:pd.DataFrame)->list[dict]:
             ] 
             for ind,line in enumerate(split['data'])
         ]
-    return temp
+    ret = []
+    for dim0 in temp:
+        ret += dim0
+
+    return ret
 
 def get_column_address(col_name:str)->dict:
     return {'address':col_name.split(".")[:-1], 'column_name':col_name.split(".")[-1]}
