@@ -45,7 +45,7 @@ def get_foreign_id_from_value(df_read:pd.DataFrame,df_expand:pd.DataFrame,row,co
     df_repeat=id_repeat(df_read,df_expand)
     return df_repeat.loc[row,column]
 
-def get_mode(df_compare:pd.DataFrame):
+def get_mode_by_compare_table(df_compare:pd.DataFrame):
     df_mode = creation('str',df_compare.index,filter_new(df_compare).columns)
     for row in df_compare.index:
         for column in df_compare.columns:
