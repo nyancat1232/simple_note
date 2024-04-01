@@ -28,7 +28,7 @@ def creation(type:Literal['bool','str'],rows,cols)->pd.DataFrame:
         case 'str':
             return pd.DataFrame({col:[None for _ in rows] for col in cols}).set_index(rows)
 
-def get_foreign_id_from_value(df_read:pd.DataFrame,df_expand:pd.DataFrame,row,column):
+def get_foreign_id_from_value(readd:pd.DataFrame,expand:pd.DataFrame,row,column):
     '''
         a.b c.d
     30  3   4
@@ -36,13 +36,13 @@ def get_foreign_id_from_value(df_read:pd.DataFrame,df_expand:pd.DataFrame,row,co
     get_foreign_id_from_value(.., .., 30, a.b)
     result : the foreign id of (30,a.b)
     '''
-    def id_repeat(df:pd.DataFrame,df_expand:pd.DataFrame):
-        df_copy = df.copy()
-        col_sub = {col:col[:col.find('.')] for col in df_expand.columns if col.find('.')!=-1}
+    def id_repeat(readd:pd.DataFrame,expand:pd.DataFrame):
+        df_copy = readd.copy()
+        col_sub = {col:col[:col.find('.')] for col in expand.columns if col.find('.')!=-1}
         for col in col_sub:
             df_copy[col] = df_copy[col_sub[col]]
         return df_copy
-    df_repeat=id_repeat(df_read,df_expand)
+    df_repeat=id_repeat(readd,expand)
     return df_repeat.loc[row,column]
 
 def get_mode_by_compare_table(df_compare:pd.DataFrame):
