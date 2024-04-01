@@ -74,32 +74,19 @@ def get_mode(comp:pd.DataFrame,readd:pd.DataFrame,expand:pd.DataFrame)->pd.DataF
     return df_new_ids
 
 
-def get_mode_points(df_mode:pd.DataFrame,mode:Literal['U','A','D'])->list[dict]:
-    def filter_true(split_orient:dict):
-        '''
-        filter point which data is true.
-        
-        Parameters
-        ----------
-        split_orient : dict
-            pd.to_dict(orient='split').
-        '''
-        temp = [
-                    [
-                        {
-                            'row':split_orient['index'][ind],'col':split_orient['columns'][col]
-                        }
-                        for col,val in enumerate(line) if val == True
-                    ] 
-                    for ind,line in enumerate(split_orient['data'])
-                ]
-        ret = []
-        for ll in temp:
-            ret += ll
-        return ret
-    df_temp = df_mode==mode
+def get_mode_points(df_mode:pd.DataFrame)->list[dict]:
+    df_temp = df_mode
     split=df_temp.to_dict(orient='split')
-    return filter_true(split)
+    temp = [
+            [
+                {
+                    'row':split['index'][ind],'col':split['columns'][col],'mode':val
+                }
+                for col,val in enumerate(line) if val is not None
+            ] 
+            for ind,line in enumerate(split['data'])
+        ]
+    return temp
 
 def get_column_address(col_name:str)->dict:
     return {'address':col_name.split(".")[:-1], 'column_name':col_name.split(".")[-1]}
