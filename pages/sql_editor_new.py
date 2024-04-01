@@ -92,5 +92,16 @@ def get_mode_points(df_mode:pd.DataFrame)->list[dict]:
 
     return ret
 
+def get_vals(d:dict,df:pd.DataFrame):
+    cp = d.copy()
+    for point in cp:
+        point['val'] = df.loc[point['row'],point['col']]
+    return cp
+
+def col_to_colinf(d:dict)->dict:
+    cp = d.copy()
+    cp['col'] = get_column_address(cp['col'])
+    return cp
+
 def get_column_address(col_name:str)->dict:
     return {'address':col_name.split(".")[:-1], 'column_name':col_name.split(".")[-1]}
