@@ -11,6 +11,38 @@ if 'conn' not in st.session_state:
 conn = st.session_state['conn']
 
 def table_selector(label:str):
+    '''
+    Show a selector for selecting schema and table.
+    
+    Parameters
+    ----------
+    label : str
+        A short label explaining to the user what this select widget is for. The label can optionally contain Markdown and supports the following
+        elements: Bold, Italics, Strikethroughs, Inline Code, Emojis, and Links.
+
+        This also supports:
+
+        Emoji shortcodes, such as and. For a list of all supported codes, see https://share.streamlit.io/streamlit/emoji-shortcodes.
+
+        LaTeX expressions, by wrapping them in "$" or "$$" (the "$$" must be on their own lines). Supported LaTeX functions are listed at https://katex.org/docs/supported.html.
+
+        Colored text, using the syntax :color[text to be colored], where color needs to be replaced with any of the following supported colors: blue, green, orange, red, violet, gray/grey, rainbow.
+
+        Unsupported elements are unwrapped so only their children (text contents) render. Display unsupported elements as literal characters by backslash-escaping them. E.g. 1\. Not an ordered list.
+    
+    Returns
+    --------
+    tuple
+        schema,table
+    
+    Examples
+    --------
+    
+    >>> with st.sidebar:
+    >>>     schema,table=table_selector('select table')
+    >>> first_ts = sqlp.TableStructure(schema,table,conn.engine)
+
+    '''
     df_list=sqlp.get_table_list(conn.engine)
 
     schema = st.selectbox(label=f'{label} of schema',options=df_list['table_schema'].unique())
