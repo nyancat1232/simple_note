@@ -38,3 +38,13 @@ if st.button('upload'):
         first_ts.upload(row,**recs[row])
 
 
+st.subheader('append mode')
+
+df_append = df_expanded.copy()
+df_append = df_append.loc[0:0]
+df_append = df_append.reset_index(drop=True)
+df_append = st.data_editor(df_append,num_rows='dynamic')
+appends = df_append.to_dict(orient='records')
+if st.button('append'):
+    for append in appends:
+        first_ts.upload_append(**append)
