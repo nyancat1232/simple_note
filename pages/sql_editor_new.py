@@ -101,3 +101,17 @@ def col_to_colinf(l:list[dict])->list[dict]:
 
 def get_column_address(col_name:str)->dict:
     return {'address':col_name.split(".")[:-1], 'column_name':col_name.split(".")[-1]}
+
+df_read = first_ts.read()
+df_expanded = first_ts.read_expand()
+df_edited = st.data_editor(df_expanded,num_rows='dynamic',)
+
+mode=st.selectbox('mode',['append','edit'])
+
+match mode:
+    case 'append':
+        pass
+    case 'edit':
+        pass
+    case _:
+        raise NotImplementedError('No modes')
