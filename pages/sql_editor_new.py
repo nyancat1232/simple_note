@@ -104,14 +104,14 @@ def get_column_address(col_name:str)->dict:
 
 df_read = first_ts.read()
 df_expanded = first_ts.read_expand()
-df_edited = st.data_editor(df_expanded,num_rows='dynamic',)
+index_expanded = df_expanded.index
+df_edited = st.data_editor(df_expanded.reset_index(drop=True),num_rows='dynamic')
+index_edited = df_edited.index
+if len(index_edited)==len(index_expanded):
+    st.subheader('edit mode')
+    df_edited_with_index = df_edited.copy()
+    df_edited_with_index.index = index_expanded
 
-mode=st.selectbox('mode',['append','edit'])
+else:
+    st.subheader('append mode')
 
-match mode:
-    case 'append':
-        pass
-    case 'edit':
-        pass
-    case _:
-        raise NotImplementedError('No modes')
