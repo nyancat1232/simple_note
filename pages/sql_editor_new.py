@@ -18,7 +18,7 @@ def filter_new(df:pd.DataFrame,col='new')->pd.DataFrame:
 
 df_read = first_ts.read()
 df_expanded = first_ts.read_expand()
-df_edited = st.data_editor(df_expanded)
+df_edited = st.data_editor(df_expanded,disabled=first_ts.refresh_identity())
 
 st.subheader('edit mode')
 
