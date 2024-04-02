@@ -112,6 +112,20 @@ if len(index_edited)==len(index_expanded):
     df_edited_with_index = df_edited.copy()
     df_edited_with_index.index = index_expanded
 
+    df_compare2=df_edited_with_index.compare(df_expanded,keep_equal=False,result_names=('new','old'))
+    
+    df_new=filter_new(df_compare2)
+    recs = df_new.to_dict(orient='index')
+
+    for row in recs:
+        row
+        recs[row]
+    
+    if st.button('upload'):
+        for row in recs:
+            row
+            recs[row]
+            first_ts.upload(row,**recs[row])
 else:
     st.subheader('append mode')
 
