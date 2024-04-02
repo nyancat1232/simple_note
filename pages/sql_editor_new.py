@@ -18,28 +18,23 @@ def filter_new(df:pd.DataFrame,col='new')->pd.DataFrame:
 
 df_read = first_ts.read()
 df_expanded = first_ts.read_expand()
-index_expanded = df_expanded.index
 df_edited = st.data_editor(df_expanded)
-index_edited = df_edited.index
-if len(index_edited)==len(index_expanded):
-    st.subheader('edit mode')
-    df_edited_with_index = df_edited.copy()
-    df_edited_with_index.index = index_expanded
 
-    df_compare2=df_edited_with_index.compare(df_expanded,keep_equal=False,result_names=('new','old'))
-    
-    df_new=filter_new(df_compare2)
-    recs = df_new.to_dict(orient='index')
+st.subheader('edit mode')
 
+df_compare2=df_edited.compare(df_expanded,keep_equal=False,result_names=('new','old'))
+
+df_new=filter_new(df_compare2)
+recs = df_new.to_dict(orient='index')
+
+for row in recs:
+    row
+    recs[row]
+
+if st.button('upload'):
     for row in recs:
         row
         recs[row]
-    
-    if st.button('upload'):
-        for row in recs:
-            row
-            recs[row]
-            first_ts.upload(row,**recs[row])
-else:
-    st.subheader('append mode')
+        first_ts.upload(row,**recs[row])
+
 
