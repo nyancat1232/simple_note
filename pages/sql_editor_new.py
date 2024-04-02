@@ -43,7 +43,15 @@ st.subheader('append mode')
 df_append = df_expanded.copy()
 df_append = df_append.loc[0:0]
 df_append = df_append.reset_index(drop=True)
+
+cols_append = df_append.columns.to_list()
+cols_has_default_val = first_ts.get_default_value().index.to_list()
+cols_default = [col for col in cols_append if col not in cols_has_default_val]
+cols_append = st.multiselect(label=f'select {first_ts.schema_name}.{first_ts.table_name}',options=cols_append,default=cols_default)
+df_append = df_append[cols_append]
+
 df_append = st.data_editor(df_append,num_rows='dynamic')
+
 appends = df_append.to_dict(orient='records')
 if st.button('append'):
     for append in appends:
