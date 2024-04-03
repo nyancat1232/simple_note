@@ -17,4 +17,4 @@ docker --host tcp://$SERVERURL:2375 image rm $APP_NAME
 docker --host tcp://$SERVERURL:2375 buildx build --tag $APP_NAME .
 docker --host tcp://$SERVERURL:2375 run --detach --publish 8044:8044 --restart always --env TZ=$MYTIMEZONE --name $CONTAINER_NAME $APP_NAME 
 
-rm -rf .streamlit/secrets.toml 
+rm -rf .streamlit
