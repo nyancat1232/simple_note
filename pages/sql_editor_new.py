@@ -16,7 +16,7 @@ def filter_new(df:pd.DataFrame,col='new')->pd.DataFrame:
     return pd.DataFrame(d)
 
 def get_custom_column_configs(ts:sqlp.TableStructure):
-    types = ts.get_types().to_dict(orient='index')
+    types = ts.get_types_expanded().to_dict(orient='index')
     types_link = {col for col in types if types[col]['domain_name'] == 'url'}
     types_img = {col for col in types if types[col]['domain_name'] == 'image_url'}
 
