@@ -67,6 +67,19 @@ cols_default = [col for col in cols_append if col not in cols_has_default_val]
 cols_append = st.multiselect(label=f'select {first_ts.schema_name}.{first_ts.table_name}',options=cols_append,default=cols_default)
 df_append = df_append[cols_append]
 
+for col in df_read.columns:
+    df_append[col] = pd.Series([None for _ in df_append.index])
+foreign_expand = st.multiselect('expand foreign column',first_ts.get_foreign_table().index.to_list(),first_ts.get_foreign_table().index.to_list())
+foreign_expand
+foreign_filter = df_read.columns.to_list()
+for col in foreign_expand:
+    orig_index = foreign_filter.index(col)
+    foreign_filter.pop(orig_index)
+    for col_expand in df_append.columns:
+        if col_expand.split('.')[0] == col:
+            foreign_filter.insert(orig_index,col_expand)
+df_append = df_append[foreign_filter]
+
 df_append = st.data_editor(df_append,num_rows='dynamic')
 
 appends = df_append.to_dict(orient='records')
