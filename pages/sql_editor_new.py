@@ -27,9 +27,14 @@ def get_custom_column_configs(ts:sqlp.TableStructure):
         column_configs[col] = st.column_config.ImageColumn(f'{col}',)
     return column_configs
 
+custom_configs = get_custom_column_configs(first_ts)
 
 df_read = first_ts.read()
 df_expanded = first_ts.read_expand()
+if st.checkbox('readonly'):
+    st.dataframe(df_expanded,column_config=custom_configs)
+    st.stop()
+
 df_edited = st.data_editor(df_expanded,disabled=first_ts.refresh_identity())
 
 st.subheader('edit mode')
