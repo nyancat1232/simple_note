@@ -5,12 +5,11 @@ import pyplus.streamlit as stp
 from pre import ex,conn
 ex()
 
-@stp.init_session('list_of_schema')
 def init_schema():
     lists=sqlp.get_table_list(conn.engine)
     return lists['table_schema'].unique().tolist()
 
-schema_list = init_schema(refresh=True)
+schema_list = init_schema()
 
 types=['bigint','double precision','text','timestamp with time zone','boolean']
 
