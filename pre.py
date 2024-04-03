@@ -10,6 +10,10 @@ if 'conn' not in st.session_state:
 
 conn = st.session_state['conn']
 
+def init_schema():
+    lists=sqlp.get_table_list(conn.engine)
+    return st.selectbox('select a schema',lists['table_schema'].unique().tolist())
+
 def table_selector(label:str):
     '''
     Show a selector for selecting schema and table.

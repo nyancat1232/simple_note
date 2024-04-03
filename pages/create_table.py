@@ -2,19 +2,12 @@ import streamlit as st
 import pyplus.sql as sqlp
 import pyplus.streamlit as stp
 
-from pre import ex,conn
+from pre import ex,conn,init_schema
 ex()
-
-def init_schema():
-    lists=sqlp.get_table_list(conn.engine)
-    return lists['table_schema'].unique().tolist()
-
-schema_list = init_schema()
 
 types=['bigint','double precision','text','timestamp with time zone','boolean']
 
-schema_list
-schema_name = st.text_input('schema name')
+schema_name = init_schema()
 table_name = st.text_input('table name')
 
 
