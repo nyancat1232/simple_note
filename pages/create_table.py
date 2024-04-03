@@ -25,6 +25,6 @@ result = st.data_editor(cols,num_rows='dynamic',column_config=sttype)
 result
 
 if st.button('create table'):
-    ts = sqlp.TableStructure(schema_name=schema_name,table_name=table_name,engine=conn.engine)
-    res = ts.create_table(**result)
+    ss = sqlp.SchemaStructure(schema_name=schema_name,engine=conn.engine)
+    res = ss.create_table(table_name,**result)
     res
