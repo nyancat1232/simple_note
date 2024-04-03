@@ -15,6 +15,18 @@ def filter_new(df:pd.DataFrame,col='new')->pd.DataFrame:
     d={upper_col[0]:df[upper_col[0],col] for upper_col in df.columns}
     return pd.DataFrame(d)
 
+def get_custom_column_configs(ts:sqlp.TableStructure):
+    types = ts.get_types().to_dict(orient='index')
+    types_link = {col for col in types if types[col]['domain_name'] == 'url'}
+    types_img = {col for col in types if types[col]['domain_name'] == 'image_url'}
+
+    column_configs = dict()
+    for col in types_link:
+        column_configs[col] = st.column_config.LinkColumn(f'{col}')
+    for col in types_img:
+        column_configs[col] = st.column_config.ImageColumn(f'{col}',)
+    return column_configs
+
 
 df_read = first_ts.read()
 df_expanded = first_ts.read_expand()
