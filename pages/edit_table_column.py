@@ -16,7 +16,7 @@ with st.sidebar:
 ts = sqlp.TableStructure(schema_name=schema,table_name=table,
                          engine=conn.engine)
 
-read_result = ts.expand_read()
+read_result = ts.read_expand()
 read_result
 
 types=['bigint','double precision','text','timestamp with time zone','boolean']
