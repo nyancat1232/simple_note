@@ -76,7 +76,9 @@ def extract_foreign_column(ts:sqlp.TableStructure)->tuple[set,set]:
     col_foreign_r = col_r-col_non_foreign
     return col_foreign_r,col_foreign_ex
 
-foreign_expand = st.multiselect('expand foreign column',first_ts.get_foreign_table().index.to_list(),first_ts.get_foreign_table().index.to_list())
+col_foreign,col_foreign_expanded = extract_foreign_column(first_ts)
+
+foreign_expand = st.multiselect('expand foreign column',col_foreign,col_foreign)
 
 foreign_filter = df_read.columns.to_list()
 for col in foreign_expand:
