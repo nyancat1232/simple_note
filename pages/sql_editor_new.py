@@ -77,29 +77,30 @@ def extract_foreign_column(ts:sqlp.TableStructure)->tuple[set,set]:
     return col_foreign_r,col_foreign_ex
 
 col_foreign,col_foreign_expanded = extract_foreign_column(first_ts)
+if len(col_foreign)>0:
+    foreign_expand = st.multiselect('expand foreign column',col_foreign,col_foreign)
 
-foreign_expand = st.multiselect('expand foreign column',col_foreign,col_foreign)
+    foreign_filter = df_read.columns.to_list()
+    for col in foreign_expand:
+        orig_index = foreign_filter.index(col)
+        foreign_filter.pop(orig_index)
+        for col_expand in df_expanded.columns:
+            if col_expand.split('.')[0] == col:
+                foreign_filter.insert(orig_index,col_expand)
+    df_append = df_append[foreign_filter]
 
-foreign_filter = df_read.columns.to_list()
-for col in foreign_expand:
-    orig_index = foreign_filter.index(col)
-    foreign_filter.pop(orig_index)
-    for col_expand in df_expanded.columns:
-        if col_expand.split('.')[0] == col:
-            foreign_filter.insert(orig_index,col_expand)
-df_append = df_append[foreign_filter]
-
-col_foreign_not_expanded = col_foreign-set(foreign_expand)
-df_foreign_not = first_ts.get_foreign_table()
-df_foreign_not = df_foreign_not.loc[list(col_foreign_not_expanded)]
-foreign_not = df_foreign_not.to_dict(orient='index')
-tab_or_col=stp.TabsPlus(connection='column',tabs=foreign_not)
-for col in foreign_not:
-    with tab_or_col[col]:
-        ts_sub = sqlp.TableStructure(foreign_not[col]['upper_schema'],foreign_not[col]['upper_table'],conn.engine)
-        df_display=ts_sub.read_expand()
-        conf = get_custom_column_configs(ts_sub)
-        st.dataframe(df_display,column_config=conf)
+    col_foreign_not_expanded = col_foreign-set(foreign_expand)
+    if len(col_foreign_not_expanded)>0:
+        df_foreign_not = first_ts.get_foreign_table()
+        df_foreign_not = df_foreign_not.loc[list(col_foreign_not_expanded)]
+        foreign_not = df_foreign_not.to_dict(orient='index')
+        tab_or_col=stp.TabsPlus(connection='column',tabs=foreign_not)
+        for col in foreign_not:
+            with tab_or_col[col]:
+                ts_sub = sqlp.TableStructure(foreign_not[col]['upper_schema'],foreign_not[col]['upper_table'],conn.engine)
+                df_display=ts_sub.read_expand()
+                conf = get_custom_column_configs(ts_sub)
+                st.dataframe(df_display,column_config=conf)
 
 df_append = st.data_editor(df_append,num_rows='dynamic')
 
