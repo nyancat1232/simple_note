@@ -63,12 +63,6 @@ def df_empty_records(df:pd.DataFrame)->pd.DataFrame:
     return df_append.reset_index(drop=True)
 df_append = df_empty_records(df_expanded)
 
-cols_append = df_expanded.columns.to_list()
-cols_has_default_val = first_ts.get_default_value().index.to_list()
-cols_default = [col for col in cols_append if col not in cols_has_default_val]
-cols_append = st.multiselect(label=f'select {first_ts.schema_name}.{first_ts.table_name}',options=cols_append,default=cols_default)
-df_append = df_append[cols_append]
-
 for col in df_read.columns:
     df_append[col] = pd.Series([None for _ in df_append.index])
 foreign_expand = st.multiselect('expand foreign column',first_ts.get_foreign_table().index.to_list(),first_ts.get_foreign_table().index.to_list())
