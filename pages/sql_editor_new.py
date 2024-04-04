@@ -65,6 +65,17 @@ df_append = df_empty_records(df_expanded)
 
 for col in df_read.columns:
     df_append[col] = pd.Series([None for _ in df_append.index])
+
+def extract_foreign_column(ts:sqlp.TableStructure)->tuple[set,set]:
+    df_read = ts.read()
+    df_expanded = ts.read_expand()
+    col_ex = set(df_expanded.columns.to_list())
+    col_r = set(df_read.columns.to_list())
+    col_non_foreign = col_ex&col_r
+    col_foreign_ex = col_ex-col_non_foreign
+    col_foreign_r = col_r-col_non_foreign
+    return col_foreign_r,col_foreign_ex
+
 foreign_expand = st.multiselect('expand foreign column',first_ts.get_foreign_table().index.to_list(),first_ts.get_foreign_table().index.to_list())
 
 foreign_filter = df_read.columns.to_list()
