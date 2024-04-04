@@ -97,6 +97,7 @@ if len(col_foreign)>0:
         tab_or_col=stp.TabsPlus(connection='column',tabs=foreign_not)
         for col in foreign_not:
             with tab_or_col[col]:
+                col
                 ts_sub = sqlp.TableStructure(foreign_not[col]['upper_schema'],foreign_not[col]['upper_table'],conn.engine)
                 df_display=ts_sub.read_expand()
                 conf = get_custom_column_configs(ts_sub)
