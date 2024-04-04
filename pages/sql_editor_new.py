@@ -80,6 +80,8 @@ col_foreign,col_foreign_expanded = extract_foreign_column(first_ts)
 
 foreign_expand = st.multiselect('expand foreign column',col_foreign,col_foreign)
 
+col_foreign_not_expanded = col_foreign-set(foreign_expand)
+
 foreign_filter = df_read.columns.to_list()
 for col in foreign_expand:
     orig_index = foreign_filter.index(col)
