@@ -70,12 +70,12 @@ df_append = df_append[cols_append]
 for col in df_read.columns:
     df_append[col] = pd.Series([None for _ in df_append.index])
 foreign_expand = st.multiselect('expand foreign column',first_ts.get_foreign_table().index.to_list(),first_ts.get_foreign_table().index.to_list())
-foreign_expand
+
 foreign_filter = df_read.columns.to_list()
 for col in foreign_expand:
     orig_index = foreign_filter.index(col)
     foreign_filter.pop(orig_index)
-    for col_expand in df_append.columns:
+    for col_expand in df_expanded.columns:
         if col_expand.split('.')[0] == col:
             foreign_filter.insert(orig_index,col_expand)
 df_append = df_append[foreign_filter]
