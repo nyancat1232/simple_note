@@ -63,7 +63,7 @@ def df_empty_records(df:pd.DataFrame)->pd.DataFrame:
     return df_append.reset_index(drop=True)
 df_append = df_empty_records(df_expanded)
 
-cols_append = df_append.columns.to_list()
+cols_append = df_expanded.columns.to_list()
 cols_has_default_val = first_ts.get_default_value().index.to_list()
 cols_default = [col for col in cols_append if col not in cols_has_default_val]
 cols_append = st.multiselect(label=f'select {first_ts.schema_name}.{first_ts.table_name}',options=cols_append,default=cols_default)
