@@ -19,7 +19,10 @@ with st.sidebar:
 for key in dfs:
     schema,table = table_selector(label='input')
 
-    df_from = dfs[key].reset_index()
+    df_from = dfs[key]
+    if st.checkbox('Reverse index of the file'):
+        df_from = df_from[::-1]
+    df_from = df_from.reset_index()
 
     ts_to = sqlp.TableStructure(schema_name=schema,table_name=table,engine=conn.engine)
     df_to = ts_to.read().reset_index()
