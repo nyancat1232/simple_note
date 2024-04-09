@@ -81,7 +81,7 @@ for col in df_read.columns:
 col_foreign,col_foreign_expanded = extract_foreign_column(first_ts)
 
 if len(col_foreign)>0:
-    foreign_expand = st.multiselect('expand foreign column',col_foreign,col_foreign)
+    foreign_expand = st.multiselect('expand foreign column',col_foreign)
 
     foreign_filter = df_read.columns.to_list()
     for col in foreign_expand:
