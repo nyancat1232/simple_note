@@ -45,6 +45,7 @@ def extract_foreign_column(ts:sqlp.TableStructure)->tuple[set,set]:
     col_foreign_r = col_r-col_non_foreign
     return col_foreign_r,col_foreign_ex
 
+custom_configs_rw = bp.select_yielder(iter_custom_column_configs(first_ts),'edit')
 custom_configs_ro = bp.select_yielder(iter_custom_column_configs(first_ts),'readonly')
 df_read = first_ts.read()
 df_expanded = first_ts.read_expand()
@@ -52,7 +53,7 @@ if st.checkbox('readonly'):
     st.dataframe(df_expanded,column_config=custom_configs_ro)
     st.stop()
 
-df_edited = st.data_editor(df_expanded,disabled=first_ts.refresh_identity())
+df_edited = st.data_editor(df_expanded,disabled=first_ts.refresh_identity(),column_config=custom_configs_rw)
 
 st.subheader('edit mode')
 
@@ -108,7 +109,7 @@ if len(col_foreign)>0:
                 conf = bp.select_yielder(iter_custom_column_configs(ts_sub),'readonly')
                 st.dataframe(df_display,column_config=conf)
 
-df_append = st.data_editor(df_append,num_rows='dynamic')
+df_append = st.data_editor(df_append,num_rows='dynamic',column_config=custom_configs_rw)
 
 appends = df_append.to_dict(orient='records')
 if st.button('append'):
