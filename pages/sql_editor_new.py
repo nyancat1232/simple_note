@@ -9,6 +9,7 @@ import pyplus.builtin as bp
 
 with st.sidebar:
     schema,table=table_selector('select table')
+    current_tz = st.text_input('current timezone',placeholder='like UTC',value='UTC')
 
 first_ts = sqlp.TableStructure(schema,table,conn.engine)
 
@@ -23,7 +24,7 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
 
     types_dtwithtimezone = {col for col in types if types[col]['data_type'] == 'timestamp with time zone'}
     for col in types_dtwithtimezone:
-        column_configs[col] = st.column_config.DatetimeColumn(f'{col}')
+        column_configs[col] = st.column_config.DatetimeColumn(f'{col}',timezone=current_tz)
     yield 'edit', column_configs.copy()
     types_link = {col for col in types if types[col]['domain_name'] == 'url'}
     types_img = {col for col in types if types[col]['domain_name'] == 'image_url'}
