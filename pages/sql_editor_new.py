@@ -16,7 +16,7 @@ def filter_new(df:pd.DataFrame,col='new')->pd.DataFrame:
     d={upper_col[0]:df[upper_col[0],col] for upper_col in df.columns}
     return pd.DataFrame(d)
 
-def get_custom_column_configs(ts:sqlp.TableStructure):
+def iter_custom_column_configs(ts:sqlp.TableStructure):
     column_configs = dict()
 
     types = ts.get_types_expanded().to_dict(orient='index')
@@ -73,7 +73,7 @@ def extract_foreign_column(ts:sqlp.TableStructure)->tuple[set,set]:
     col_foreign_r = col_r-col_non_foreign
     return col_foreign_r,col_foreign_ex
 
-custom_configs_ro = select_yielder(get_custom_column_configs(first_ts),'readonly')
+custom_configs_ro = select_yielder(iter_custom_column_configs(first_ts),'readonly')
 df_read = first_ts.read()
 df_expanded = first_ts.read_expand()
 if st.checkbox('readonly'):
@@ -133,7 +133,7 @@ if len(col_foreign)>0:
                 col
                 ts_sub = sqlp.TableStructure(foreign_not[col]['upper_schema'],foreign_not[col]['upper_table'],conn.engine)
                 df_display=ts_sub.read_expand()
-                conf = select_yielder(get_custom_column_configs(ts_sub),'readonly')
+                conf = select_yielder(iter_custom_column_configs(ts_sub),'readonly')
                 st.dataframe(df_display,column_config=conf)
 
 df_append = st.data_editor(df_append,num_rows='dynamic')
