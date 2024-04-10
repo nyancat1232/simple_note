@@ -5,7 +5,7 @@ import pyplus.sql as sqlp
 import pyplus.streamlit as stp
 import pandas as pd
 import pyplus.pandas as pdp
-from typing import Literal,Generator
+import pyplus.builtin as bp
 
 with st.sidebar:
     schema,table=table_selector('select table')
@@ -34,35 +34,6 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
     
     yield 'readonly', column_configs.copy()
 
-def select_yielder(gen:Generator,msg:str):
-    '''
-    catch a return of generator. yield type must be like (msg:str,value:Any).
-    
-    Parameters
-    ----------
-    gen : Generator
-        generator that yields (msg,value).
-    
-    Returns
-    --------
-    Any
-        a value of yield.
-    
-    Examples
-    --------
-    >>> def test_yield(first_msg):
-    >>>     yield f'{first_msg}: apple', 3
-    >>>     yield f'{first_msg}: banaba', 1
-    >>>     yield f'{first_msg}: cherry', 2
-    >>> 
-    >>> aa = select_yielder(test_yield('Rick'),'Rick: banaba')
-    >>> aa
-    1
-    '''
-    for current_msg,ret in gen:
-        if current_msg == msg:
-            return ret
-
 def extract_foreign_column(ts:sqlp.TableStructure)->tuple[set,set]:
     df_read = ts.read()
     df_expanded = ts.read_expand(remove_original_id=True)
@@ -73,7 +44,7 @@ def extract_foreign_column(ts:sqlp.TableStructure)->tuple[set,set]:
     col_foreign_r = col_r-col_non_foreign
     return col_foreign_r,col_foreign_ex
 
-custom_configs_ro = select_yielder(iter_custom_column_configs(first_ts),'readonly')
+custom_configs_ro = bp.select_yielder(iter_custom_column_configs(first_ts),'readonly')
 df_read = first_ts.read()
 df_expanded = first_ts.read_expand()
 if st.checkbox('readonly'):
@@ -133,7 +104,7 @@ if len(col_foreign)>0:
                 col
                 ts_sub = sqlp.TableStructure(foreign_not[col]['upper_schema'],foreign_not[col]['upper_table'],conn.engine)
                 df_display=ts_sub.read_expand()
-                conf = select_yielder(iter_custom_column_configs(ts_sub),'readonly')
+                conf = bp.select_yielder(iter_custom_column_configs(ts_sub),'readonly')
                 st.dataframe(df_display,column_config=conf)
 
 df_append = st.data_editor(df_append,num_rows='dynamic')
