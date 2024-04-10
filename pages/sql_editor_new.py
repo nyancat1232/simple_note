@@ -28,6 +28,21 @@ def get_custom_column_configs(ts:sqlp.TableStructure):
     return column_configs
 
 def df_empty_records(df:pd.DataFrame)->pd.DataFrame:
+    '''
+    Empty values in dataframe.
+    
+    Parameters
+    ----------
+    df : pd.DataFrame
+        A dataframe for referencing dtypes.
+    
+    Examples
+    --------
+    >>> d = {'col1': [1, 2], 'col2': [3, 4]}
+    >>> df_append = df_empty_records(df_expanded)
+    ???
+    '''
+    
     df_ret = df.copy()
     df_ret = df_ret.iloc[0:1]
     df_ret.iloc[-1] = None
