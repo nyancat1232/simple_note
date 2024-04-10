@@ -5,7 +5,7 @@ import pyplus.sql as sqlp
 import pyplus.streamlit as stp
 import pandas as pd
 import pyplus.pandas as pdp
-from typing import Literal
+from typing import Literal,Generator
 
 with st.sidebar:
     schema,table=table_selector('select table')
