@@ -4,6 +4,7 @@ import streamlit as st
 import pyplus.sql as sqlp
 import pyplus.streamlit as stp
 import pandas as pd
+import pyplus.pandas as pdp
 from typing import Literal
 
 with st.sidebar:
@@ -26,27 +27,6 @@ def get_custom_column_configs(ts:sqlp.TableStructure):
     for col in types_img:
         column_configs[col] = st.column_config.ImageColumn(f'{col}',)
     return column_configs
-
-def df_empty_records(df:pd.DataFrame)->pd.DataFrame:
-    '''
-    Empty values in dataframe.
-    
-    Parameters
-    ----------
-    df : pd.DataFrame
-        A dataframe for referencing dtypes.
-    
-    Examples
-    --------
-    >>> d = {'col1': [1, 2], 'col2': [3, 4]}
-    >>> df_append = df_empty_records(df_expanded)
-    ???
-    '''
-    
-    df_ret = df.copy()
-    df_ret = df_ret.iloc[0:1]
-    df_ret.iloc[-1] = None
-    return df_ret
 
 def extract_foreign_column(ts:sqlp.TableStructure)->tuple[set,set]:
     df_read = ts.read()
@@ -88,7 +68,7 @@ if st.button('upload'):
 
 st.subheader('append mode')
 
-df_append = df_empty_records(df_expanded)
+df_append = pdp.empty_records(df_expanded)
 df_append = df_append.reset_index(drop=True)
 #for col in df_read.columns:
 #    df_append[col] = pd.Series([None for _ in df_append.index])
