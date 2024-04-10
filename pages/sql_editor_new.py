@@ -18,17 +18,17 @@ def filter_new(df:pd.DataFrame,col='new')->pd.DataFrame:
 
 def get_custom_column_configs(ts:sqlp.TableStructure):
     types = ts.get_types_expanded().to_dict(orient='index')
+    types_dtwithtimezone = {col for col in types if types[col]['data_type'] == 'timestamp with time zone'}
     types_link = {col for col in types if types[col]['domain_name'] == 'url'}
     types_img = {col for col in types if types[col]['domain_name'] == 'image_url'}
-    types_dtwithtimezone = {col for col in types if types[col]['data_type'] == 'timestamp with time zone'}
 
     column_configs = dict()
+    for col in types_dtwithtimezone:
+        column_configs[col] = st.column_config.DatetimeColumn(f'{col}')
     for col in types_link:
         column_configs[col] = st.column_config.LinkColumn(f'{col}')
     for col in types_img:
         column_configs[col] = st.column_config.ImageColumn(f'{col}',)
-    for col in types_dtwithtimezone:
-        column_configs[col] = st.column_config.DatetimeColumn(f'{col}')
     return column_configs
 
 def extract_foreign_column(ts:sqlp.TableStructure)->tuple[set,set]:
@@ -41,12 +41,12 @@ def extract_foreign_column(ts:sqlp.TableStructure)->tuple[set,set]:
     col_foreign_r = col_r-col_non_foreign
     return col_foreign_r,col_foreign_ex
 
-custom_configs = get_custom_column_configs(first_ts)
+custom_configs_ro = get_custom_column_configs(first_ts)
 
 df_read = first_ts.read()
 df_expanded = first_ts.read_expand()
 if st.checkbox('readonly'):
-    st.dataframe(df_expanded,column_config=custom_configs)
+    st.dataframe(df_expanded,column_config=custom_configs_ro)
     st.stop()
 
 df_edited = st.data_editor(df_expanded,disabled=first_ts.refresh_identity())
@@ -102,7 +102,7 @@ if len(col_foreign)>0:
                 col
                 ts_sub = sqlp.TableStructure(foreign_not[col]['upper_schema'],foreign_not[col]['upper_table'],conn.engine)
                 df_display=ts_sub.read_expand()
-                conf = get_custom_column_configs(ts_sub)
+                conf = get_custom_column_configs_readonly(ts_sub)
                 st.dataframe(df_display,column_config=conf)
 
 df_append = st.data_editor(df_append,num_rows='dynamic')
