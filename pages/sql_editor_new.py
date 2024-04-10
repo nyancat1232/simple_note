@@ -29,7 +29,8 @@ def get_custom_column_configs(ts:sqlp.TableStructure):
 
 def df_empty_records(df:pd.DataFrame)->pd.DataFrame:
     df_append = df.copy()
-    df_append = df_append.loc[0:0]
+    df_append = df_append.iloc[0:1]
+    df_append.iloc[-1] = None
     return df_append.reset_index(drop=True)
 
 def extract_foreign_column(ts:sqlp.TableStructure)->tuple[set,set]:
@@ -73,9 +74,8 @@ if st.button('upload'):
 st.subheader('append mode')
 
 df_append = df_empty_records(df_expanded)
-
-for col in df_read.columns:
-    df_append[col] = pd.Series([None for _ in df_append.index])
+#for col in df_read.columns:
+#    df_append[col] = pd.Series([None for _ in df_append.index])
 
 
 col_foreign,col_foreign_expanded = extract_foreign_column(first_ts)
