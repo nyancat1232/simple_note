@@ -17,12 +17,13 @@ def filter_new(df:pd.DataFrame,col='new')->pd.DataFrame:
     return pd.DataFrame(d)
 
 def get_custom_column_configs(ts:sqlp.TableStructure):
+    column_configs = dict()
+    
     types = ts.get_types_expanded().to_dict(orient='index')
     types_dtwithtimezone = {col for col in types if types[col]['data_type'] == 'timestamp with time zone'}
     types_link = {col for col in types if types[col]['domain_name'] == 'url'}
     types_img = {col for col in types if types[col]['domain_name'] == 'image_url'}
 
-    column_configs = dict()
     for col in types_dtwithtimezone:
         column_configs[col] = st.column_config.DatetimeColumn(f'{col}')
     for col in types_link:
