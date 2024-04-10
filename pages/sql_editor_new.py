@@ -18,18 +18,20 @@ def filter_new(df:pd.DataFrame,col='new')->pd.DataFrame:
 
 def get_custom_column_configs(ts:sqlp.TableStructure):
     column_configs = dict()
-    
-    types = ts.get_types_expanded().to_dict(orient='index')
-    types_dtwithtimezone = {col for col in types if types[col]['data_type'] == 'timestamp with time zone'}
-    types_link = {col for col in types if types[col]['domain_name'] == 'url'}
-    types_img = {col for col in types if types[col]['domain_name'] == 'image_url'}
 
+    types = ts.get_types_expanded().to_dict(orient='index')
+
+    types_dtwithtimezone = {col for col in types if types[col]['data_type'] == 'timestamp with time zone'}
     for col in types_dtwithtimezone:
         column_configs[col] = st.column_config.DatetimeColumn(f'{col}')
+    
+    types_link = {col for col in types if types[col]['domain_name'] == 'url'}
+    types_img = {col for col in types if types[col]['domain_name'] == 'image_url'}
     for col in types_link:
         column_configs[col] = st.column_config.LinkColumn(f'{col}')
     for col in types_img:
         column_configs[col] = st.column_config.ImageColumn(f'{col}',)
+    
     return column_configs
 
 def extract_foreign_column(ts:sqlp.TableStructure)->tuple[set,set]:
