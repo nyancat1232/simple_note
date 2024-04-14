@@ -6,4 +6,5 @@ A database of Postgres.
 
 ## Roadmap
 - Multiple timers and stopwatches
-- Customization of clock such as hours from wake up.
+- Customization of the clock such as hours from wake up.
+- Customization of the dashboard.
