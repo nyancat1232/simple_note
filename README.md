@@ -4,4 +4,6 @@ Table-based note taking app that is based on Postgresql. You can easily create a
 ## Requirements
 A database of Postgres.
 
-
+## Roadmap
+- Multiple timers and stopwatches
+- Customization of clock such as hours from wake up.
