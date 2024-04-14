@@ -13,10 +13,10 @@ table_name = st.text_input('table name')
 
 cols = {'':None}
 sttype = {'value':st.column_config.SelectboxColumn('test',options=types)}
-result = st.data_editor(cols,num_rows='dynamic',column_config=sttype)
-result
-
+result_type = st.data_editor(cols,num_rows='dynamic',column_config=sttype)
+result_type
+{key:"" for key in result_type}
 if st.button('create table'):
     ss = sqlp.SchemaStructure(schema_name=schema_name,engine=conn.engine)
-    res = ss.create_table(table_name,**result)
-    res
+    res = ss.create_table(table_name,**result_type)
+    res.upload_append(**{key:"" for key in result_type})
