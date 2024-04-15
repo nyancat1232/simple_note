@@ -8,3 +8,4 @@ A database of Postgres.
 - Multiple timers and stopwatches
 - Customization of the clock such as hours from wake up.
 - Customization of the dashboard.
+- Convert column types
