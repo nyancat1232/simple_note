@@ -50,6 +50,9 @@ def table_selector(label:str):
     '''
     df_list=sqlp.get_table_list(conn.engine)
 
-    schema = st.selectbox(label=f'{label} of schema',options=df_list['table_schema'].unique())
-    table = st.selectbox(label=f"{label} of table",options=df_list['table_name'][df_list['table_schema']==schema])
+    np_schemas=df_list['table_schema'].unique()
+    schema = st.selectbox(label=f'{label} of schema',options=np_schemas)
+
+    np_tables=df_list['table_name'][df_list['table_schema']==schema]
+    table = st.selectbox(label=f"{label} of table",options=np_tables)
     return schema, table
