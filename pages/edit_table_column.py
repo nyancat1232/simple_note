@@ -2,7 +2,7 @@ import streamlit as st
 
 import pyplus.streamlit as stp
 
-from pre import ex,conn,table_selector
+from pre import ex,conn,table_selector,types
 ex()
 
 import pyplus.sql as sqlp
@@ -18,8 +18,6 @@ ts = sqlp.TableStructure(schema_name=schema,table_name=table,
 
 read_result = ts.read_expand()
 read_result
-
-types=['bigint','double precision','text','timestamp with time zone','boolean']
 
 cols = {'':None}
 sttype = {'value':st.column_config.SelectboxColumn('test',options=types)}

@@ -2,10 +2,8 @@ import streamlit as st
 import pyplus.sql as sqlp
 import pyplus.streamlit as stp
 
-from pre import ex,conn,init_schema
+from pre import ex,conn,init_schema,types
 ex()
-
-types=['bigint','double precision','text','timestamp with time zone','boolean','url','image_url']
 
 schema_name = init_schema()
 table_name = st.text_input('table name')
