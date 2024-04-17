@@ -1,9 +1,10 @@
 import streamlit as st
+from pre import ex,conn,init_schema,types
+ex()
+
 import pyplus.sql as sqlp
 import pyplus.streamlit as stp
 
-from pre import ex,conn,init_schema,types
-ex()
 
 schema_name = init_schema()
 table_name = st.text_input('table name')

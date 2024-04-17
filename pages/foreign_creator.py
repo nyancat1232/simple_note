@@ -1,11 +1,12 @@
 import streamlit as st
+from pre import ex,table_selector
+from pre import conn as st_connff
+ex()
+
 import pandas as pd
 import pyplus.streamlit as stp
 from pyplus.sql import TableStructure
 
-from pre import ex,table_selector
-from pre import conn as st_connff
-ex()
 
 def create_new_foreign(ts:TableStructure) -> pd.DataFrame:
     df = ts.read()

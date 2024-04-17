@@ -1,11 +1,12 @@
 import streamlit as st
+from pre import ex
+ex()
+
 import json 
 from typing import List
 import pyplus.streamlit as stp
 from collections import Counter
 
-from pre import ex
-ex()
 
 fe = stp.FileExecutor()
 fe.append_behavior('[A-Za-z0-9]*.json',json.load)

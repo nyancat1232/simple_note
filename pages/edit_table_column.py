@@ -1,9 +1,9 @@
 import streamlit as st
+from pre import ex,conn,table_selector,types
+ex()
 
 import pyplus.streamlit as stp
 
-from pre import ex,conn,table_selector,types
-ex()
 
 import pyplus.sql as sqlp
 

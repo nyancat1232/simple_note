@@ -1,11 +1,11 @@
 import streamlit as st
+from pre import ex,conn,table_selector
+ex()
+
 import pandas as pd
 import pyplus.streamlit as stp
 import pyplus.sql as sqlp
 from datetime import datetime
-
-from pre import ex,conn,table_selector
-ex()
 
 
 with st.sidebar:
