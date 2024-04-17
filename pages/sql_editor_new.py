@@ -27,7 +27,7 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
     for col in df_foreign.index.tolist():
         ts_sub = sqlp.TableStructure(df_foreign.loc[col]['upper_schema'],df_foreign.loc[col]['upper_table'],conn.engine)
         ids_foreign=ts_sub.read().index.to_list()
-        column_configs[col] = st.column_config.SelectboxColumn(f'{col}',options=ids_foreign)
+        column_configs[col] = st.column_config.SelectboxColumn(f'{col}',options=ids_foreign,width='small')
 
     for col in types:
         match types[col]['data_type']:
