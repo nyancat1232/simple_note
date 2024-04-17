@@ -23,6 +23,11 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
     column_configs = dict()
 
     types = ts.get_types_expanded().to_dict(orient='index')
+    df_foreign = ts.get_foreign_table()
+    for col in df_foreign.index.tolist():
+        ts_sub = sqlp.TableStructure(df_foreign.loc[col]['upper_schema'],df_foreign.loc[col]['upper_table'],conn.engine)
+        ids_foreign=ts_sub.read().index.to_list()
+        column_configs[col] = st.column_config.SelectboxColumn(f'{col}',options=ids_foreign)
 
     for col in types:
         match types[col]['data_type']:
@@ -111,7 +116,7 @@ if len(col_foreign)>0:
             ts_sub = sqlp.TableStructure(foreign_not[col]['upper_schema'],foreign_not[col]['upper_table'],conn.engine)
             df_display=ts_sub.read_expand()
             conf = bp.select_yielder(iter_custom_column_configs(ts_sub),'readonly')
-            custom_configs_rw_foreign[col] = st.column_config.SelectboxColumn(f'{col}',options=df_display.index.to_list())
+            
             #display
             with tab_or_col[col]:
                 col
