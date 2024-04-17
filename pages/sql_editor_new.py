@@ -111,13 +111,13 @@ if len(col_foreign)>0:
             ts_sub = sqlp.TableStructure(foreign_not[col]['upper_schema'],foreign_not[col]['upper_table'],conn.engine)
             df_display=ts_sub.read_expand()
             conf = bp.select_yielder(iter_custom_column_configs(ts_sub),'readonly')
-
+            custom_configs_rw_foreign[col] = st.column_config.SelectboxColumn(f'{col}',options=df_display.index.to_list())
             #display
             with tab_or_col[col]:
                 col
                 st.dataframe(df_display,column_config=conf)
 
-df_append = st.data_editor(df_append,num_rows='dynamic',column_config=custom_configs_rw)
+df_append = st.data_editor(df_append,num_rows='dynamic',column_config={**custom_configs_rw,**custom_configs_rw_foreign})
 
 appends = df_append.to_dict(orient='records')
 if st.button('append'):
