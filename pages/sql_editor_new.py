@@ -50,8 +50,8 @@ def extract_foreign_column(ts:sqlp.TableStructure)->tuple[set,set]:
     col_foreign_r = col_r-col_non_foreign
     return col_foreign_r,col_foreign_ex
 
-custom_configs_rw = bp.select_yielder(iter_custom_column_configs(first_ts),'edit')
-custom_configs_ro = bp.select_yielder(iter_custom_column_configs(first_ts),'readonly')
+custom_configs_rw:dict = bp.select_yielder(iter_custom_column_configs(first_ts),'edit')
+custom_configs_ro:dict = bp.select_yielder(iter_custom_column_configs(first_ts),'readonly')
 df_read = first_ts.read()
 df_expanded = first_ts.read_expand()
 if st.checkbox('readonly'):
