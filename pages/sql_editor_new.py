@@ -24,17 +24,18 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
 
     types = ts.get_types_expanded().to_dict(orient='index')
 
-    types_dtwithtimezone = {col for col in types if types[col]['data_type'] == 'timestamp with time zone'}
-    for col in types_dtwithtimezone:
-        column_configs[col] = st.column_config.DatetimeColumn(f'{col}',timezone=current_tz)
+    for col in types:
+        match types[col]['data_type']:
+            case 'timestamp with time zone':
+                column_configs[col] = st.column_config.DatetimeColumn(f'{col}',timezone=current_tz)
     yield column_configs.copy(),'edit'
 
-    types_link = {col for col in types if types[col]['domain_name'] == 'url'}
-    types_img = {col for col in types if types[col]['domain_name'] == 'image_url'}
-    for col in types_link:
-        column_configs[col] = st.column_config.LinkColumn(f'{col}')
-    for col in types_img:
-        column_configs[col] = st.column_config.ImageColumn(f'{col}',)
+    for col in types:
+        match types[col]['domain_name']:
+            case 'url':
+                column_configs[col]=st.column_config.LinkColumn(f'{col}')
+            case 'image_url':
+                column_configs[col] = st.column_config.ImageColumn(f'{col}',)
     yield column_configs.copy(), 'readonly' 
 
 def extract_foreign_column(ts:sqlp.TableStructure)->tuple[set,set]:
