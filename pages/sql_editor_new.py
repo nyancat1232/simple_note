@@ -84,9 +84,6 @@ st.subheader('append mode')
 
 df_append = pdp.empty_records(df_expanded)
 df_append = df_append.reset_index(drop=True)
-#for col in df_read.columns:
-#    df_append[col] = pd.Series([None for _ in df_append.index])
-
 
 col_foreign,col_foreign_expanded = extract_foreign_column(first_ts)
 
