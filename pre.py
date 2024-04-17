@@ -10,6 +10,7 @@ if 'conn' not in st.session_state:
 
 conn = st.session_state['conn']
 types=['bigint','double precision','text','timestamp with time zone','boolean','url','image_url']
+title = 'Simple note'
 
 def init_schema():
     lists=sqlp.get_table_list(conn.engine)

@@ -1,6 +1,8 @@
-from pre import conn,ex,table_selector
-ex()
 import streamlit as st
+from pre import conn,ex,table_selector,title
+ex()
+st.set_page_config(page_title=title,page_icon='📒',layout='wide')
+
 import pyplus.sql as sqlp
 import pyplus.streamlit as stp
 import pandas as pd
