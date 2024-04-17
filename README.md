@@ -9,3 +9,4 @@ A database of Postgres.
 - Customization of the clock such as hours from wake up.
 - Customization of the dashboard.
 - Convert column types
+- Appending a foreign column
