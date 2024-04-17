@@ -28,6 +28,8 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
         match types[col]['data_type']:
             case 'timestamp with time zone':
                 column_configs[col] = st.column_config.DatetimeColumn(f'{col}',timezone=current_tz)
+            case 'date':
+                column_configs[col] = st.column_config.DateColumn(f'{col}')
     yield column_configs.copy(),'edit'
 
     for col in types:
