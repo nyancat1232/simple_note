@@ -35,12 +35,18 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
                 column_configs[col] = st.column_config.DatetimeColumn(f'{col}',timezone=current_tz)
             case 'date':
                 column_configs[col] = st.column_config.DateColumn(f'{col}')
-    yield column_configs.copy(),'edit'
 
     for col in types:
         match types[col]['domain_name']:
             case 'url':
-                column_configs[col]=st.column_config.LinkColumn(f'{col}')
+                column_configs[col] = st.column_config.LinkColumn(f'{col}')
+            case 'image_url':
+                column_configs[col] = st.column_config.LinkColumn(f'{col}')
+
+    yield column_configs.copy(),'edit'
+
+    for col in types:
+        match types[col]['domain_name']:
             case 'image_url':
                 column_configs[col] = st.column_config.ImageColumn(f'{col}',)
     yield column_configs.copy(), 'readonly' 
