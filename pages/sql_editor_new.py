@@ -111,6 +111,8 @@ if len(col_foreign)>0:
             ts_sub = sqlp.TableStructure(foreign_not[col]['upper_schema'],foreign_not[col]['upper_table'],conn.engine)
             df_display=ts_sub.read_expand()
             conf = bp.select_yielder(iter_custom_column_configs(ts_sub),'readonly')
+
+            #display
             with tab_or_col[col]:
                 col
                 st.dataframe(df_display,column_config=conf)
