@@ -87,6 +87,8 @@ df_append = df_append.reset_index(drop=True)
 
 col_foreign,col_foreign_expanded = extract_foreign_column(first_ts)
 
+custom_configs_rw_foreign = {}
+
 if len(col_foreign)>0:
     foreign_expand = st.multiselect('expand foreign column',col_foreign)
 
@@ -106,11 +108,11 @@ if len(col_foreign)>0:
         foreign_not = df_foreign_not.to_dict(orient='index')
         tab_or_col=stp.TabsPlus(connection='column',tabs=foreign_not)
         for col in foreign_not:
+            ts_sub = sqlp.TableStructure(foreign_not[col]['upper_schema'],foreign_not[col]['upper_table'],conn.engine)
+            df_display=ts_sub.read_expand()
+            conf = bp.select_yielder(iter_custom_column_configs(ts_sub),'readonly')
             with tab_or_col[col]:
                 col
-                ts_sub = sqlp.TableStructure(foreign_not[col]['upper_schema'],foreign_not[col]['upper_table'],conn.engine)
-                df_display=ts_sub.read_expand()
-                conf = bp.select_yielder(iter_custom_column_configs(ts_sub),'readonly')
                 st.dataframe(df_display,column_config=conf)
 
 df_append = st.data_editor(df_append,num_rows='dynamic',column_config=custom_configs_rw)
