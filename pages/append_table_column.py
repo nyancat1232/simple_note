@@ -3,7 +3,7 @@ from pre import ex,conn,table_selector,types
 ex()
 
 import pyplus.streamlit as stp
-
+import pandas as pd
 
 import pyplus.sql as sqlp
 
@@ -19,9 +19,10 @@ ts = sqlp.TableStructure(schema_name=schema,table_name=table,
 read_result = ts.read_expand()
 read_result
 
-cols = {'':None}
-sttype = {'value':st.column_config.SelectboxColumn('test',options=types)}
-result = st.data_editor(cols,num_rows='dynamic',column_config=sttype)
+df = pd.DataFrame([{'name':'','type':''}])
+sttype = {'type':st.column_config.SelectboxColumn('test',options=types)}
+result = st.data_editor(df,num_rows='dynamic',column_config=sttype)
+result = {rec['name']:rec['type'] for rec in result.to_dict(orient='records')}
 result
 
 if st.button('append columns'):
