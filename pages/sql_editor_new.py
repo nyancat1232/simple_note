@@ -12,8 +12,6 @@ import pyplus.builtin as bp
 with st.sidebar:
     df_list=sqlp.get_table_list(conn.engine)
     received_queries=st.query_params
-
-    li_schemas:list=df_list['table_schema'].unique().tolist()
     def get_appender(query:str):
         appender=dict()
         try:
@@ -24,6 +22,8 @@ with st.sidebar:
             except:
                 st.toast(f'No {query}')
         return appender
+
+    li_schemas:list=df_list['table_schema'].unique().tolist()
     schema = st.selectbox(label=f'schema',options=li_schemas,**get_appender('schema'))
 
     li_tables=df_list['table_name'][df_list['table_schema']==schema].tolist()
