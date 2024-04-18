@@ -27,7 +27,7 @@ with st.sidebar:
     schema = st.selectbox(label=f'schema',options=li_schemas,**get_appender('schema',li_schemas))
 
     li_tables=df_list['table_name'][df_list['table_schema']==schema].tolist()
-    table = st.selectbox(label=f"table",options=li_tables)
+    table = st.selectbox(label=f"table",options=li_tables,**get_appender('table',li_tables))
 
     current_tz = st.text_input('current timezone',placeholder='like UTC',value='UTC')
 
