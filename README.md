@@ -10,3 +10,4 @@ A database of Postgres.
 - Customization of the dashboard.
 - Convert column types
 - Appending a foreign column
+- Expanding a Self-referencing column.
