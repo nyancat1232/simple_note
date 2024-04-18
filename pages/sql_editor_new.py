@@ -12,10 +12,10 @@ import pyplus.builtin as bp
 with st.sidebar:
     df_list=sqlp.get_table_list(conn.engine)
     received_queries=st.query_params
-    def get_appender(query:str):
+    def get_appender(query:str,ll:list):
         appender=dict()
         try:
-            appender['index']=li_schemas.index(received_queries[query])
+            appender['index']=ll.index(received_queries[query])
         except:
             try:
                 st.toast(f'{received_queries[query]} not in {query}')
@@ -24,7 +24,7 @@ with st.sidebar:
         return appender
 
     li_schemas:list=df_list['table_schema'].unique().tolist()
-    schema = st.selectbox(label=f'schema',options=li_schemas,**get_appender('schema'))
+    schema = st.selectbox(label=f'schema',options=li_schemas,**get_appender('schema',li_schemas))
 
     li_tables=df_list['table_name'][df_list['table_schema']==schema].tolist()
     table = st.selectbox(label=f"table",options=li_tables)
