@@ -14,17 +14,17 @@ with st.sidebar:
     received_queries=st.query_params
 
     li_schemas:list=df_list['table_schema'].unique().tolist()
-    def get_appender():
+    def get_appender(query:str):
         appender=dict()
         try:
-            appender['index']=li_schemas.index(received_queries['schema'])
+            appender['index']=li_schemas.index(received_queries[query])
         except:
             try:
-                st.toast(f'{received_queries['schema']} not in schema')
+                st.toast(f'{received_queries[query]} not in {query}')
             except:
-                st.toast(f'No schema')
+                st.toast(f'No {query}')
         return appender
-    schema = st.selectbox(label=f'schema',options=li_schemas,**get_appender())
+    schema = st.selectbox(label=f'schema',options=li_schemas,**get_appender('schema'))
 
     li_tables=df_list['table_name'][df_list['table_schema']==schema].tolist()
     table = st.selectbox(label=f"table",options=li_tables)
