@@ -10,7 +10,20 @@ import pyplus.pandas as pdp
 import pyplus.builtin as bp
 
 with st.sidebar:
-    schema,table=table_selector('select table')
+    df_list=sqlp.get_table_list(conn.engine)
+    received_queries=st.query_params
+
+    li_schemas:list=df_list['table_schema'].unique().tolist()
+    appender=dict()
+    try:
+        appender['index']=li_schemas.index(received_queries['schema'])
+    except:
+        st.toast(f'{received_queries['schema']} not in schema')
+    schema = st.selectbox(label=f'schema',options=li_schemas,**appender)
+
+    li_tables=df_list['table_name'][df_list['table_schema']==schema].tolist()
+    table = st.selectbox(label=f"table",options=li_tables)
+
     current_tz = st.text_input('current timezone',placeholder='like UTC',value='UTC')
 
 first_ts = sqlp.TableStructure(schema,table,conn.engine)
