@@ -18,7 +18,10 @@ with st.sidebar:
     try:
         appender['index']=li_schemas.index(received_queries['schema'])
     except:
-        st.toast(f'{received_queries['schema']} not in schema')
+        try:
+            st.toast(f'{received_queries['schema']} not in schema')
+        except:
+            st.toast(f'No schema')
     schema = st.selectbox(label=f'schema',options=li_schemas,**appender)
 
     li_tables=df_list['table_name'][df_list['table_schema']==schema].tolist()
