@@ -10,4 +10,7 @@ A database of Postgres.
 - Customization of the dashboard.
 - Convert column types
 - Appending a foreign column
-- Expanding a Self-referencing column.
+- Expanding an array of self-referencing column.
+
+## Done
+- Expanding a Self-referencing column. 
