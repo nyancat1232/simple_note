@@ -11,6 +11,8 @@ Tables must have a primary key with a bigint type.
     - e.g. A site's row
 - image_url
     - An image as url.
+- text_with_tag
+    - A text with tags.
 
 
 ## Roadmap
