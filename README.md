@@ -3,6 +3,15 @@ Table-based note taking app that is based on Postgresql. You can easily create a
 
 ## Requirements
 A database of Postgres.
+Tables must have a primary key with a bigint type.
+
+## Custon Database Types
+- url
+    - A column that includes url.
+    - e.g. A site's row
+- image_url
+    - An image as url.
+
 
 ## Roadmap
 - Multiple timers and stopwatches
