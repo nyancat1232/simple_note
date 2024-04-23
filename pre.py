@@ -14,7 +14,7 @@ title = 'Simple note'
 
 def init_schema():
     lists=sqlp.get_table_list(conn.engine)
-    return st.selectbox('select a schema',lists['table_schema'].unique().tolist())
+    return st.selectbox('select a schema',['public']+lists['table_schema'].unique().tolist())
 
 def table_selector(label:str):
     '''
