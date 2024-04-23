@@ -1,14 +1,13 @@
 import streamlit as st
-from pre import ex,conn,init_schema
+from pre import ex,conn
 ex()
 
 import pyplus.sql as sqlp
 
-ss = sqlp.SchemaStructure('public',conn.engine)
-
 if st.button('init domain'):
-    ss.create_domain('url','text')
-    ss.create_domain('image_url','text')
+    sqlp.create_domain(conn.engine,'url','text')
+    sqlp.create_domain(conn.engine,'image_url','text')
+    sqlp.create_domain(conn.engine,'text_with_tag','text')
 
 if st.button('init setting'):
     sn_conf = sqlp.create_schema(conn.engine,'sn_config')
