@@ -10,3 +10,5 @@ secrets.toml
 pages/test.py
 .venv
 .vscode
+.devcontainer
+.github
