@@ -9,7 +9,7 @@ if 'conn' not in st.session_state:
     st.session_state['conn'] = st.connection('myaddress',type='sql')
 
 conn = st.session_state['conn']
-types=['bigint','double precision','text','timestamp with time zone','boolean','url','image_url']
+types=['bigint','double precision','text','timestamp with time zone','boolean','url','image_url','text_with_tag']
 title = 'Simple note'
 
 def init_schema():
