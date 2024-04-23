@@ -20,6 +20,7 @@ Tables must have a primary key with a bigint type.
 - Convert column types
 - Appending a foreign column
 - Expanding an array of self-referencing a column.
+- Using for any database of Postgresql. 
 
 ## Done
 - Expanding a Self-referencing column. 
