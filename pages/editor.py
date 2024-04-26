@@ -1,5 +1,5 @@
 import streamlit as st
-from pre import conn,ex,table_selector,title
+from pre import conn,ex,tag_table,title
 ex()
 st.set_page_config(page_title=title,page_icon='📒',layout='wide')
 
@@ -31,6 +31,8 @@ with st.sidebar:
 
     current_tz = st.text_input('current timezone',placeholder='like UTC',value='UTC')
 
+tagize = sqlp.TableStructure(tag_table['schema'],tag_table['table'],conn.engine)
+st.dataframe(tagize.read())
 first_ts = sqlp.TableStructure(schema,table,conn.engine)
 
 def filter_new(df:pd.DataFrame,col='new')->pd.DataFrame:
