@@ -63,6 +63,8 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
             case 'image_url':
                 column_configs[col] = st.column_config.LinkColumn(f'{col}')
 
+    column_configs['_tags'] = st.column_config.ListColumn(f'_tags')
+
     yield column_configs.copy(),'edit'
 
     for col in types:
@@ -85,6 +87,31 @@ custom_configs_rw:dict = bp.select_yielder(iter_custom_column_configs(first_ts),
 custom_configs_ro:dict = bp.select_yielder(iter_custom_column_configs(first_ts),'readonly')
 df_read = first_ts.read()
 df_expanded = first_ts.read_expand()
+
+def add_tag_column():
+    ts=first_ts
+    df=df_expanded
+
+    col_expanded_tag=ts.get_types_expanded().to_dict('index')
+    for col in col_expanded_tag:
+        match col_expanded_tag[col]['domain_name']:
+            case 'text_with_tag':
+                df['_tags']=df[col].str.split('#')
+                def try_tag(cols:list):
+                    try:
+                        match len(cols):
+                            case 1:
+                                return [cols[1]]
+                            case 0:
+                                return [None]
+                            case _:
+                                return cols[1:]
+                    except:
+                        return [None]
+                df['_tags']=df['_tags'].apply(lambda cols:try_tag(cols))
+
+add_tag_column()
+
 if st.checkbox('readonly'):
     st.dataframe(df_expanded,column_config=custom_configs_ro)
     st.stop()
