@@ -175,6 +175,10 @@ if len(col_foreign)>0:
                 col
                 st.dataframe(df_display,column_config=conf)
 
+for col in df_append.columns.to_list():
+    if col.startswith('_'):
+        del df_append[col]
+
 df_append = st.data_editor(df_append,num_rows='dynamic',column_config={**custom_configs_rw,**custom_configs_rw_foreign})
 
 appends = df_append.to_dict(orient='records')
