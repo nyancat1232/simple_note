@@ -12,7 +12,6 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt ./
 COPY pyplus ./pyplus
 COPY pages ./pages
-COPY simple_note_funcs ./simple_note_funcs
 COPY main.py ./
 COPY pre.py ./
 COPY .streamlit ./.streamlit
