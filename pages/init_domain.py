@@ -14,3 +14,4 @@ if st.button('init setting'):
     ts = sn_conf.create_table(sn_config_table['table'],**{'name':'text','val':'text'})
     ts.upload_append(**{'name':'recent_address'})
     ts.upload_append(**{'name':'address_tags'})
+    ts.upload_append(**{'name':'address_timer'})
