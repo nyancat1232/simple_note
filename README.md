@@ -24,7 +24,7 @@ Tables must have a primary key with a bigint type.
 - Convert column types
 - Expanding an array of self-referencing a column.
 - Using for any database of Postgresql. 
-- Tag filter
+- Tag filter 
 
 ## Done
 - Expanding a Self-referencing column. 
