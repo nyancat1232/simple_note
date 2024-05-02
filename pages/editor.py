@@ -82,7 +82,7 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
     col_expanded_tag=ts.get_types_expanded().to_dict('index')
     for col in col_expanded_tag:
         match col_expanded_tag[col]['domain_name']:
-            case 'text_with_tag':
+            case 'tag_string':
                 column_configs[col] = None
     yield column_configs.copy(), 'readonly' 
 
