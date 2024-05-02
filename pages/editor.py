@@ -8,6 +8,7 @@ import pyplus.streamlit as stp
 import pandas as pd
 import pyplus.pandas as pdp
 import pyplus.builtin as bp
+from typing import Any
 
 with st.sidebar:
     df_list=sqlp.get_table_list(conn.engine)
@@ -35,9 +36,10 @@ tagize = sqlp.TableStructure(sn_config_table['schema'],sn_config_table['table'],
 st.dataframe(tagize.read())
 first_ts = sqlp.TableStructure(schema,table,conn.engine)
 
-def filter_new(df:pd.DataFrame,col='new')->pd.DataFrame:
+def filter_new(df:pd.DataFrame,col='new')->dict[str,Any]:
     d={upper_col[0]:df[upper_col[0],col] for upper_col in df.columns}
-    return pd.DataFrame(d)
+    df_d = pd.DataFrame(d)
+    return df_d.to_dict(orient='index')
 
 def iter_custom_column_configs(ts:sqlp.TableStructure):
     column_configs = dict()
@@ -122,8 +124,7 @@ st.subheader('edit mode')
 
 df_compare2=df_edited.compare(df_expanded,keep_equal=False,result_names=('new','old'))
 
-df_new=filter_new(df_compare2)
-recs = df_new.to_dict(orient='index')
+recs = filter_new(df_compare2)
 
 tp = stp.TabsPlus('popover','type',*[f'upload of {id_row}' for id_row in recs])
 
