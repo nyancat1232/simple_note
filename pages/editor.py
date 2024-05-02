@@ -39,7 +39,10 @@ first_ts = sqlp.TableStructure(schema,table,conn.engine)
 def filter_new(df:pd.DataFrame,col='new')->dict[int,dict[str,Any]]:
     d={upper_col[0]:df[upper_col[0],col] for upper_col in df.columns}
     df_d = pd.DataFrame(d)
-    return df_d.to_dict(orient='index')
+    ret_dict=df_d.to_dict(orient='index')
+    for row in ret_dict:
+        ret_dict[row]={col:ret_dict[row][col] for col in ret_dict[row] if ret_dict[row][col] is not None }
+    return ret_dict
 
 def iter_custom_column_configs(ts:sqlp.TableStructure):
     column_configs = dict()
