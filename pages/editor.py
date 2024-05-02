@@ -164,7 +164,7 @@ if len(col_foreign)>0:
         df_foreign_not = first_ts.get_foreign_table()
         df_foreign_not = df_foreign_not.loc[list(col_foreign_not_expanded)]
         foreign_not = df_foreign_not.to_dict(orient='index')
-        tab_or_col=stp.TabsPlus(connection='column',tabs=foreign_not)
+        tab_or_col=stp.TabsPlus('column',*foreign_not)
         for col in foreign_not:
             ts_sub = sqlp.TableStructure(foreign_not[col]['upper_schema'],foreign_not[col]['upper_table'],conn.engine)
             df_display=ts_sub.read_expand()
