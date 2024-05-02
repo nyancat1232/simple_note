@@ -122,17 +122,17 @@ st.subheader('edit mode')
 
 df_compare2=df_edited.compare(df_expanded,keep_equal=False,result_names=('new','old'))
 
-tp = stp.TabsPlus('popover','type','upload of')
-
 df_new=filter_new(df_compare2)
 recs = df_new.to_dict(orient='index')
+
+tp = stp.TabsPlus('popover','type',*[f'upload of {id_row}' for id_row in recs])
 
 with tp['type']:
     st.write(df_edited.dtypes)
 
 for row in recs:
-    row
-    recs[row]
+    with tp[f'upload of {row}']:
+        recs[row]
 
 if st.button('upload'):
     for row in recs:
