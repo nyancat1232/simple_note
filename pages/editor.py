@@ -122,7 +122,10 @@ st.subheader('edit mode')
 
 df_compare2=df_edited.compare(df_expanded,keep_equal=False,result_names=('new','old'))
 
-st.write(df_edited.dtypes)
+tp = stp.TabsPlus('popover','type','upload of')
+
+with tp['type']:
+    st.write(df_edited.dtypes)
 
 df_new=filter_new(df_compare2)
 recs = df_new.to_dict(orient='index')
@@ -164,7 +167,7 @@ if len(col_foreign)>0:
         df_foreign_not = first_ts.get_foreign_table()
         df_foreign_not = df_foreign_not.loc[list(col_foreign_not_expanded)]
         foreign_not = df_foreign_not.to_dict(orient='index')
-        tab_or_col=stp.TabsPlus('column',*foreign_not)
+        tab_or_col=stp.TabsPlus('popover',*foreign_not)
         for col in foreign_not:
             ts_sub = sqlp.TableStructure(foreign_not[col]['upper_schema'],foreign_not[col]['upper_table'],conn.engine)
             df_display=ts_sub.read_expand()
