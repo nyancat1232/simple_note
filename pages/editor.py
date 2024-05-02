@@ -74,6 +74,16 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
         match types[col]['domain_name']:
             case 'image_url':
                 column_configs[col] = st.column_config.ImageColumn(f'{col}',)
+
+    #Hide columns
+    for col in df_foreign.index.tolist():
+        column_configs[col] = None
+
+    col_expanded_tag=ts.get_types_expanded().to_dict('index')
+    for col in col_expanded_tag:
+        match col_expanded_tag[col]['domain_name']:
+            case 'text_with_tag':
+                column_configs[col] = None
     yield column_configs.copy(), 'readonly' 
 
 def extract_foreign_column(ts:sqlp.TableStructure)->tuple[set,set]:
