@@ -124,11 +124,11 @@ df_compare2=df_edited.compare(df_expanded,keep_equal=False,result_names=('new','
 
 tp = stp.TabsPlus('popover','type','upload of')
 
-with tp['type']:
-    st.write(df_edited.dtypes)
-
 df_new=filter_new(df_compare2)
 recs = df_new.to_dict(orient='index')
+
+with tp['type']:
+    st.write(df_edited.dtypes)
 
 for row in recs:
     row
