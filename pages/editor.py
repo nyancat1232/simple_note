@@ -68,8 +68,6 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
             case 'image_url':
                 column_configs[col] = st.column_config.LinkColumn(f'{col}')
 
-    column_configs['_tags'] = st.column_config.ListColumn(f'_tags')
-
     yield column_configs.copy(),'edit'
 
     for col in types:
@@ -101,7 +99,7 @@ def add_tag_column():
     for col in col_expanded_tag:
         match col_expanded_tag[col]['domain_name']:
             case 'text_with_tag':
-                df['_tags']=df[col].str.split('#')
+                df[f'_tags_{col}']=df[col].str.split('#')
                 def try_tag(cols:list):
                     try:
                         match len(cols):
@@ -113,7 +111,7 @@ def add_tag_column():
                                 return cols[1:]
                     except:
                         return [None]
-                df['_tags']=df['_tags'].apply(lambda cols:try_tag(cols))
+                df[f'_tags_{col}']=df[f'_tags_{col}'].apply(lambda cols:try_tag(cols))
 
 add_tag_column()
 
