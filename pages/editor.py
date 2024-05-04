@@ -121,17 +121,17 @@ first_ts = sqlp.TableStructure(schema,table,conn.engine)
 custom_configs_rw:dict = bp.select_yielder(iter_custom_column_configs(first_ts),'edit')
 custom_configs_ro:dict = bp.select_yielder(iter_custom_column_configs(first_ts),'readonly')
 df_read = first_ts.read()
-df_expanded = add_tag_column(first_ts)
+df_with_tag = add_tag_column(first_ts)
 
 if st.checkbox('readonly'):
-    st.dataframe(df_expanded,column_config=custom_configs_ro)
+    st.dataframe(df_with_tag,column_config=custom_configs_ro)
     st.stop()
 
-df_edited = st.data_editor(df_expanded,disabled=first_ts.refresh_identity(),column_config=custom_configs_rw)
+df_edited = st.data_editor(df_with_tag,disabled=first_ts.refresh_identity(),column_config=custom_configs_rw)
 
 st.subheader('edit mode')
 
-df_compare2=df_edited.compare(df_expanded,keep_equal=False,result_names=('new','old'))
+df_compare2=df_edited.compare(df_with_tag,keep_equal=False,result_names=('new','old'))
 
 recs = filter_new(df_compare2)
 
@@ -153,7 +153,7 @@ if st.button('upload'):
 
 st.subheader('append mode')
 
-df_append = pdp.empty_records(df_expanded)
+df_append = pdp.empty_records(df_with_tag)
 df_append = df_append.reset_index(drop=True)
 
 col_foreign,col_foreign_expanded = extract_foreign_column(first_ts)
@@ -167,7 +167,7 @@ if len(col_foreign)>0:
     for col in foreign_expand:
         orig_index = foreign_filter.index(col)
         foreign_filter.pop(orig_index)
-        for col_expand in df_expanded.columns:
+        for col_expand in df_with_tag.columns:
             if col_expand.split('.')[0] == col:
                 foreign_filter.insert(orig_index,col_expand)
     df_append = df_append[foreign_filter]
