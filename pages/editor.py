@@ -131,9 +131,7 @@ df_edited = st.data_editor(df_with_tag,disabled=first_ts.refresh_identity(),colu
 
 st.subheader('edit mode')
 
-df_compare2=df_edited.compare(df_with_tag,keep_equal=False,result_names=('new','old'))
-
-recs = filter_new(df_compare2)
+recs = filter_new(df_edited.compare(df_with_tag,keep_equal=False,result_names=('new','old')))
 
 tp = stp.TabsPlus('popover','type',*[f'upload of {id_row}' for id_row in recs])
 
