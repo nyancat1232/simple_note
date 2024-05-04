@@ -127,9 +127,8 @@ if st.checkbox('readonly'):
     df_readonly=df_with_tag.copy()
     st.dataframe(df_readonly,column_config=custom_configs_ro)
 else:
-    df_edited = st.data_editor(df_with_tag,disabled=second_ts.refresh_identity(),column_config=custom_configs_rw)
-
     st.subheader('edit mode')
+    df_edited = st.data_editor(df_with_tag,disabled=second_ts.refresh_identity(),column_config=custom_configs_rw)
 
     recs = filter_new(df_edited.compare(df_with_tag,keep_equal=False,result_names=('new','old')))
 
