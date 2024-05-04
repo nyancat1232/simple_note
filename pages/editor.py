@@ -125,74 +125,73 @@ df_with_tag = add_tag_column(second_ts)
 
 if st.checkbox('readonly'):
     st.dataframe(df_with_tag,column_config=custom_configs_ro)
-    st.stop()
+else:
+    df_edited = st.data_editor(df_with_tag,disabled=second_ts.refresh_identity(),column_config=custom_configs_rw)
 
-df_edited = st.data_editor(df_with_tag,disabled=second_ts.refresh_identity(),column_config=custom_configs_rw)
+    st.subheader('edit mode')
 
-st.subheader('edit mode')
+    recs = filter_new(df_edited.compare(df_with_tag,keep_equal=False,result_names=('new','old')))
 
-recs = filter_new(df_edited.compare(df_with_tag,keep_equal=False,result_names=('new','old')))
+    tp = stp.TabsPlus('popover','type',*[f'upload of {id_row}' for id_row in recs])
 
-tp = stp.TabsPlus('popover','type',*[f'upload of {id_row}' for id_row in recs])
+    with tp['type']:
+        st.write(df_edited.dtypes)
 
-with tp['type']:
-    st.write(df_edited.dtypes)
-
-for row in recs:
-    with tp[f'upload of {row}']:
-        recs[row]
-
-if st.button('upload'):
     for row in recs:
-        row
-        recs[row]
-        second_ts.upload(row,**recs[row])
+        with tp[f'upload of {row}']:
+            recs[row]
+
+    if st.button('upload'):
+        for row in recs:
+            row
+            recs[row]
+            second_ts.upload(row,**recs[row])
 
 
-st.subheader('append mode')
+    st.subheader('append mode')
 
-df_append = pdp.empty_records(df_with_tag)
-df_append = df_append.reset_index(drop=True)
+    df_append = pdp.empty_records(df_with_tag)
+    df_append = df_append.reset_index(drop=True)
 
-col_foreign,col_foreign_expanded = extract_foreign_column(second_ts)
+    col_foreign,col_foreign_expanded = extract_foreign_column(second_ts)
 
-custom_configs_rw_foreign = {}
+    custom_configs_rw_foreign = {}
 
-if len(col_foreign)>0:
-    foreign_expand = st.multiselect('expand foreign column',col_foreign)
+    if len(col_foreign)>0:
+        foreign_expand = st.multiselect('expand foreign column',col_foreign)
 
-    foreign_filter = df_read.columns.to_list()
-    for col in foreign_expand:
-        orig_index = foreign_filter.index(col)
-        foreign_filter.pop(orig_index)
-        for col_expand in df_with_tag.columns:
-            if col_expand.split('.')[0] == col:
-                foreign_filter.insert(orig_index,col_expand)
-    df_append = df_append[foreign_filter]
+        foreign_filter = df_read.columns.to_list()
+        for col in foreign_expand:
+            orig_index = foreign_filter.index(col)
+            foreign_filter.pop(orig_index)
+            for col_expand in df_with_tag.columns:
+                if col_expand.split('.')[0] == col:
+                    foreign_filter.insert(orig_index,col_expand)
+        df_append = df_append[foreign_filter]
 
-    col_foreign_not_expanded = col_foreign-set(foreign_expand)
-    if len(col_foreign_not_expanded)>0:
-        df_foreign_not = second_ts.get_foreign_table()
-        df_foreign_not = df_foreign_not.loc[list(col_foreign_not_expanded)]
-        foreign_not = df_foreign_not.to_dict(orient='index')
-        tab_or_col=stp.TabsPlus('popover',*foreign_not)
-        for col in foreign_not:
-            ts_sub = sqlp.TableStructure(foreign_not[col]['upper_schema'],foreign_not[col]['upper_table'],conn.engine)
-            df_display=ts_sub.read_expand()
-            conf = bp.select_yielder(iter_custom_column_configs(ts_sub),'readonly')
-            
-            #display
-            with tab_or_col[col]:
-                col
-                st.dataframe(df_display,column_config=conf)
+        col_foreign_not_expanded = col_foreign-set(foreign_expand)
+        if len(col_foreign_not_expanded)>0:
+            df_foreign_not = second_ts.get_foreign_table()
+            df_foreign_not = df_foreign_not.loc[list(col_foreign_not_expanded)]
+            foreign_not = df_foreign_not.to_dict(orient='index')
+            tab_or_col=stp.TabsPlus('popover',*foreign_not)
+            for col in foreign_not:
+                ts_sub = sqlp.TableStructure(foreign_not[col]['upper_schema'],foreign_not[col]['upper_table'],conn.engine)
+                df_display=ts_sub.read_expand()
+                conf = bp.select_yielder(iter_custom_column_configs(ts_sub),'readonly')
+                
+                #display
+                with tab_or_col[col]:
+                    col
+                    st.dataframe(df_display,column_config=conf)
 
-for col in df_append.columns.to_list():
-    if col.startswith('_'):
-        del df_append[col]
+    for col in df_append.columns.to_list():
+        if col.startswith('_'):
+            del df_append[col]
 
-df_append = st.data_editor(df_append,num_rows='dynamic',column_config={**custom_configs_rw,**custom_configs_rw_foreign})
+    df_append = st.data_editor(df_append,num_rows='dynamic',column_config={**custom_configs_rw,**custom_configs_rw_foreign})
 
-appends = df_append.to_dict(orient='records')
-if st.button('append'):
-    for append in appends:
-        second_ts.upload_append(**append)
+    appends = df_append.to_dict(orient='records')
+    if st.button('append'):
+        for append in appends:
+            second_ts.upload_append(**append)
