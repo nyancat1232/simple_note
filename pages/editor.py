@@ -95,8 +95,7 @@ def extract_foreign_column(ts:sqlp.TableStructure)->tuple[set,set]:
     col_foreign_r = col_r-col_non_foreign
     return col_foreign_r,col_foreign_ex
 
-def add_tag_column():
-    ts=first_ts
+def add_tag_column(ts:sqlp.TableStructure):
     df=df_expanded
 
     col_expanded_tag=ts.get_types_expanded().to_dict('index')
@@ -123,7 +122,7 @@ custom_configs_ro:dict = bp.select_yielder(iter_custom_column_configs(first_ts),
 df_read = first_ts.read()
 df_expanded = first_ts.read_expand()
 
-add_tag_column()
+add_tag_column(first_ts)
 
 if st.checkbox('readonly'):
     st.dataframe(df_expanded,column_config=custom_configs_ro)
