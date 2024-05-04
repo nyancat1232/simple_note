@@ -34,7 +34,6 @@ with st.sidebar:
 
 tagize = sqlp.TableStructure(sn_config_table['schema'],sn_config_table['table'],conn.engine)
 st.dataframe(tagize.read())
-first_ts = sqlp.TableStructure(schema,table,conn.engine)
 
 def filter_new(df:pd.DataFrame,col='new')->dict[int,dict[str,Any]]:
     d={upper_col[0]:df[upper_col[0],col] for upper_col in df.columns}
@@ -96,11 +95,6 @@ def extract_foreign_column(ts:sqlp.TableStructure)->tuple[set,set]:
     col_foreign_r = col_r-col_non_foreign
     return col_foreign_r,col_foreign_ex
 
-custom_configs_rw:dict = bp.select_yielder(iter_custom_column_configs(first_ts),'edit')
-custom_configs_ro:dict = bp.select_yielder(iter_custom_column_configs(first_ts),'readonly')
-df_read = first_ts.read()
-df_expanded = first_ts.read_expand()
-
 def add_tag_column():
     ts=first_ts
     df=df_expanded
@@ -122,6 +116,12 @@ def add_tag_column():
                     except:
                         return [None]
                 df[f'_tags_{col}']=df[f'_tags_{col}'].apply(lambda cols:try_tag(cols))
+
+first_ts = sqlp.TableStructure(schema,table,conn.engine)
+custom_configs_rw:dict = bp.select_yielder(iter_custom_column_configs(first_ts),'edit')
+custom_configs_ro:dict = bp.select_yielder(iter_custom_column_configs(first_ts),'readonly')
+df_read = first_ts.read()
+df_expanded = first_ts.read_expand()
 
 add_tag_column()
 
