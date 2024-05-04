@@ -119,12 +119,13 @@ def add_tag_column(ts:sqlp.TableStructure):
 
 second_ts = sqlp.TableStructure(schema,table,conn.engine)
 custom_configs_rw:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'edit')
-custom_configs_ro:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'readonly')
 df_read = second_ts.read()
 df_with_tag = add_tag_column(second_ts)
 
 if st.checkbox('readonly'):
-    st.dataframe(df_with_tag,column_config=custom_configs_ro)
+    custom_configs_ro:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'readonly')
+    df_readonly=df_with_tag.copy()
+    st.dataframe(df_readonly,column_config=custom_configs_ro)
 else:
     df_edited = st.data_editor(df_with_tag,disabled=second_ts.refresh_identity(),column_config=custom_configs_rw)
 
