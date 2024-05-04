@@ -96,7 +96,7 @@ def extract_foreign_column(ts:sqlp.TableStructure)->tuple[set,set]:
     return col_foreign_r,col_foreign_ex
 
 def add_tag_column(ts:sqlp.TableStructure):
-    df=first_ts.read_expand()
+    df=ts.read_expand()
 
     col_expanded_tag=ts.get_types_expanded().to_dict('index')
     for col in col_expanded_tag:
