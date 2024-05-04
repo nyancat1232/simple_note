@@ -117,17 +117,17 @@ def add_tag_column(ts:sqlp.TableStructure):
                 df[f'_tags_{col}']=df[f'_tags_{col}'].apply(lambda cols:try_tag(cols))
     return df
 
-first_ts = sqlp.TableStructure(schema,table,conn.engine)
-custom_configs_rw:dict = bp.select_yielder(iter_custom_column_configs(first_ts),'edit')
-custom_configs_ro:dict = bp.select_yielder(iter_custom_column_configs(first_ts),'readonly')
-df_read = first_ts.read()
-df_with_tag = add_tag_column(first_ts)
+second_ts = sqlp.TableStructure(schema,table,conn.engine)
+custom_configs_rw:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'edit')
+custom_configs_ro:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'readonly')
+df_read = second_ts.read()
+df_with_tag = add_tag_column(second_ts)
 
 if st.checkbox('readonly'):
     st.dataframe(df_with_tag,column_config=custom_configs_ro)
     st.stop()
 
-df_edited = st.data_editor(df_with_tag,disabled=first_ts.refresh_identity(),column_config=custom_configs_rw)
+df_edited = st.data_editor(df_with_tag,disabled=second_ts.refresh_identity(),column_config=custom_configs_rw)
 
 st.subheader('edit mode')
 
@@ -146,7 +146,7 @@ if st.button('upload'):
     for row in recs:
         row
         recs[row]
-        first_ts.upload(row,**recs[row])
+        second_ts.upload(row,**recs[row])
 
 
 st.subheader('append mode')
@@ -154,7 +154,7 @@ st.subheader('append mode')
 df_append = pdp.empty_records(df_with_tag)
 df_append = df_append.reset_index(drop=True)
 
-col_foreign,col_foreign_expanded = extract_foreign_column(first_ts)
+col_foreign,col_foreign_expanded = extract_foreign_column(second_ts)
 
 custom_configs_rw_foreign = {}
 
@@ -172,7 +172,7 @@ if len(col_foreign)>0:
 
     col_foreign_not_expanded = col_foreign-set(foreign_expand)
     if len(col_foreign_not_expanded)>0:
-        df_foreign_not = first_ts.get_foreign_table()
+        df_foreign_not = second_ts.get_foreign_table()
         df_foreign_not = df_foreign_not.loc[list(col_foreign_not_expanded)]
         foreign_not = df_foreign_not.to_dict(orient='index')
         tab_or_col=stp.TabsPlus('popover',*foreign_not)
@@ -195,4 +195,4 @@ df_append = st.data_editor(df_append,num_rows='dynamic',column_config={**custom_
 appends = df_append.to_dict(orient='records')
 if st.button('append'):
     for append in appends:
-        first_ts.upload_append(**append)
+        second_ts.upload_append(**append)
