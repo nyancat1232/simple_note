@@ -129,7 +129,7 @@ if st.checkbox('readonly'):
     for col in col_tags:
         sr_tag = df_readonly[col].explode()
         all_tags = sr_tag.unique().tolist()
-        selected_tags = st.multiselect(f'select tags of {col}',all_tags)
+        selected_tags = st.multiselect(f'select tags of {col}',all_tags,[])
         def contains_tags(ll:list,tags:list)->bool:
             left = set(ll)
             right = set(tags)
