@@ -103,7 +103,7 @@ def add_tag_column(ts:sqlp.TableStructure):
         match col_expanded_tag[col]['domain_name']:
             case 'text_with_tag':
                 df[f'_tags_{col}']=df[col].str.split('#')
-                def try_tag(cols:list):
+                def extract_tags(cols:list):
                     try:
                         match len(cols):
                             case 1:
@@ -114,7 +114,7 @@ def add_tag_column(ts:sqlp.TableStructure):
                                 return cols[1:]
                     except:
                         return [None]
-                df[f'_tags_{col}']=df[f'_tags_{col}'].apply(try_tag)
+                df[f'_tags_{col}']=df[f'_tags_{col}'].apply(extract_tags)
     return df
 
 def filter_tag(df:pd.DataFrame):
