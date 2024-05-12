@@ -117,11 +117,6 @@ def add_tag_column(ts:sqlp.TableStructure):
                 df[f'_tags_{col}']=df[f'_tags_{col}'].apply(lambda cols:try_tag(cols))
     return df
 
-second_ts = sqlp.TableStructure(schema,table,conn.engine)
-custom_configs_rw:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'edit')
-df_read = second_ts.read()
-df_with_tag = add_tag_column(second_ts)
-
 def filter_tag(df:pd.DataFrame):
     df_readonly=df.copy()
     col_tags = [a for a  in df_readonly.columns.to_list() if a.startswith('_tags_')]
@@ -141,6 +136,12 @@ def filter_tag(df:pd.DataFrame):
 
         df_readonly = df_readonly[sr_contain_all]
     return df_readonly
+
+
+second_ts = sqlp.TableStructure(schema,table,conn.engine)
+custom_configs_rw:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'edit')
+df_read = second_ts.read()
+df_with_tag = add_tag_column(second_ts)
 
 if st.checkbox('readonly'):
     custom_configs_ro:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'readonly')
