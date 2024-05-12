@@ -114,7 +114,7 @@ def add_tag_column(ts:sqlp.TableStructure):
                                 return cols[1:]
                     except:
                         return [None]
-                df[f'_tags_{col}']=df[f'_tags_{col}'].apply(lambda cols:try_tag(cols))
+                df[f'_tags_{col}']=df[f'_tags_{col}'].apply(try_tag)
     return df
 
 def filter_tag(df:pd.DataFrame):
