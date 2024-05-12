@@ -114,7 +114,15 @@ def add_tag_column(ts:sqlp.TableStructure):
                                 return cols[1:]
                     except:
                         return [None]
-                df[f'_tags_{col}']=df[f'_tags_{col}'].apply(extract_tags)
+                def remove_spaces(vals:list):
+                    def remove_space(s:str):
+                        try:
+                            ll = s.split(' ')
+                            return ll[0]
+                        except:
+                            return s
+                    return [remove_space(val) for val in vals]
+                df[f'_tags_{col}']=df[f'_tags_{col}'].apply(extract_tags).apply(remove_spaces)
     return df
 
 def filter_tag(df:pd.DataFrame):
