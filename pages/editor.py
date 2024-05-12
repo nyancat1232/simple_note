@@ -121,7 +121,7 @@ def filter_tag(df:pd.DataFrame):
     df_readonly=df.copy()
     col_tags = [a for a  in df_readonly.columns.to_list() if a.startswith('_tags_')]
     for col in col_tags:
-        sr_tag = df_readonly[col].explode()
+        sr_tag = df_readonly[col].explode().sort_values()
         all_tags = sr_tag.unique().tolist()
         selected_tags = st.multiselect(f'select tags of {col}',all_tags,[])
         def contains_tags(ll:list,tags:list)->bool:
