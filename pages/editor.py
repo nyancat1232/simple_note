@@ -122,9 +122,8 @@ custom_configs_rw:dict = bp.select_yielder(iter_custom_column_configs(second_ts)
 df_read = second_ts.read()
 df_with_tag = add_tag_column(second_ts)
 
-if st.checkbox('readonly'):
-    custom_configs_ro:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'readonly')
-    df_readonly=df_with_tag.copy()
+def filter_tag(df:pd.DataFrame):
+    df_readonly=df.copy()
     col_tags = [a for a  in df_readonly.columns.to_list() if a.startswith('_tags_')]
     for col in col_tags:
         sr_tag = df_readonly[col].explode()
@@ -141,6 +140,11 @@ if st.checkbox('readonly'):
         sr_contain_all = df_readonly[col].apply(lambda ll:contains_tags(ll,selected_tags))
 
         df_readonly = df_readonly[sr_contain_all]
+    return df_readonly
+
+if st.checkbox('readonly'):
+    custom_configs_ro:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'readonly')
+    df_readonly = filter_tag(df_with_tag)
     st.dataframe(df_readonly,column_config=custom_configs_ro)
 else:
     st.subheader('edit mode')
