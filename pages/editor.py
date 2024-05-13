@@ -150,11 +150,11 @@ second_ts = sqlp.TableStructure(schema,table,conn.engine)
 custom_configs_rw:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'edit')
 df_read = second_ts.read()
 df_with_tag = add_tag_column(second_ts)
+df_with_tag = filter_tag(df_with_tag)
 
 if st.checkbox('readonly'):
     custom_configs_ro:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'readonly')
-    df_readonly = filter_tag(df_with_tag)
-    st.dataframe(df_readonly,column_config=custom_configs_ro)
+    st.dataframe(df_with_tag,column_config=custom_configs_ro)
 else:
     st.subheader('edit mode')
     df_edited = st.data_editor(df_with_tag,disabled=second_ts.refresh_identity(),column_config=custom_configs_rw)
