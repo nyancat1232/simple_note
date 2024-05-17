@@ -115,14 +115,24 @@ def iter_tag_process(ts:sqlp.TableStructure):
                     except:
                         return [None]
                 def remove_spaces(vals:list):
-                    def remove_space(s:str):
+                    def apply_each(s:str):
                         try:
                             ll = s.split(' ')
                             return ll[0]
                         except:
                             return s
-                    return [remove_space(val) for val in vals]
-                df[f'_tags_{col}']=df[f'_tags_{col}'].apply(extract_tags).apply(remove_spaces)
+                    return [apply_each(val) for val in vals]
+                def duplicate_super_tags(vals:list):
+                    def apply_each(s:str):
+                        spl = s.split(':')
+                        return [':'.join(spl[0:1+ind]) for ind,_ in enumerate(spl)]
+                    ret_pre = [apply_each(val) for val in vals]
+                    ret = []
+                    for l in ret_pre:
+                        ret += l
+                    return ret
+
+                df[f'_tags_{col}']=df[f'_tags_{col}'].apply(extract_tags).apply(remove_spaces).apply(duplicate_super_tags)
     yield df, 'add_tag_column'
     
     col_tags = [a for a  in df.columns.to_list() if a.startswith('_tags_')]
