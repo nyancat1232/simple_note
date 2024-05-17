@@ -148,9 +148,10 @@ def filter_tag(df:pd.DataFrame):
 
 second_ts = sqlp.TableStructure(schema,table,conn.engine)
 custom_configs_rw:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'edit')
-df_read = second_ts.read()
 df_with_tag = add_tag_column(second_ts)
 df_with_tag = filter_tag(df_with_tag)
+
+df_read = second_ts.read()
 
 if st.checkbox('readonly'):
     custom_configs_ro:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'readonly')
