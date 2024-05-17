@@ -97,8 +97,8 @@ def extract_foreign_column(ts:sqlp.TableStructure)->tuple[set,set]:
 
 def add_tag_column(ts:sqlp.TableStructure):
     df=ts.read_expand()
-
     col_expanded_tag=ts.get_types_expanded().to_dict('index')
+    
     for col in col_expanded_tag:
         match col_expanded_tag[col]['domain_name']:
             case 'text_with_tag':
