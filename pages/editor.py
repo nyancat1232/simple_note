@@ -150,7 +150,6 @@ second_ts = sqlp.TableStructure(schema,table,conn.engine)
 df_with_tag = add_tag_column(second_ts)
 df_with_tag = filter_tag(df_with_tag)
 
-df_read = second_ts.read()
 
 if st.checkbox('readonly'):
     custom_configs_ro:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'readonly')
@@ -189,8 +188,9 @@ else:
 
     if len(col_foreign)>0:
         foreign_expand = st.multiselect('expand foreign column',col_foreign)
-
-        foreign_filter = df_read.columns.to_list()
+        
+        df_read5 = second_ts.read()
+        foreign_filter = df_read5.columns.to_list()
         for col in foreign_expand:
             orig_index = foreign_filter.index(col)
             foreign_filter.pop(orig_index)
