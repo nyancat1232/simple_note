@@ -95,10 +95,10 @@ def extract_foreign_column(ts:sqlp.TableStructure)->tuple[set,set]:
     col_foreign_r = col_r-col_non_foreign
     return col_foreign_r,col_foreign_ex
 
-def add_tag_column(ts:sqlp.TableStructure):
+def iter_tag_process(ts:sqlp.TableStructure):
     df=ts.read_expand()
     col_expanded_tag=ts.get_types_expanded().to_dict('index')
-    
+
     for col in col_expanded_tag:
         match col_expanded_tag[col]['domain_name']:
             case 'text_with_tag':
@@ -123,13 +123,11 @@ def add_tag_column(ts:sqlp.TableStructure):
                             return s
                     return [remove_space(val) for val in vals]
                 df[f'_tags_{col}']=df[f'_tags_{col}'].apply(extract_tags).apply(remove_spaces)
-    return df
-
-def filter_tag(df:pd.DataFrame):
-    df_readonly=df.copy()
-    col_tags = [a for a  in df_readonly.columns.to_list() if a.startswith('_tags_')]
+    yield df, 'add_tag_column'
+    
+    col_tags = [a for a  in df.columns.to_list() if a.startswith('_tags_')]
     for col in col_tags:
-        sr_tag = df_readonly[col].explode().sort_values()
+        sr_tag = df[col].explode().sort_values()
         all_tags = sr_tag.unique().tolist()
         selected_tags = st.multiselect(f'select tags of {col}',all_tags,[])
         def contains_tags(ll:list,tags:list)->bool:
@@ -140,15 +138,15 @@ def filter_tag(df:pd.DataFrame):
                 return False
             else:
                 return True
-        sr_contain_all = df_readonly[col].apply(lambda ll:contains_tags(ll,selected_tags))
+        sr_contain_all = df[col].apply(lambda ll:contains_tags(ll,selected_tags))
 
-        df_readonly = df_readonly[sr_contain_all]
-    return df_readonly
+        df = df[sr_contain_all]
+    yield df, 'filter_tag'
+    
 
 
 second_ts = sqlp.TableStructure(schema,table,conn.engine)
-df_with_tag = add_tag_column(second_ts)
-df_with_tag = filter_tag(df_with_tag)
+df_with_tag = bp.select_yielder(iter_tag_process(second_ts),'filter_tag')
 
 
 if st.checkbox('readonly'):
