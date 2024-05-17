@@ -124,6 +124,8 @@ def iter_tag_process(ts:sqlp.TableStructure):
                     return [apply_each(val) for val in vals]
                 def duplicate_super_tags(vals:list):
                     def apply_each(s:str):
+                        if s is None:
+                            return [s]
                         spl = s.split(':')
                         return [':'.join(spl[0:1+ind]) for ind,_ in enumerate(spl)]
                     ret_pre = [apply_each(val) for val in vals]
