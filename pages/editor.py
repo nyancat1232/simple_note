@@ -184,7 +184,7 @@ else:
         for row in recs:
             st.toast(f'{row}\n{recs[row]}')
             second_ts.upload(row,**recs[row])
-            st.rerun()
+        st.rerun()
 
 
     st.subheader('append mode')
