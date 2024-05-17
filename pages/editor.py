@@ -147,7 +147,6 @@ def filter_tag(df:pd.DataFrame):
 
 
 second_ts = sqlp.TableStructure(schema,table,conn.engine)
-custom_configs_rw:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'edit')
 df_with_tag = add_tag_column(second_ts)
 df_with_tag = filter_tag(df_with_tag)
 
@@ -158,6 +157,7 @@ if st.checkbox('readonly'):
     st.dataframe(df_with_tag,column_config=custom_configs_ro)
 else:
     st.subheader('edit mode')
+    custom_configs_rw:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'edit')
     df_edited = st.data_editor(df_with_tag,disabled=second_ts.refresh_identity(),column_config=custom_configs_rw)
 
     recs = filter_new(df_edited.compare(df_with_tag,keep_equal=False,result_names=('new','old')))
