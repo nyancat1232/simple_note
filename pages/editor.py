@@ -66,6 +66,8 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
                 column_configs[col] = st.column_config.LinkColumn(f'{col}')
             case 'image_url':
                 column_configs[col] = st.column_config.LinkColumn(f'{col}')
+    
+    column_configs['__hidden']=st.column_config.Column(disabled=True)
 
     yield column_configs.copy(),'edit'
 
@@ -228,8 +230,14 @@ else:
     for col in df_append.columns.to_list():
         if col.startswith('_'):
             del df_append[col]
-
+    
+    if len(df_append.columns)<2:
+        st.warning('Problem when column is only one. ValueError: setting an array element with a sequence')
+        df_append['__hidden']=df_append.index
     df_append = st.data_editor(df_append,num_rows='dynamic',column_config={**custom_configs_rw,**custom_configs_rw_foreign})
+    if len(df_append.columns)<2:
+        st.warning('Problem when column is only one. ValueError: setting an array element with a sequence')
+        del df_append['__hidden']
 
     appends = df_append.to_dict(orient='records')
     if st.button('append'):
