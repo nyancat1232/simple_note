@@ -18,4 +18,4 @@ result_type
 if st.button('create table'):
     ss = sqlp.SchemaStructure(schema_name=schema_name,engine=conn.engine)
     res = ss.create_table(table_name,**result_type)
-    res.upload_append(**{key:"" for key in result_type})
+    #res.upload_append(**{key:"" for key in result_type})
