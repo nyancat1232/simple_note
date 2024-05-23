@@ -47,7 +47,7 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
     column_configs = dict()
 
     types = ts.get_types_expanded().to_dict(orient='index')
-    df_foreign = ts.get_foreign_table()
+    df_foreign = ts.get_foreign_list_table()
     for col in df_foreign.index.tolist():
         ts_sub = sqlp.TableStructure(df_foreign.loc[col]['upper_schema'],df_foreign.loc[col]['upper_table'],conn.engine)
         ids_foreign=ts_sub.read().index.to_list()
@@ -213,7 +213,7 @@ else:
 
         col_foreign_not_expanded = col_foreign-set(foreign_expand)
         if len(col_foreign_not_expanded)>0:
-            df_foreign_not = second_ts.get_foreign_table()
+            df_foreign_not = second_ts.get_foreign_list_table()
             df_foreign_not = df_foreign_not.loc[list(col_foreign_not_expanded)]
             foreign_not = df_foreign_not.to_dict(orient='index')
             tab_or_col=stp.TabsPlus('popover',*foreign_not)
