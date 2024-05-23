@@ -47,7 +47,7 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
     column_configs = dict()
 
     types = ts.get_types_expanded().to_dict(orient='index')
-    df_foreign = ts.get_foreign_list_table()
+    df_foreign = ts.get_foreign_tables_list()
     for col in df_foreign.index.tolist():
         ts_sub = sqlp.TableStructure(df_foreign.loc[col]['upper_schema'],df_foreign.loc[col]['upper_table'],conn.engine)
         ids_foreign=ts_sub.read().index.to_list()
@@ -162,6 +162,10 @@ def iter_tag_process(ts:sqlp.TableStructure):
 second_ts = sqlp.TableStructure(schema,table,conn.engine)
 df_with_tag = bp.select_yielder(iter_tag_process(second_ts),'filter_tag')
 
+temp=second_ts.get_foreign_tables()
+for col in temp:
+    bb=second_ts.check_selfref_table(temp[col])
+    bb
 
 if st.checkbox('readonly'):
     custom_configs_ro:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'readonly')
@@ -213,7 +217,7 @@ else:
 
         col_foreign_not_expanded = col_foreign-set(foreign_expand)
         if len(col_foreign_not_expanded)>0:
-            df_foreign_not = second_ts.get_foreign_list_table()
+            df_foreign_not = second_ts.get_foreign_tables_list()
             df_foreign_not = df_foreign_not.loc[list(col_foreign_not_expanded)]
             foreign_not = df_foreign_not.to_dict(orient='index')
             tab_or_col=stp.TabsPlus('popover',*foreign_not)
