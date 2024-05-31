@@ -1,5 +1,5 @@
 import streamlit as st
-from pre import conn,ex,sn_config_table,title
+from pre import conn,ex,table_selector
 ex()
 
 
@@ -10,8 +10,15 @@ import pyplus.pandas as pdp
 import pyplus.builtin as bp
 from typing import Any
 
-def select_table():
-    df_lists = sqlp.get_table_list(conn)
-    schema = st.selectbox('schema',df_lists['table_schema'].unique().tolist())
-    table = st.selectbox('table',df_lists[df_lists['table_schema']==schema]['table_name'].unique().tolist())
-    return schema,table
+tp=stp.TabsPlus('column','original','foreign')
+with tp['original']:
+    ts_left=table_selector()
+    st.dataframe(ts_left.read())
+with tp['foreign']:
+    ts_right=table_selector('select a foreign table')
+    st.dataframe(ts_right.read())
+tp_mode=stp.TabsPlus('tab','new foreign','convert foreign')
+with tp_mode['new foreign']:
+    new_foreign_column = st.text_input('new foreign column name')
+with tp_mode['convert foreign']:
+    column = st.selectbox('select a column',ts_left.read().columns)
