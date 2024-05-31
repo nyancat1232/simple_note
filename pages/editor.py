@@ -120,10 +120,9 @@ def iter_tag_process(ts:sqlp.TableStructure):
                     def apply_each(s:str):
                         try:
                             ret = s
-                            ll = ret.split(' ')
-                            ret = ll[0]
-                            ll2 = ret.split('\n')
-                            ret = ll2[0]
+                            for ch in ' \n':
+                                ll = ret.split(ch)
+                                ret = ll[0]
                             return ret
                         except:
                             return s
