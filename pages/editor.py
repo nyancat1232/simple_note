@@ -119,8 +119,10 @@ def iter_tag_process(ts:sqlp.TableStructure):
                 def remove_spaces(vals:list):
                     def apply_each(s:str):
                         try:
-                            ll = s.split(' ')
-                            return ll[0]
+                            ret = s
+                            ll = ret.split(' ')
+                            ret = ll[0]
+                            return ret
                         except:
                             return s
                     return [apply_each(val) for val in vals]
