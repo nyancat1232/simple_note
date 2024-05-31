@@ -58,4 +58,4 @@ def table_selector(label:str,conn=conn.engine):
 
     np_tables=df_lists['table_name'][df_lists['table_schema']==schema]
     table = st.selectbox(label=f"{label} of table",options=np_tables)
-    return schema, table
+    return sqlp.TableStructure(schema,table,engine)
