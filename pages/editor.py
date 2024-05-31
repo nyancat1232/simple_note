@@ -30,6 +30,8 @@ with st.sidebar:
     li_tables=df_list['table_name'][df_list['table_schema']==schema].tolist()
     table = st.selectbox(label=f"table",options=li_tables,**query_to_index('table',li_tables))
 
+    second_ts = sqlp.TableStructure(schema,table,conn.engine)
+
     current_tz = st.text_input('current timezone',placeholder='like UTC',value='UTC')
 
 tagize = sqlp.TableStructure(sn_config_table['schema'],sn_config_table['table'],conn.engine)
@@ -162,7 +164,6 @@ def iter_tag_process(ts:sqlp.TableStructure):
     
 
 
-second_ts = sqlp.TableStructure(schema,table,conn.engine)
 df_with_tag = bp.select_yielder(iter_tag_process(second_ts),'filter_tag')
 
 temp=second_ts.get_foreign_tables()
