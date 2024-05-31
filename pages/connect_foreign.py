@@ -10,7 +10,8 @@ import pyplus.pandas as pdp
 import pyplus.builtin as bp
 from typing import Any
 
-df_lists = sqlp.get_table_list(conn)
-df_lists
-schema = st.selectbox('schema',df_lists['table_schema'].unique().tolist())
-table = st.selectbox('table',df_lists[df_lists['table_schema']==schema]['table_name'].unique().tolist())
+def select_table():
+    df_lists = sqlp.get_table_list(conn)
+    schema = st.selectbox('schema',df_lists['table_schema'].unique().tolist())
+    table = st.selectbox('table',df_lists[df_lists['table_schema']==schema]['table_name'].unique().tolist())
+    return schema,table
