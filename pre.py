@@ -50,12 +50,27 @@ def table_selector(label:str,conn=conn.engine)->sqlp.TableStructure:
     >>> first_ts = sqlp.TableStructure(schema,table,conn.engine)
 
     '''
+
+    received_queries=st.query_params
+    def query_to_index(query:str,ll:list):
+        appender=dict()
+        try:
+            appender['index']=ll.index(received_queries[query])
+        except:
+            try:
+                st.toast(f'{received_queries[query]} not in {query}')
+            except:
+                st.toast(f'No {query}')
+        return appender
+
     engine = conn.engine
     df_lists=sqlp.get_table_list(engine)
 
     np_schemas=df_lists['table_schema'].unique()
-    schema = st.selectbox(label=f'{label} of schema',options=np_schemas)
+    schema = st.selectbox(label=f'{label} of schema',options=np_schemas,
+                          **query_to_index('schema',np_schemas.tolist()))
 
     np_tables=df_lists['table_name'][df_lists['table_schema']==schema]
-    table = st.selectbox(label=f"{label} of table",options=np_tables)
+    table = st.selectbox(label=f"{label} of table",options=np_tables,
+                         **query_to_index('table',np_tables.tolist()))
     return sqlp.TableStructure(schema,table,engine)

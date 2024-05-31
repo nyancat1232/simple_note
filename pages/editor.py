@@ -1,5 +1,5 @@
 import streamlit as st
-from pre import conn,ex,sn_config_table,title
+from pre import conn,ex,sn_config_table,title,table_selector
 ex()
 st.set_page_config(page_title=title,page_icon='📒',layout='wide')
 
@@ -11,26 +11,7 @@ import pyplus.builtin as bp
 from typing import Any
 
 with st.sidebar:
-    df_list=sqlp.get_table_list(conn.engine)
-    received_queries=st.query_params
-    def query_to_index(query:str,ll:list):
-        appender=dict()
-        try:
-            appender['index']=ll.index(received_queries[query])
-        except:
-            try:
-                st.toast(f'{received_queries[query]} not in {query}')
-            except:
-                st.toast(f'No {query}')
-        return appender
-
-    li_schemas:list=df_list['table_schema'].unique().tolist()
-    schema = st.selectbox(label=f'schema',options=li_schemas,**query_to_index('schema',li_schemas))
-
-    li_tables=df_list['table_name'][df_list['table_schema']==schema].tolist()
-    table = st.selectbox(label=f"table",options=li_tables,**query_to_index('table',li_tables))
-
-    second_ts = sqlp.TableStructure(schema,table,conn.engine)
+    second_ts = table_selector('select a table')
 
     current_tz = st.text_input('current timezone',placeholder='like UTC',value='UTC')
 
