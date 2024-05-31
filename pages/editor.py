@@ -15,9 +15,6 @@ with st.sidebar:
 
     current_tz = st.text_input('current timezone',placeholder='like UTC',value='UTC')
 
-tagize = sqlp.TableStructure(sn_config_table['schema'],sn_config_table['table'],conn.engine)
-st.dataframe(tagize.read())
-
 def filter_new(df:pd.DataFrame,col='new')->dict[int,dict[str,Any]]:
     d={upper_col[0]:df[upper_col[0],col] for upper_col in df.columns}
     df_d = pd.DataFrame(d)
