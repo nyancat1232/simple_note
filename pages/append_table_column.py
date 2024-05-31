@@ -9,12 +9,7 @@ import pyplus.sql as sqlp
 
 
 with st.sidebar:
-    schema,table = table_selector('input')
-    st.button('refresh',on_click=st.rerun)
-
-
-ts = sqlp.TableStructure(schema_name=schema,table_name=table,
-                         engine=conn.engine)
+    ts = table_selector()
 
 read_result = ts.read_expand()
 read_result
@@ -25,14 +20,13 @@ result = st.data_editor(df,num_rows='dynamic',column_config=sttype)
 result = {rec['name']:rec['type'] for rec in result.to_dict(orient='records')}
 for col_local in [col for col in result if result[col] == '_foreign']:
     del result[col_local]
-    schema,table = table_selector(f'{col_local} to a table ')
-    ts = sqlp.TableStructure(schema,table,conn.engine)
+    ts = table_selector(f'{col_local} to a table ')
     df_foreign = ts.read()
 
     f'{col_local} to a table'
     df_foreign
 
-    result[col_local] = f'_foreign:{schema}.{table}'
+    result[col_local] = f'_foreign:{ts.schema_name}.{ts.table_name}'
 result
 
 if st.button('append columns'):
