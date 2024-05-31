@@ -122,6 +122,8 @@ def iter_tag_process(ts:sqlp.TableStructure):
                             ret = s
                             ll = ret.split(' ')
                             ret = ll[0]
+                            ll2 = ret.split('\n')
+                            ret = ll2[0]
                             return ret
                         except:
                             return s
