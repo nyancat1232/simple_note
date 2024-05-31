@@ -17,7 +17,7 @@ def init_schema():
     lists=sqlp.get_table_list(conn.engine)
     return st.selectbox('select a schema',['public']+lists['table_schema'].unique().tolist())
 
-def table_selector(label:str,conn=conn.engine):
+def table_selector(label:str,conn=conn.engine)->sqlp.TableStructure:
     '''
     Show a selector for selecting schema and table.
     
