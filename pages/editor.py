@@ -56,7 +56,7 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
                 column_configs[col] = st.column_config.ImageColumn(f'{col}',)
 
     #Hide columns
-    for col in df_foreign.index.tolist():
+    for col in tss_foreign:
         column_configs[col] = None
 
     col_expanded_tag=ts.get_types_expanded().to_dict('index')
