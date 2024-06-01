@@ -29,6 +29,8 @@ if left_column is None:
 else:
     override = st.checkbox('override a column')
     if override:
+        df_left[left_column]=df_left[left_column].apply(lambda val:df_right_to_id[val])
+        df_left
         raise NotImplementedError('No override')
     else:
         local_column = st.text_input('new id column name')
