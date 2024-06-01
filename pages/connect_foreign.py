@@ -19,8 +19,20 @@ with tp['foreign']:
     ts_right=table_selector('select a foreign table')
     df_right=ts_right.read()
     st.dataframe(df_right)
-tp_mode=stp.TabsPlus('tab','new foreign','convert foreign')
-with tp_mode['new foreign']:
-    new_foreign_column = st.text_input('new foreign column name')
-with tp_mode['convert foreign']:
-    column = st.selectbox('select a column',ts_left.read().columns)
+
+override = st.checkbox('override a column')
+left_column = st.selectbox('local column',df_left.columns.tolist()+[None])
+right_column = st.selectbox('foreign column',df_right.columns)
+df_right_to_id = ts_right.get_local_val_to_id(right_column)
+
+if not override:
+    local_column = st.text_input('new id column name')
+
+if left_column is None:
+    raise NotImplementedError("Not None")
+else:
+    if override:
+        raise NotImplementedError('No override')
+    else:
+        df_left[local_column]=df_left[left_column].apply(lambda val:df_right_to_id[val])
+        df_left
