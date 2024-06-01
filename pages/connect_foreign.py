@@ -13,10 +13,12 @@ from typing import Any
 tp=stp.TabsPlus('column','original','foreign')
 with tp['original']:
     ts_left=table_selector()
-    st.dataframe(ts_left.read())
+    df_left=ts_left.read()
+    st.dataframe(df_left)
 with tp['foreign']:
     ts_right=table_selector('select a foreign table')
-    st.dataframe(ts_right.read())
+    df_right=ts_right.read()
+    st.dataframe(df_right)
 tp_mode=stp.TabsPlus('tab','new foreign','convert foreign')
 with tp_mode['new foreign']:
     new_foreign_column = st.text_input('new foreign column name')
