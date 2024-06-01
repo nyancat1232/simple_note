@@ -37,7 +37,7 @@ for key in dfs:
     df_direction=st.data_editor(df_direction,disabled=['from'])
     df_direction=df_direction.dropna()
 
-    df_foreign = ts_to.get_foreign_tables_list()
+    df_foreign = ts_to._get_foreign_tables_list()
     df_foreign
 
 

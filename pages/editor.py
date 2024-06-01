@@ -198,7 +198,7 @@ else:
 
         col_foreign_not_expanded = col_foreign-set(foreign_expand)
         if len(col_foreign_not_expanded)>0:
-            df_foreign_not = second_ts.get_foreign_tables_list()
+            df_foreign_not = second_ts._get_foreign_tables_list()
             df_foreign_not = df_foreign_not.loc[list(col_foreign_not_expanded)]
             foreign_not = df_foreign_not.to_dict(orient='index')
             tab_or_col=stp.TabsPlus('popover',*foreign_not)
