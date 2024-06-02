@@ -65,7 +65,10 @@ def table_selector(key:str='select a table',conn=conn.engine)->sqlp.TableStructu
     engine = conn.engine
     df_lists=sqlp.get_table_list(engine)
     event_df = st.dataframe(df_lists,key=key,on_select='rerun',selection_mode='single-row',hide_index=True)
-    selected_row = event_df['selection']['rows'][0]
-    result=df_lists.to_dict('records')[selected_row]
+    try:
+        selected_row = event_df['selection']['rows'][0]
+        result=df_lists.to_dict('records')[selected_row]
 
-    return sqlp.TableStructure(result['table_schema'],result['table_name'],engine)
+        return sqlp.TableStructure(result['table_schema'],result['table_name'],engine)
+    except:
+        return None
