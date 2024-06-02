@@ -17,7 +17,7 @@ def init_schema():
     lists=sqlp.get_table_list(conn.engine)
     return st.selectbox('select a schema',['public']+lists['table_schema'].unique().tolist())
 
-def table_selector(label:str='select a table',conn=conn.engine)->sqlp.TableStructure:
+def table_selector(key:str='select a table',conn=conn.engine)->sqlp.TableStructure:
     '''
     Show a selector for selecting schema and table.
     
@@ -64,7 +64,7 @@ def table_selector(label:str='select a table',conn=conn.engine)->sqlp.TableStruc
 
     engine = conn.engine
     df_lists=sqlp.get_table_list(engine)
-    event_df = st.dataframe(df_lists,key=label,on_select='rerun',selection_mode='single-row',hide_index=True)
+    event_df = st.dataframe(df_lists,key=key,on_select='rerun',selection_mode='single-row',hide_index=True)
     selected_row = event_df['selection']['rows'][0]
     result=df_lists.to_dict('records')[selected_row]
 

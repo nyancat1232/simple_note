@@ -17,7 +17,7 @@ with st.sidebar:
 
 
 for key in dfs:
-    schema,table = table_selector(label='input')
+    schema,table = table_selector(key='input')
 
     df_from = dfs[key]
     if st.checkbox('Reverse index of the file'):
