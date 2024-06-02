@@ -148,7 +148,8 @@ for col in temp:
     bb=second_ts.check_selfref_table(temp[col])
     bb
 
-if st.checkbox('readonly'):
+b_readonly = st.checkbox('readonly')
+if b_readonly:
     custom_configs_ro:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'readonly')
     st.dataframe(df_with_tag,column_config=custom_configs_ro)
 else:
