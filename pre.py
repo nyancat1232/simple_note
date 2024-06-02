@@ -64,12 +64,8 @@ def table_selector(label:str='select a table',conn=conn.engine)->sqlp.TableStruc
 
     engine = conn.engine
     df_lists=sqlp.get_table_list(engine)
+    event_df = st.dataframe(df_lists,on_select='rerun',selection_mode='single-row',hide_index=True)
+    selected_row = event_df['selection']['rows'][0]
+    result=df_lists.to_dict('records')[selected_row]
 
-    np_schemas=df_lists['table_schema'].unique()
-    schema = st.selectbox(label=f'{label} of schema',options=np_schemas,
-                          **query_to_index('schema',np_schemas.tolist()))
-
-    np_tables=df_lists['table_name'][df_lists['table_schema']==schema]
-    table = st.selectbox(label=f"{label} of table",options=np_tables,
-                         **query_to_index('table',np_tables.tolist()))
-    return sqlp.TableStructure(schema,table,engine)
+    return sqlp.TableStructure(result['table_schema'],result['table_name'],engine)
