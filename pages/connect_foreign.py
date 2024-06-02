@@ -17,13 +17,13 @@ with tp['foreign']:
     ts_right=table_selector('select a foreign table')
 with tp['original']:
     df_left=ts_left.read()
-    st.dataframe(df_left)
+    event_left = st.dataframe(df_left,on_select='rerun',selection_mode='single-column')
 with tp['foreign']:
     df_right=ts_right.read()
-    st.dataframe(df_right)
+    event_right = st.dataframe(df_right,on_select='rerun',selection_mode='single-column')
 
-left_column = st.selectbox('local column',df_left.columns.tolist()+[None])
-right_column = st.selectbox('foreign column',df_right.columns)
+left_column = event_left['selection']['columns'][0]
+right_column = event_right['selection']['columns'][0]
 df_right_to_id = ts_right.get_local_val_to_id(right_column)
 
 if left_column is None:
