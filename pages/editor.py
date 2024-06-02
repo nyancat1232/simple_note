@@ -136,8 +136,10 @@ def iter_tag_process(ts:sqlp.TableStructure):
             else:
                 return True
         sr_contain_all = df[col].apply(lambda ll:contains_tags(ll,selected_tags))
-
-        df = df[sr_contain_all]
+        if len(df.index)>0:
+            df = df[sr_contain_all]
+        else:
+            st.warning('empty')
     yield df, 'filter_tag'
     
 
