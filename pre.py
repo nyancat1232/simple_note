@@ -46,8 +46,7 @@ def table_selector(label:str='select a table',conn=conn.engine)->sqlp.TableStruc
     --------
     
     >>> with st.sidebar:
-    >>>     schema,table=table_selector('select table')
-    >>> first_ts = sqlp.TableStructure(schema,table,conn.engine)
+    >>>     ts = table_selector('select a table')
 
     '''
 
