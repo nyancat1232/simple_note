@@ -14,6 +14,7 @@ with st.sidebar:
     second_ts = table_selector('select a table')
 
     current_tz = st.text_input('current timezone',placeholder='like UTC',value='UTC')
+    b_readonly = st.checkbox('readonly')
 
 def filter_new(df:pd.DataFrame,col='new')->dict[int,dict[str,Any]]:
     d={upper_col[0]:df[upper_col[0],col] for upper_col in df.columns}
@@ -148,7 +149,6 @@ for col in temp:
     bb=second_ts.check_selfref_table(temp[col])
     bb
 
-b_readonly = st.checkbox('readonly')
 if b_readonly:
     custom_configs_ro:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'readonly')
     st.dataframe(df_with_tag,column_config=custom_configs_ro)
