@@ -13,10 +13,12 @@ from typing import Any
 tp=stp.TabsPlus('column','original','foreign')
 with tp['original']:
     ts_left=table_selector()
+with tp['foreign']:
+    ts_right=table_selector('select a foreign table')
+with tp['original']:
     df_left=ts_left.read()
     st.dataframe(df_left)
 with tp['foreign']:
-    ts_right=table_selector('select a foreign table')
     df_right=ts_right.read()
     st.dataframe(df_right)
 
