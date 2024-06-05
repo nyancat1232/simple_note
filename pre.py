@@ -11,7 +11,6 @@ if 'conn' not in st.session_state:
 conn = st.session_state['conn']
 types=['bigint','double precision','text','timestamp with time zone','boolean','url','image_url','text_with_tag']
 title = 'Simple note'
-sn_config_table={'schema':'sn_config','table':'configs'}
 
 def init_schema():
     lists=sqlp.get_table_list(conn.engine)

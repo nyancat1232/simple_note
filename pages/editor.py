@@ -1,5 +1,5 @@
 import streamlit as st
-from pre import conn,ex,sn_config_table,title,table_selector
+from pre import conn,ex,title,table_selector
 ex()
 st.set_page_config(page_title=title,page_icon='📒',layout='wide')
 
