@@ -5,7 +5,7 @@ ex()
 import pandas as pd
 import pyplus.streamlit as stp
 
-
+st.warning('Deprecation warning',icon='🚨')
 
 tab_name = ['new','open']
 file_tab = stp.TabsPlus(*tab_name)

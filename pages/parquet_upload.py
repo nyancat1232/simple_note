@@ -7,6 +7,8 @@ import pyplus.streamlit as stp
 import pyplus.sql as sqlp
 from datetime import datetime
 
+st.warning('Deprecation warning',icon='🚨')
+
 
 with st.sidebar:
     fe = stp.FileExecutor()
