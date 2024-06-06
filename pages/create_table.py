@@ -31,9 +31,9 @@ if (ts_first := stglobal.table_selector()) is not None:
             st.rerun()
 
     with tp['change column name']:
-        df = ts_first.read()
-        df
-        df_change = pd.DataFrame({'before':df.columns,'after':df.columns})
+        read_result = ts_first.read()
+        read_result
+        df_change = pd.DataFrame({'before':read_result.columns,'after':read_result.columns})
         df_change = st.data_editor(df_change,column_config={'before':st.column_config.Column(disabled=True)})
         df_change['changed'] = df_change['before'] != df_change['after']
         df_change
