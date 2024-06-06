@@ -26,9 +26,9 @@ if (ts_first := stglobal.table_selector()) is not None:
         result = {rec['name']:rec['type'] for rec in result.to_dict(orient='records')}
         result
 
-        if st.button('append columns'):
+        def append_columns():
             ts_first.append_column(**result)
-            st.rerun()
+        upload_button(append_columns,'append columns')
 
     with tp['change column name']:
         df_change = pd.DataFrame({'before':read_result.columns,'after':read_result.columns})
