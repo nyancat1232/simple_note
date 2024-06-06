@@ -14,12 +14,12 @@ def upload_button(func,label):
         st.toast(f'Succeed: {label}')
 
 if (ts_first := stglobal.table_selector()) is not None:
+    read_result = ts_first.read()
+    read_result
+
     tp = stp.TabsPlus('tab','append a column','change column name','change a column order')
 
     with tp['append a column']:
-        read_result = ts_first.read_expand()
-        read_result
-
         df = pd.DataFrame([{'name':'','type':''}])
         sttype = {'type':st.column_config.SelectboxColumn('test',options=stglobal.types)}
         result = st.data_editor(df,num_rows='dynamic',column_config=sttype)
@@ -31,8 +31,6 @@ if (ts_first := stglobal.table_selector()) is not None:
             st.rerun()
 
     with tp['change column name']:
-        read_result = ts_first.read()
-        read_result
         df_change = pd.DataFrame({'before':read_result.columns,'after':read_result.columns})
         df_change = st.data_editor(df_change,column_config={'before':st.column_config.Column(disabled=True)})
         df_change['changed'] = df_change['before'] != df_change['after']
@@ -48,9 +46,6 @@ if (ts_first := stglobal.table_selector()) is not None:
         upload_button(change_names,'change column names')
 
     with tp['change a column order']:
-        read_result = ts_first.read_expand()
-        read_result
-
         columns=read_result.columns
         df_order = pd.DataFrame({'name':columns,'order':range(len(columns))})
         tp_order = stp.TabsPlus('column','before','after')
