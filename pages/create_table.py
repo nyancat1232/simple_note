@@ -7,7 +7,10 @@ stglobal.ex()
 import pyplus.sql as sqlp
 import pyplus.streamlit as stp
 
-tp = stp.TabsPlus('tab','create a table','append a column','change a column order')
+def upload_button(func,label):
+    if st.button(label):
+        func()
+        st.toast(f'Succeed: {label}')
 
 with tp['create a table']:
     schema_name = stglobal.init_schema()
@@ -18,11 +21,12 @@ with tp['create a table']:
     sttype = {'value':st.column_config.SelectboxColumn('test',options=stglobal.types)}
     result_type = st.data_editor(cols,num_rows='dynamic',column_config=sttype)
     result_type
-    if st.button('create table'):
+
+    def upload_create():
         ss = sqlp.SchemaStructure(schema_name=schema_name,engine=stglobal.conn.engine)
-        res = ss.create_table(table_name,**result_type)
-        st.toast('succeed')
-        #res.upload_append(**{key:"" for key in result_type})
+        ss.create_table(table_name,**result_type)
+
+    upload_button(upload_create,'create table')
 
 with tp['append a column']:
     if (ts_first := stglobal.table_selector()) is not None:
