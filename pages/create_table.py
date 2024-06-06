@@ -7,7 +7,7 @@ stglobal.ex()
 import pyplus.sql as sqlp
 import pyplus.streamlit as stp
 
-tp = stp.TabsPlus('tab','create a table','append a column')
+tp = stp.TabsPlus('tab','create a table','append a column','change a column order')
 
 with tp['create a table']:
     schema_name = stglobal.init_schema()
@@ -38,3 +38,18 @@ with tp['append a column']:
         if st.button('append columns'):
             ts_first.append_column(**result)
             st.rerun()
+
+with tp['change a column order']:
+    if (ts_first := stglobal.table_selector('select a table for changing a order')) is not None:
+        read_result = ts_first.read_expand()
+        read_result
+
+        columns=read_result.columns
+        df_order = pd.DataFrame({'name':columns,'order':range(len(columns))})
+        tp_order = stp.TabsPlus('column','before','after')
+        with tp_order['before']:
+            df_order = st.data_editor(df_order,column_config={'name':st.column_config.Column(disabled=True)})
+        with tp_order['after']:
+            columns_after = [df_order['name'][ind] for ind in df_order['order']]
+            df_order_after = pd.DataFrame({'name':columns_after}) 
+            df_order_after
