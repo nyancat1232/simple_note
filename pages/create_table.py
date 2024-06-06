@@ -20,8 +20,8 @@ if (ts_first := stglobal.table_selector()) is not None:
     tp = stp.TabsPlus('tab','append a column','change column name','change a column order')
 
     with tp['append a column']:
-        df = pd.DataFrame([{'name':'','type':''}])
-        sttype = {'type':st.column_config.SelectboxColumn('test',options=stglobal.types)}
+        df = pd.DataFrame({'name':pd.Series(dtype=pd.StringDtype),'type':pd.Series(dtype=pd.StringDtype)})
+        sttype = {'name':st.column_config.TextColumn('name'),'type':st.column_config.SelectboxColumn('type',options=stglobal.types)}
         result = st.data_editor(df,num_rows='dynamic',column_config=sttype)
         result = {rec['name']:rec['type'] for rec in result.to_dict(orient='records')}
         result
