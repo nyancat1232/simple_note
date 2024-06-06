@@ -7,6 +7,8 @@ stglobal.ex()
 import pyplus.sql as sqlp
 import pyplus.streamlit as stp
 
+tp = stp.TabsPlus('tab','create a table','append a column','change column name','change a column order')
+
 def upload_button(func,label):
     if st.button(label):
         func()
@@ -43,6 +45,23 @@ with tp['append a column']:
             ts_first.append_column(**result)
             st.rerun()
 
+with tp['change column name']:
+    if (ts_first := stglobal.table_selector('select a table for changing column names')) is not None:
+        df = ts_first.read()
+        df
+        df_change = pd.DataFrame({'before':df.columns,'after':df.columns})
+        df_change = st.data_editor(df_change,column_config={'before':st.column_config.Column(disabled=True)})
+        df_change['changed'] = df_change['before'] != df_change['after']
+        df_change
+        df_change = df_change[df_change['changed']]
+        del df_change['changed']
+        df_change
+
+        arg={row['before']: row['after'] for row in df_change.to_dict('records')}
+        arg
+        def change_names():
+            ts_first.change_column_name(**arg)
+        upload_button(change_names,'change column names')
 with tp['change a column order']:
     if (ts_first := stglobal.table_selector('select a table for changing a order')) is not None:
         read_result = ts_first.read_expand()
