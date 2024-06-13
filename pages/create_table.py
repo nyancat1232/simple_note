@@ -11,7 +11,9 @@ import pyplus.streamlit as stp
 def upload_button(func,label):
     if st.button(label):
         func()
-        st.toast(f'Succeed: {label}')
+        st.rerun()
+
+st.toast('refreshed')
 
 if (ts_first := stglobal.table_selector()) is not None:
     read_result = ts_first.read()
