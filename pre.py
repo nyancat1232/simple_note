@@ -12,6 +12,14 @@ conn = st.session_state['conn']
 types=['bigint','double precision','text','timestamp with time zone','boolean','url','image_url','video_url','text_with_tag']
 title = 'Simple note'
 
+def get_configs():
+    ts_config = sqlp.TableStructure('sn_config','configs',conn)
+    dd = ts_config.read().to_dict('records')
+    return {elem['name']:elem['value'] for elem in dd}
+configs=get_configs()
+
+ts_tables=sqlp.TableStructure('sn_config',configs['table_list'],conn)
+
 def init_schema():
     lists=sqlp.get_table_list(conn.engine)
     return st.selectbox('select a schema',['public']+lists['table_schema'].unique().tolist())
@@ -63,6 +71,7 @@ def table_selector(key:str='select a table',conn=conn.engine)->sqlp.TableStructu
 
     engine = conn.engine
     df_lists=sqlp.get_table_list(engine)
+    st.dataframe(ts_tables.read())
     event_df = st.dataframe(df_lists,key=key,on_select='rerun',selection_mode='single-row',hide_index=True)
     try:
         selected_row = event_df['selection']['rows'][0]
