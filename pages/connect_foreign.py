@@ -26,15 +26,17 @@ left_column = event_left['selection']['columns'][0]
 right_column = event_right['selection']['columns'][0]
 df_right_to_id = ts_right.get_local_val_to_id(right_column)
 
+apply_foreign = lambda val:df_right_to_id[val]
+
 if left_column is None:
     raise NotImplementedError("Not None")
 else:
     override = st.checkbox('override a column')
     if override:
-        df_left[left_column]=df_left[left_column].apply(lambda val:df_right_to_id[val])
+        df_left[left_column]=df_left[left_column].apply(lambda val:apply_foreign(val))
         df_left
         raise NotImplementedError('No override')
     else:
         local_column = st.text_input('new id column name')
-        df_left[local_column]=df_left[left_column].apply(lambda val:df_right_to_id[val])
+        df_left[local_column]=df_left[left_column].apply(lambda val:apply_foreign(val))
         df_left
