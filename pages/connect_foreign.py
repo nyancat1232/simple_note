@@ -27,7 +27,10 @@ right_column = event_right['selection']['columns'][0]
 df_right_to_id = ts_right.get_local_val_to_id(right_column)
 
 def apply_foreign(val):
-    return df_right_to_id[val]
+    if val in df_right_to_id:
+        return df_right_to_id[val]
+    else:
+        return None
 
 if left_column is None:
     raise NotImplementedError("Not None")
