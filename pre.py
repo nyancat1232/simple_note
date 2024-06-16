@@ -71,7 +71,12 @@ def table_selector(key:str='select a table',conn=conn.engine)->sqlp.TableStructu
 
     engine = conn.engine
     df_lists=sqlp.get_table_list(engine)
-    st.dataframe(ts_tables.read())
+    df_desc = ts_tables.read()
+
+    right_joined_col=['schema','table']
+    df_lists = df_lists.merge(df_desc,'left',left_on=['table_schema','table_name'],right_on=right_joined_col)
+    for col in right_joined_col:
+        del df_lists[col]
     event_df = st.dataframe(df_lists,key=key,on_select='rerun',selection_mode='single-row',hide_index=True)
     try:
         selected_row = event_df['selection']['rows'][0]
