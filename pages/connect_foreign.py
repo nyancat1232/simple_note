@@ -42,5 +42,7 @@ else:
         raise NotImplementedError('No override')
     else:
         local_column = st.text_input('new id column name')
-        df_left[local_column]=df_left[left_column].apply(lambda val:apply_foreign(val))
-        df_left
+        ser_new_col=df_left[left_column].apply(lambda val:apply_foreign(val))
+        ser_new_col.name = local_column
+        df_disp_res=pd.concat([df_left,ser_new_col],axis=1)
+        df_disp_res
