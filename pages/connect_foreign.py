@@ -47,3 +47,11 @@ else:
         ser_new_col.name = local_column
         df_disp_res=pd.concat([df_left,ser_new_col],axis=1)
         df_disp_res
+        if st.button('upload'):
+            ts_left.append_column(**{ser_new_col.name:"bigint"})
+            upload_val = ser_new_col.to_dict()
+            for id in upload_val:
+                ts_left.upload(id,**{ser_new_col.name:upload_val[id]})
+                st.toast([id,{ser_new_col.name:upload_val[id]}])
+            ts_left.connect_foreign_column(ts_right,ser_new_col.name)
+            st.rerun()
