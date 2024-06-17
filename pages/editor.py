@@ -248,7 +248,6 @@ else:
 
     appends = df_append.to_dict(orient='records')
     if st.button('append'):
-        for append in appends:
-            second_ts.upload_append(**append)
+        second_ts.upload_appends(*appends)
         st.toast('append')
         st.rerun()
