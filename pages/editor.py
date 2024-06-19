@@ -16,14 +16,6 @@ with st.sidebar:
     current_tz = st.text_input('current timezone',placeholder='like UTC',value='UTC')
     b_readonly = st.checkbox('readonly')
 
-def filter_new(df:pd.DataFrame,col='new')->dict[int,dict[str,Any]]:
-    d={upper_col[0]:df[upper_col[0],col] for upper_col in df.columns}
-    df_d = pd.DataFrame(d)
-    ret_dict=df_d.to_dict(orient='index')
-    for row in ret_dict:
-        ret_dict[row]={col:ret_dict[row][col] for col in ret_dict[row] if ret_dict[row][col] is not None }
-    return ret_dict
-
 def iter_custom_column_configs(ts:sqlp.TableStructure):
     column_configs = dict()
 
@@ -179,21 +171,30 @@ else:
     custom_configs_rw:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'edit')
     df_edited = st.data_editor(df_with_tag,disabled=second_ts.column_identity,column_config=custom_configs_rw)
 
-    recs = filter_new(df_edited.compare(df_with_tag,keep_equal=False,result_names=('new','old')))
-
-    tp = stp.TabsPlus('popover','type',*[f'upload of {id_row}' for id_row in recs])
-
-    with tp['type']:
-        st.write(df_edited.dtypes)
-
-    for row in recs:
-        with tp[f'upload of {row}']:
-            recs[row]
-
+    idname_df_edited = df_edited.index.name
+    def func_melt(df):
+        return df.reset_index().melt(id_vars='id')
+    df_edited_melt=func_melt(df_edited)
+    df_with_tag_melt=func_melt(df_with_tag)
+    tp_debug = stp.TabsPlus('column','before','after')
+    with tp_debug['before']:
+        df_edited_melt
+    with tp_debug['after']:
+        df_with_tag_melt
+    df_compared = df_edited_melt.compare(df_with_tag_melt)
+    changed=df_compared.index.to_list()
+    df_temp = df_edited_melt.loc[changed]
+    df_temp
+    recs=dict()
+    for temp in df_temp.to_dict('records'):
+        if temp['id'] not in recs:
+            recs[temp['id']] = {}
+        recs[temp['id']][temp['variable']] = temp['value']
+    recs
     if st.button('upload'):
-        for row in recs:
-            st.toast(f'{row}\n{recs[row]}')
-            second_ts.upload(row,**recs[row])
+        for row_id in recs:
+            st.toast(f'{row_id}:{recs[row_id]}')
+            second_ts.upload(id_row=row_id,**recs[row_id])
         st.rerun()
 
 
