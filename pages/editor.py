@@ -176,21 +176,22 @@ else:
         return df.reset_index().melt(id_vars='id')
     df_edited_melt=func_melt(df_edited)
     df_with_tag_melt=func_melt(df_with_tag)
-    tp_debug = stp.TabsPlus('column','before','after')
-    with tp_debug['before']:
-        df_edited_melt
-    with tp_debug['after']:
-        df_with_tag_melt
-    df_compared = df_edited_melt.compare(df_with_tag_melt)
-    changed=df_compared.index.to_list()
-    df_temp = df_edited_melt.loc[changed]
-    df_temp
-    recs=dict()
-    for temp in df_temp.to_dict('records'):
-        if temp['id'] not in recs:
-            recs[temp['id']] = {}
-        recs[temp['id']][temp['variable']] = temp['value']
-    recs
+    with st.expander('debug'):
+        tp_debug = stp.TabsPlus('column','before','after')
+        with tp_debug['before']:
+            df_edited_melt
+        with tp_debug['after']:
+            df_with_tag_melt
+        df_compared = df_edited_melt.compare(df_with_tag_melt)
+        changed=df_compared.index.to_list()
+        df_temp = df_edited_melt.loc[changed]
+        df_temp
+        recs=dict()
+        for temp in df_temp.to_dict('records'):
+            if temp['id'] not in recs:
+                recs[temp['id']] = {}
+            recs[temp['id']][temp['variable']] = temp['value']
+        recs
     if st.button('upload'):
         for row_id in recs:
             st.toast(f'{row_id}:{recs[row_id]}')
@@ -246,7 +247,7 @@ else:
     if len(df_append.columns)<2:
         st.warning('Problem when column is only one. ValueError: setting an array element with a sequence')
         del df_append['__hidden']
-
+    
     appends = df_append.to_dict(orient='records')
     if st.button('append'):
         second_ts.upload_appends(*appends)
