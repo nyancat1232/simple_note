@@ -17,8 +17,6 @@ Tables must have a primary key with a bigint type.
 
 ## Roadmap
 - Column type of Interval support (e.g. duration)
-- Appending a foreign column
-- Connecting between tables by foreign column.
 - Multiple timers and stopwatches
 - Customization of the clock such as hours from wake up.
 - Customization of the dashboard.
@@ -27,5 +25,7 @@ Tables must have a primary key with a bigint type.
 - Using for any database of Postgresql. 
 
 ## Done
+- Appending a foreign column
+- Connecting between tables by foreign column.
 - Expanding a Self-referencing column. 
 - Tag filter 
