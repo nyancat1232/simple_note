@@ -210,32 +210,18 @@ else:
     custom_configs_rw_foreign = {}
 
     if len(col_foreign)>0:
-        foreign_expand = st.multiselect('expand foreign column',col_foreign)
+        tss_foreign = second_ts.get_foreign_tables()
+        tss_foreign
         
-        df_read5 = second_ts.read()
-        foreign_filter = df_read5.columns.to_list()
-        for col in foreign_expand:
-            orig_index = foreign_filter.index(col)
-            foreign_filter.pop(orig_index)
-            for col_expand in df_with_tag.columns:
-                if col_expand.split('.')[0] == col:
-                    foreign_filter.insert(orig_index,col_expand)
-        df_append = df_append[foreign_filter]
-
-        col_foreign_not_expanded = col_foreign-set(foreign_expand)
-        if len(col_foreign_not_expanded)>0:
-            df_foreign_not = second_ts._get_foreign_tables_list()
-            df_foreign_not = df_foreign_not.loc[list(col_foreign_not_expanded)]
-            foreign_not = df_foreign_not.to_dict(orient='index')
-            tab_or_col=stp.TabsPlus(layout='column',titles=[foreign_not])
-            for col in foreign_not:
-                ts_sub = sqlp.TableStructure(foreign_not[col]['upper_schema'],foreign_not[col]['upper_table'],conn.engine)
-                df_display=ts_sub.read_expand()
-                conf = bp.select_yielder(iter_custom_column_configs(ts_sub),'readonly')
-                
-                #display
-                with tab_or_col[col]:
-                    st.dataframe(df_display,column_config=conf)
+        tab_or_col=stp.TabsPlus(layout='column',titles=tss_foreign,hide_titles=False)
+        for col_local_foreign in tss_foreign:
+            ts_sub = tss_foreign[col_local_foreign]
+            df_display=ts_sub.read_expand()
+            conf = bp.select_yielder(iter_custom_column_configs(ts_sub),'readonly')
+            
+            #display
+            with tab_or_col[col_local_foreign]:
+                st.dataframe(df_display,column_config=conf)
 
     for col in df_append.columns.to_list():
         if col.startswith('_'):
