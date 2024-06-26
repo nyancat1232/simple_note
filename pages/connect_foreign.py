@@ -10,7 +10,7 @@ import pyplus.pandas as pdp
 import pyplus.builtin as bp
 from typing import Any
 
-tp=stp.TabsPlus('column','original','foreign')
+tp=stp.TabsPlus(layout='column',titles=['original','foreign'])
 with tp['original']:
     ts_left=table_selector()
 with tp['foreign']:

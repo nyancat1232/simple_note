@@ -177,7 +177,7 @@ else:
     df_edited_melt=func_melt(df_edited)
     df_with_tag_melt=func_melt(df_with_tag)
     with st.expander('debug'):
-        tp_debug = stp.TabsPlus('column','before','after')
+        tp_debug = stp.TabsPlus(layout='column',titles=['before','after'])
         with tp_debug['before']:
             df_edited_melt
         with tp_debug['after']:
@@ -226,7 +226,7 @@ else:
             df_foreign_not = second_ts._get_foreign_tables_list()
             df_foreign_not = df_foreign_not.loc[list(col_foreign_not_expanded)]
             foreign_not = df_foreign_not.to_dict(orient='index')
-            tab_or_col=stp.TabsPlus('column',*foreign_not)
+            tab_or_col=stp.TabsPlus(layout='column',titles=[foreign_not])
             for col in foreign_not:
                 ts_sub = sqlp.TableStructure(foreign_not[col]['upper_schema'],foreign_not[col]['upper_table'],conn.engine)
                 df_display=ts_sub.read_expand()

@@ -19,7 +19,7 @@ if (ts_first := stglobal.table_selector()) is not None:
     read_result = ts_first.read()
     read_result
 
-    tp = stp.TabsPlus('tab','append a column','change column name','change a column order')
+    tp = stp.TabsPlus(layout='tab',titles=['append a column','change column name','change a column order'])
 
     with tp['append a column']:
         df = pd.DataFrame({'name':pd.Series(dtype=pd.StringDtype),'type':pd.Series(dtype=pd.StringDtype)})
@@ -50,7 +50,7 @@ if (ts_first := stglobal.table_selector()) is not None:
     with tp['change a column order']:
         columns=read_result.columns
         df_order = pd.DataFrame({'name':columns,'order':range(len(columns))})
-        tp_order = stp.TabsPlus('column','before','after')
+        tp_order = stp.TabsPlus(layout='column',titles=['before','after'])
         with tp_order['before']:
             df_order = st.data_editor(df_order,column_config={'name':st.column_config.Column(disabled=True)})
         with tp_order['after']:
@@ -58,7 +58,7 @@ if (ts_first := stglobal.table_selector()) is not None:
             df_order_after = pd.DataFrame({'name':columns_after}) 
             df_order_after
 else:
-    tp = stp.TabsPlus('tab','create a table')
+    tp = stp.TabsPlus(layout='tab',titles=['create a table'])
     with tp['create a table']:
         schema_name = stglobal.init_schema()
         table_name = st.text_input('table name')
