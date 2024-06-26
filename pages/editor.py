@@ -33,7 +33,7 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
                 column_configs[col] = st.column_config.DateColumn(f'{col}')
 
     for col in types:
-        match types[col]['domain_name']:
+        match types[col]['display_type']:
             case 'url':
                 column_configs[col] = st.column_config.LinkColumn(f'{col}')
             case 'image_url':
@@ -46,7 +46,7 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
     yield column_configs.copy(),'edit'
 
     for col in types:
-        match types[col]['domain_name']:
+        match types[col]['display_type']:
             case 'image_url':
                 column_configs[col] = st.column_config.ImageColumn(f'{col}',)
 
@@ -56,7 +56,7 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
 
     col_expanded_tag=ts.get_types_expanded().to_dict('index')
     for col in col_expanded_tag:
-        match col_expanded_tag[col]['domain_name']:
+        match col_expanded_tag[col]['display_type']:
             case 'tag_string':
                 column_configs[col] = None
     yield column_configs.copy(), 'readonly' 
@@ -77,7 +77,7 @@ def iter_tag_process(ts:sqlp.TableStructure):
     col_expanded_tag=ts.get_types_expanded().to_dict('index')
 
     for col in col_expanded_tag:
-        match col_expanded_tag[col]['domain_name']:
+        match col_expanded_tag[col]['display_type']:
             case 'text_with_tag':
                 df[f'_tags_{col}']=df[col].str.split('#')
                 def extract_tags(cols:list):
@@ -160,7 +160,7 @@ if b_readonly:
             continue
 
         if row[col] is not None:
-            match types[col]['domain_name']:
+            match types[col]['display_type']:
                 case 'image_url':
                     st.markdown(f'#### {col}')
                     st.image(row[col])
