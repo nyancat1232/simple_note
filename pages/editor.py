@@ -29,7 +29,7 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
         types
     for col in types:
         disable_this_col = False
-        if types[col]['is_generated'] == True:
+        if types[col]['is_generated'] == 'ALWAYS':
             disable_this_col = True
         match types[col]['display_type']:
             case 'timestamp with time zone':
