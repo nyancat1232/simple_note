@@ -25,6 +25,8 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
         ids_foreign=tss_foreign[col].read().index.to_list()
         column_configs[col] = st.column_config.SelectboxColumn(f'{col}',options=ids_foreign,width='small')
 
+    with st.expander('debug types of the current table.'):
+        types
     for col in types:
         match types[col]['display_type']:
             case 'timestamp with time zone':
