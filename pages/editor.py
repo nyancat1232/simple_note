@@ -31,9 +31,6 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
                 column_configs[col] = st.column_config.DatetimeColumn(f'{col}',timezone=current_tz)
             case 'date':
                 column_configs[col] = st.column_config.DateColumn(f'{col}')
-
-    for col in types:
-        match types[col]['display_type']:
             case 'url':
                 column_configs[col] = st.column_config.LinkColumn(f'{col}')
             case 'image_url':
