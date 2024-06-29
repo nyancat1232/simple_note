@@ -13,7 +13,7 @@ from typing import Any
 with st.sidebar:
     second_ts = table_selector('select a table')
 
-    current_tz = st.text_input('current timezone',placeholder='like UTC',value='UTC')
+    current_tz = st.text_input('current timezone',placeholder='like UTC',value=st.secrets['default_timezone'])
     b_readonly = st.checkbox('readonly')
 
 def iter_custom_column_configs(ts:sqlp.TableStructure):
