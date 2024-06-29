@@ -173,8 +173,9 @@ else:
     df_edited = st.data_editor(df_with_tag,disabled=second_ts.column_identity,column_config=custom_configs_rw)
 
     idname_df_edited = df_edited.index.name
-    def func_melt(df):
-        return df.reset_index().melt(id_vars='id')
+    def func_melt(df:pd.DataFrame):
+        df_reset = df.copy().reset_index()
+        return df_reset.melt(id_vars='id',value_name='_sn_value')
     df_edited_melt=func_melt(df_edited)
     df_with_tag_melt=func_melt(df_with_tag)
     with st.expander('debug'):
@@ -191,7 +192,7 @@ else:
         for temp in df_temp.to_dict('records'):
             if temp['id'] not in recs:
                 recs[temp['id']] = {}
-            recs[temp['id']][temp['variable']] = temp['value']
+            recs[temp['id']][temp['variable']] = temp['_sn_value']
         recs
     if st.button('upload'):
         for row_id in recs:
