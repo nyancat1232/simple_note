@@ -28,17 +28,22 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
     with st.expander('debug types of the current table.'):
         types
     for col in types:
+        disable_this_col = False
+        if types[col]['is_generated'] == True:
+            disable_this_col = True
         match types[col]['display_type']:
             case 'timestamp with time zone':
-                column_configs[col] = st.column_config.DatetimeColumn(f'{col}',timezone=current_tz)
+                column_configs[col] = st.column_config.DatetimeColumn(f'{col}',timezone=current_tz,disabled=disable_this_col)
             case 'date':
-                column_configs[col] = st.column_config.DateColumn(f'{col}')
+                column_configs[col] = st.column_config.DateColumn(f'{col}',disabled=disable_this_col)
             case 'url':
-                column_configs[col] = st.column_config.LinkColumn(f'{col}')
+                column_configs[col] = st.column_config.LinkColumn(f'{col}',disabled=disable_this_col)
             case 'image_url':
-                column_configs[col] = st.column_config.LinkColumn(f'{col}')
+                column_configs[col] = st.column_config.LinkColumn(f'{col}',disabled=disable_this_col)
             case 'video_url':
-                column_configs[col] = st.column_config.LinkColumn(f'{col}')
+                column_configs[col] = st.column_config.LinkColumn(f'{col}',disabled=disable_this_col)
+            case _:
+                column_configs[col] = st.column_config.Column(f'{col}',disabled=disable_this_col)
     
     column_configs['__hidden']=st.column_config.Column(disabled=True)
 
