@@ -1,7 +1,5 @@
 import streamlit as st
-from pre import conn,ex,title,table_selector
-ex()
-st.set_page_config(page_title=title,page_icon='📒',layout='wide')
+from pre import table_selector
 
 import pyplus.sql as sqlp
 import pyplus.streamlit as stp
@@ -19,7 +17,7 @@ with st.sidebar:
 def iter_custom_column_configs(ts:sqlp.TableStructure):
     column_configs = dict()
 
-    types = ts.get_types_expanded().to_dict(orient='index')
+    types = ts.get_types_expanded().to_dict(orient='index').copy()
     tss_foreign = ts.get_foreign_tables()
     for col in tss_foreign:
         ids_foreign=tss_foreign[col].read().index.to_list()
@@ -172,6 +170,7 @@ if b_readonly:
 else:
     st.subheader('edit mode')
     custom_configs_rw:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'edit')
+    custom_configs_rw
     df_edited = st.data_editor(df_with_tag,disabled=second_ts.column_identity,column_config=custom_configs_rw)
 
     idname_df_edited = df_edited.index.name
