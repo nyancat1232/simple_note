@@ -169,7 +169,8 @@ if b_readonly:
 else:
     st.subheader('edit mode')
     custom_configs_rw:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'edit')
-    custom_configs_rw
+    with st.expander('column config'):
+        custom_configs_rw
     df_edited = st.data_editor(df_with_tag,disabled=second_ts.column_identity,column_config=custom_configs_rw)
 
     idname_df_edited = df_edited.index.name
