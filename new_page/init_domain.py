@@ -1,12 +1,10 @@
 import streamlit as st
-from pre import ex,conn
-ex()
 
 import pyplus.sql as sqlp
 
 if st.button('init domain'):
-    sqlp.create_domain(conn.engine,'url','text')
-    sqlp.create_domain(conn.engine,'image_url','text')
-    sqlp.create_domain(conn.engine,'video_url','text')
-    sqlp.create_domain(conn.engine,'text_with_tag','text')
+    sqlp.create_domain(st.session_state['conn'].engine,'url','text')
+    sqlp.create_domain(st.session_state['conn'].engine,'image_url','text')
+    sqlp.create_domain(st.session_state['conn'].engine,'video_url','text')
+    sqlp.create_domain(st.session_state['conn'].engine,'text_with_tag','text')
     st.toast('Initialization succeed domain')
