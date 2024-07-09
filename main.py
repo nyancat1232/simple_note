@@ -2,12 +2,12 @@ import streamlit as st
 import pyplus.streamlit as stp
 import pyplus.sql as sqlp
 
-if stp.check_password() != True:
-    st.stop()
-
 page_title = 'Simple note'
 page_icon='📒'
 st.set_page_config(page_title=page_title,page_icon=page_icon,layout='wide')
+
+if stp.check_password() != True:
+    st.stop()
 
 #Set global vars
 if 'conn' not in st.session_state:
