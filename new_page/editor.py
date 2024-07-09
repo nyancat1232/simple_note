@@ -6,7 +6,6 @@ import pyplus.streamlit as stp
 import pandas as pd
 import pyplus.pandas as pdp
 import pyplus.builtin as bp
-from typing import Any
 
 with st.sidebar:
     second_ts = table_selector('select a table')
