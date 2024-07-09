@@ -227,15 +227,17 @@ else:
         if col.startswith('_'):
             del df_append[col]
     
-    if len(df_append.columns)<2:
+    if len(df_append.columns)<3:
         st.warning('Problem when column is only one. ValueError: setting an array element with a sequence')
         df_append['__hidden']=df_append.index
     df_append = st.data_editor(df_append,num_rows='dynamic',column_config={**custom_configs_rw,**custom_configs_rw_foreign})
-    if len(df_append.columns)<2:
+    if len(df_append.columns)<3:
         st.warning('Problem when column is only one. ValueError: setting an array element with a sequence')
         del df_append['__hidden']
     
     appends = df_append.to_dict(orient='records')
+    with st.expander('upload preview'):
+        appends
     if st.button('append'):
         second_ts.upload_appends(*appends)
         st.toast('append')
