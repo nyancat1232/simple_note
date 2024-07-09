@@ -1,4 +1,4 @@
-FROM python:3.11
+FROM python:3.12
 
 WORKDIR /study
 
@@ -11,7 +11,8 @@ RUN apt-get update && apt-get install -y \
 
 COPY requirements.txt ./
 COPY pyplus ./pyplus
-COPY pages ./pages
+COPY new_page ./new_page
+COPY table_editor ./table_editor
 COPY main.py ./
 COPY pre.py ./
 COPY .streamlit ./.streamlit
