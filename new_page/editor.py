@@ -1,14 +1,11 @@
 import streamlit as st
-from pre import conn,ex,title,table_selector
-ex()
-st.set_page_config(page_title=title,page_icon='📒',layout='wide')
+from pre import table_selector
 
 import pyplus.sql as sqlp
 import pyplus.streamlit as stp
 import pandas as pd
 import pyplus.pandas as pdp
 import pyplus.builtin as bp
-from typing import Any
 
 with st.sidebar:
     second_ts = table_selector('select a table')
@@ -19,7 +16,7 @@ with st.sidebar:
 def iter_custom_column_configs(ts:sqlp.TableStructure):
     column_configs = dict()
 
-    types = ts.get_types_expanded().to_dict(orient='index')
+    types = ts.get_types_expanded().to_dict(orient='index').copy()
     tss_foreign = ts.get_foreign_tables()
     for col in tss_foreign:
         ids_foreign=tss_foreign[col].read().index.to_list()
@@ -172,6 +169,8 @@ if b_readonly:
 else:
     st.subheader('edit mode')
     custom_configs_rw:dict = bp.select_yielder(iter_custom_column_configs(second_ts),'edit')
+    with st.expander('column config'):
+        custom_configs_rw
     df_edited = st.data_editor(df_with_tag,disabled=second_ts.column_identity,column_config=custom_configs_rw)
 
     idname_df_edited = df_edited.index.name
@@ -229,15 +228,18 @@ else:
         if col.startswith('_'):
             del df_append[col]
     
-    if len(df_append.columns)<2:
+    cond_satisfies_warning = len(df_append.columns)<3
+    if cond_satisfies_warning:
         st.warning('Problem when column is only one. ValueError: setting an array element with a sequence')
         df_append['__hidden']=df_append.index
     df_append = st.data_editor(df_append,num_rows='dynamic',column_config={**custom_configs_rw,**custom_configs_rw_foreign})
-    if len(df_append.columns)<2:
+    if cond_satisfies_warning:
         st.warning('Problem when column is only one. ValueError: setting an array element with a sequence')
         del df_append['__hidden']
     
     appends = df_append.to_dict(orient='records')
+    with st.expander('upload preview'):
+        appends
     if st.button('append'):
         second_ts.upload_appends(*appends)
         st.toast('append')
