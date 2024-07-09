@@ -214,7 +214,6 @@ else:
 
     if len(col_foreign)>0:
         tss_foreign = second_ts.get_foreign_tables()
-        tss_foreign
         
         tab_or_col=stp.TabsPlus(layout='column',titles=tss_foreign,hide_titles=False)
         for col_local_foreign in tss_foreign:
