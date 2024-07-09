@@ -227,11 +227,12 @@ else:
         if col.startswith('_'):
             del df_append[col]
     
-    if len(df_append.columns)<3:
+    cond_satisfies_warning = len(df_append.columns)<3
+    if cond_satisfies_warning:
         st.warning('Problem when column is only one. ValueError: setting an array element with a sequence')
         df_append['__hidden']=df_append.index
     df_append = st.data_editor(df_append,num_rows='dynamic',column_config={**custom_configs_rw,**custom_configs_rw_foreign})
-    if len(df_append.columns)<3:
+    if cond_satisfies_warning:
         st.warning('Problem when column is only one. ValueError: setting an array element with a sequence')
         del df_append['__hidden']
     
