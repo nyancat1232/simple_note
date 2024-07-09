@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 
 import pre as stglobal
-stglobal.ex()
 
 import pyplus.sql as sqlp
 import pyplus.streamlit as stp
@@ -23,7 +22,7 @@ if (ts_first := stglobal.table_selector()) is not None:
 
     with tp['append a column']:
         df = pd.DataFrame({'name':pd.Series(dtype=pd.StringDtype),'type':pd.Series(dtype=pd.StringDtype)})
-        sttype = {'name':st.column_config.TextColumn('name'),'type':st.column_config.SelectboxColumn('type',options=stglobal.types)}
+        sttype = {'name':st.column_config.TextColumn('name'),'type':st.column_config.SelectboxColumn('type',options=st.session_state['types'])}
         result = st.data_editor(df,num_rows='dynamic',column_config=sttype)
         result = {rec['name']:rec['type'] for rec in result.to_dict(orient='records')}
         result
@@ -65,12 +64,12 @@ else:
 
 
         cols = {'':None}
-        sttype = {'value':st.column_config.SelectboxColumn('test',options=stglobal.types)}
+        sttype = {'value':st.column_config.SelectboxColumn('test',options=st.session_state['types'])}
         result_type = st.data_editor(cols,num_rows='dynamic',column_config=sttype)
         result_type
 
         def upload_create():
-            ss = sqlp.SchemaStructure(schema_name=schema_name,engine=stglobal.conn.engine)
+            ss = sqlp.SchemaStructure(schema_name=schema_name,engine=st.session_state['conn'].engine)
             ss.create_table(table_name,**result_type)
 
         upload_button(upload_create,'create table')

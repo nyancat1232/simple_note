@@ -1,14 +1,7 @@
 import streamlit as st
-from pre import conn,ex,table_selector
-ex()
-
-
-import pyplus.sql as sqlp
+from pre import table_selector
 import pyplus.streamlit as stp
 import pandas as pd
-import pyplus.pandas as pdp
-import pyplus.builtin as bp
-from typing import Any
 
 tp=stp.TabsPlus(layout='column',titles=['original','foreign'])
 with tp['original']:

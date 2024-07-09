@@ -15,6 +15,9 @@ if 'conn' not in st.session_state:
 st.session_state['types']=['bigint','double precision','text','timestamp with time zone','boolean','url','image_url','video_url','text_with_tag']
 
 pg = st.navigation({'main':[st.Page('new_page/empty.py',title='empty'),
-                            st.Page('new_page/editor.py',title='editor')]
+                            st.Page('new_page/editor.py',title='editor'),
+                            st.Page('new_page/connect_foreign.py',title='foreign connection'),
+                            st.Page('new_page/create_table.py',title='table or column editor'),
+                            ]
                     })
 pg.run()
