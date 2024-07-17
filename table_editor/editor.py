@@ -29,6 +29,8 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
         if types[col]['is_generated'] == 'ALWAYS':
             disable_this_col = True
         match types[col]['display_type']:
+            case 'date':
+                column_configs[col] = st.column_config.DateColumn(disabled=disable_this_col)
             case 'timestamp with time zone':
                 column_configs[col] = st.column_config.DatetimeColumn(timezone=current_tz,disabled=disable_this_col)
             case 'url':
