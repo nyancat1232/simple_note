@@ -32,5 +32,4 @@ df_expand
 
 "filter uploader"
 df_expand = df_expand[[replacer[key] for key in replacer]]
-del df_expand[merge]
 df_expand
