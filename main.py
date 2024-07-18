@@ -16,7 +16,8 @@ st.session_state['types']=['bigint','double precision','text','timestamp with ti
 
 pg = st.navigation({'main':[st.Page('new_page/empty.py',title='empty'),
                             st.Page('table_editor/editor.py',title='editor'),
-                            st.Page('table_editor/create_table.py',title='table or column editor')
+                            st.Page('table_editor/create_table.py',title='table or column editor'),
+                            st.Page('table_editor/remover_table.py',title='row or column deletion'),
                             ],
                     'foreign':[
                             st.Page('table_editor/connect_foreign.py',title='foreign connection'),
