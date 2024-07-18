@@ -19,12 +19,12 @@ df_expand
 foreigns = ts.get_foreign_tables()
 merge = st.selectbox('merge this local foreign id',foreigns)
 
-"filter uploader"
-df_expand = df_expand[[col for col in df_expand.columns if col.startswith(merge)]]
-del df_expand[merge]
+"rename"
+replacer = {col:col[col.find('.')+1:] for col in df_expand.columns if col.startswith(merge)}
+df_expand = df_expand.rename(columns= replacer)
 df_expand
 
-"rename"
-replacer = {col:col.replace('.','__') for col in df_expand.columns}
-df_expand = df_expand.rename(columns= replacer)
+"filter uploader"
+df_expand = df_expand[[replacer[key] for key in replacer]]
+del df_expand[merge]
 df_expand
