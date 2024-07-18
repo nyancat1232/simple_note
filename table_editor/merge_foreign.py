@@ -10,9 +10,12 @@ row = event['selection']['rows']
 address=df_list.loc[row].to_dict('records')[0]
 address
 
+"load"
 ts = sqlp.TableStructure(address['table_schema'],address['table_name'],st.session_state['conn'].engine)
 df_expand = ts.read_expand()
 df_expand
+
+"select"
 foreigns = ts.get_foreign_tables()
 merge = st.selectbox('merge this local foreign id',foreigns)
 
