@@ -20,7 +20,13 @@ foreigns = ts.get_foreign_tables()
 merge = st.selectbox('merge this local foreign id',foreigns)
 
 "rename"
-replacer = {col:col[col.find('.')+1:] for col in df_expand.columns if col.startswith(merge)}
+def apply_check(col):
+    new_col=col[col.find('.')+1:] 
+    if new_col in df_expand.columns:
+        return new_col+'__'+col[:col.find('.')]
+    else:
+        return new_col
+replacer = {col:apply_check(col) for col in df_expand.columns if col.startswith(merge+'.')}
 df_expand = df_expand.rename(columns= replacer)
 df_expand
 
