@@ -14,3 +14,13 @@ address
 ts = sqlp.TableStructure(address['table_schema'],address['table_name'],st.session_state['conn'].engine)
 df_expand = ts.read_expand()
 df_expand
+
+"select"
+event = st.dataframe(df_expand,on_select='rerun',selection_mode=['multi-column','multi-row'])
+event
+
+"remove col"
+df_expand[event['selection']['columns']]
+
+"remove row"
+df_expand.iloc[event['selection']['rows']]
