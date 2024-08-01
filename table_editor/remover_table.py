@@ -26,7 +26,7 @@ if st.button('delete columns'):
     for col in event['selection']['columns']:
         st.toast(col)
         ts.delete_column(col)
-        st.rerun()
+    st.rerun()
 
 "remove row"
 df_filtered_row=df_expand.iloc[event['selection']['rows']]
@@ -36,4 +36,4 @@ if st.button('delete rows'):
     for row in rows:
         st.toast(row)
         ts.delete_row(row)
-        st.rerun()
+    st.rerun()
