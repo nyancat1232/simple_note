@@ -217,7 +217,7 @@ else:
     if cond_satisfies_warning:
         st.warning('Problem when column is only one. ValueError: setting an array element with a sequence')
         df_append['__hidden']=df_append.index
-    df_append = st.data_editor(df_append,num_rows='dynamic',column_config={**custom_configs_rw})
+    df_append = st.data_editor(df_append,num_rows='dynamic',column_config=custom_configs_rw)
     if cond_satisfies_warning:
         st.warning('Problem when column is only one. ValueError: setting an array element with a sequence')
         del df_append['__hidden']
