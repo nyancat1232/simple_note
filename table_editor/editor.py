@@ -214,8 +214,7 @@ else:
     for col in df_append.columns.to_list():
         if col.startswith('_'):
             del df_append[col]
-    
-    cond_satisfies_warning = len(df_append.columns)<3
+    cond_satisfies_warning = len(df_append.columns)<2
     if cond_satisfies_warning:
         st.warning('Problem when column is only one. ValueError: setting an array element with a sequence')
         df_append['__hidden']=df_append.index
