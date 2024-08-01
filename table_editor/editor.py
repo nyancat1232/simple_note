@@ -62,17 +62,6 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
                 column_configs[col] = None
     yield column_configs.copy(), 'readonly' 
 
-def extract_foreign_column(ts:sqlp.TableStructure)->tuple[set,set]:
-    tss_foreign = ts.get_foreign_tables()
-    col_foreign_r = set((local_foreign_col for local_foreign_col in tss_foreign))
-    col_foreign_ex = set()
-    for col_local_foreign in tss_foreign:
-        foreign_columns = tss_foreign[col_local_foreign].read_expand().columns.to_list()
-        foreign_columns = set((f'{col_local_foreign}.{col}' for col in foreign_columns))
-        col_foreign_ex = col_foreign_ex|foreign_columns
-    
-    return col_foreign_r,col_foreign_ex
-
 def iter_tag_process(ts:sqlp.TableStructure):
     df=ts.read_expand()
     col_expanded_tag=ts.get_types_expanded().to_dict('index')
@@ -206,25 +195,21 @@ else:
 
     st.subheader('append mode')
 
-    df_append = pdp.empty_records(df_with_tag)
+    df_append = pdp.empty_records(second_ts.read())
     df_append = df_append.reset_index(drop=True)
-
-    col_foreign,col_foreign_expanded = extract_foreign_column(second_ts)
-
     custom_configs_rw_foreign = {}
 
-    if len(col_foreign)>0:
-        tss_foreign = second_ts.get_foreign_tables()
+    tss_foreign = second_ts.get_foreign_tables()
+    
+    tab_or_col=stp.TabsPlus(layout='column',titles=tss_foreign,hide_titles=False)
+    for col_local_foreign in tss_foreign:
+        ts_sub = tss_foreign[col_local_foreign]
+        df_display=ts_sub.read_expand()
+        conf = bp.select_yielder(iter_custom_column_configs(ts_sub),'readonly')
         
-        tab_or_col=stp.TabsPlus(layout='column',titles=tss_foreign,hide_titles=False)
-        for col_local_foreign in tss_foreign:
-            ts_sub = tss_foreign[col_local_foreign]
-            df_display=ts_sub.read_expand()
-            conf = bp.select_yielder(iter_custom_column_configs(ts_sub),'readonly')
-            
-            #display
-            with tab_or_col[col_local_foreign]:
-                st.dataframe(df_display,column_config=conf)
+        #display
+        with tab_or_col[col_local_foreign]:
+            st.dataframe(df_display,column_config=conf)
 
     for col in df_append.columns.to_list():
         if col.startswith('_'):
