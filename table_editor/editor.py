@@ -197,7 +197,6 @@ else:
 
     df_append = pdp.empty_records(second_ts.read())
     df_append = df_append.reset_index(drop=True)
-    custom_configs_rw_foreign = {}
 
     tss_foreign = second_ts.get_foreign_tables()
     
@@ -218,7 +217,7 @@ else:
     if cond_satisfies_warning:
         st.warning('Problem when column is only one. ValueError: setting an array element with a sequence')
         df_append['__hidden']=df_append.index
-    df_append = st.data_editor(df_append,num_rows='dynamic',column_config={**custom_configs_rw,**custom_configs_rw_foreign})
+    df_append = st.data_editor(df_append,num_rows='dynamic',column_config={**custom_configs_rw})
     if cond_satisfies_warning:
         st.warning('Problem when column is only one. ValueError: setting an array element with a sequence')
         del df_append['__hidden']
