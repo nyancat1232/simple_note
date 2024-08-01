@@ -16,8 +16,11 @@ with tp['foreign']:
     event_right = st.dataframe(df_right,on_select='rerun',selection_mode='single-column')
 
 left_column = event_left['selection']['columns'][0]
-right_column = event_right['selection']['columns'][0]
-df_right_to_id = ts_right.get_local_val_to_id(right_column)
+try:
+    right_column = event_right['selection']['columns'][0]
+    df_right_to_id = ts_right.get_local_val_to_id(right_column)
+except:
+    df_right_to_id = {val:val for val in df_right.index.to_list()}
 
 def apply_foreign(val):
     if val in df_right_to_id:
