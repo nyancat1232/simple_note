@@ -17,10 +17,6 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
     column_configs = dict()
 
     types = ts.get_types_expanded().to_dict(orient='index').copy()
-    tss_foreign = ts.get_foreign_tables()
-    for col in tss_foreign:
-        ids_foreign=tss_foreign[col].read().index.to_list()
-        column_configs[col] = st.column_config.SelectboxColumn(f'{col}',options=ids_foreign,width='small')
 
     with st.expander('debug types of the current table.'):
         types
@@ -42,6 +38,11 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
             case _:
                 column_configs[col] = st.column_config.Column(disabled=disable_this_col)
     
+    tss_foreign = ts.get_foreign_tables()
+    for col in tss_foreign:
+        ids_foreign=tss_foreign[col].read().index.to_list()
+        column_configs[col] = st.column_config.SelectboxColumn(f'{col}',options=ids_foreign,width='small')
+
     column_configs['__hidden']=st.column_config.Column(disabled=True)
 
     yield column_configs.copy(),'edit'
