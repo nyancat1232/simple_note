@@ -25,26 +25,23 @@ def apply_foreign(val):
     else:
         return None
 
-if left_column is None:
-    raise NotImplementedError("Not None")
+override = st.checkbox('override a column')
+if override:
+    df_left[left_column]=df_left[left_column].apply(lambda val:apply_foreign(val))
+    df_left
+    raise NotImplementedError('No override')
 else:
-    override = st.checkbox('override a column')
-    if override:
-        df_left[left_column]=df_left[left_column].apply(lambda val:apply_foreign(val))
-        df_left
-        raise NotImplementedError('No override')
-    else:
-        local_column = st.text_input('new id column name')
-        ser_new_col=df_left[left_column].apply(lambda val:apply_foreign(val))
-        ser_new_col=ser_new_col.astype("Int64")
-        ser_new_col.name = local_column
-        df_disp_res=pd.concat([df_left,ser_new_col],axis=1)
-        df_disp_res
-        if st.button('upload'):
-            ts_left.append_column(**{ser_new_col.name:"bigint"})
-            upload_val = ser_new_col.to_dict()
-            for id in upload_val:
-                ts_left.upload(id,**{ser_new_col.name:upload_val[id]})
-                st.toast([id,{ser_new_col.name:upload_val[id]}])
-            ts_left.connect_foreign_column(ts_right,ser_new_col.name)
-            st.rerun()
+    local_column = st.text_input('new id column name')
+    ser_new_col=df_left[left_column].apply(lambda val:apply_foreign(val))
+    ser_new_col=ser_new_col.astype("Int64")
+    ser_new_col.name = local_column
+    df_disp_res=pd.concat([df_left,ser_new_col],axis=1)
+    df_disp_res
+    if st.button('upload'):
+        ts_left.append_column(**{ser_new_col.name:"bigint"})
+        upload_val = ser_new_col.to_dict()
+        for id in upload_val:
+            ts_left.upload(id,**{ser_new_col.name:upload_val[id]})
+            st.toast([id,{ser_new_col.name:upload_val[id]}])
+        ts_left.connect_foreign_column(ts_right,ser_new_col.name)
+        st.rerun()
