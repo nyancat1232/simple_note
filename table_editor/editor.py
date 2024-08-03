@@ -23,20 +23,23 @@ st.subheader('edit mode')
 custom_configs_rw:dict = bp.select_yielder(stglobal.iter_custom_column_configs(second_ts),'edit')
 df_edited = st.data_editor(df_with_tag,disabled=second_ts.column_identity,column_config=custom_configs_rw)
 
-idname_df_edited = df_edited.index.name
-def func_melt(df:pd.DataFrame):
-    df_reset = df.copy().reset_index()
-    return df_reset.melt(id_vars='id',value_name='_sn_value')
-df_edited_melt=func_melt(df_edited)
-df_with_tag_melt=func_melt(df_with_tag)
-df_compared = df_edited_melt.compare(df_with_tag_melt)
-changed=df_compared.index.to_list()
-df_temp = df_edited_melt.loc[changed]
-recs=dict()
-for temp in df_temp.to_dict('records'):
-    if temp['id'] not in recs:
-        recs[temp['id']] = {}
-    recs[temp['id']][temp['variable']] = temp['_sn_value']
+def get_comparison(df_new,df_old):
+    def func_melt(df:pd.DataFrame):
+        df_reset = df.copy().reset_index()
+        return df_reset.melt(id_vars='id',value_name='_sn_value')
+    df_edited_melt=func_melt(df_new)
+    df_with_tag_melt=func_melt(df_old)
+    df_compared = df_edited_melt.compare(df_with_tag_melt)
+    changed=df_compared.index.to_list()
+    df_temp = df_edited_melt.loc[changed]
+    recs=dict()
+    for temp in df_temp.to_dict('records'):
+        if temp['id'] not in recs:
+            recs[temp['id']] = {}
+        recs[temp['id']][temp['variable']] = temp['_sn_value']
+    return recs
+
+recs=get_comparison(df_edited,df_with_tag)
 
 if st.button('upload'):
     for row_id in recs:
