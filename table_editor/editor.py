@@ -38,16 +38,16 @@ with st.expander('debug'):
         df_edited_melt
     with tp_debug['after']:
         df_with_tag_melt
-    df_compared = df_edited_melt.compare(df_with_tag_melt)
-    changed=df_compared.index.to_list()
-    df_temp = df_edited_melt.loc[changed]
-    df_temp
-    recs=dict()
-    for temp in df_temp.to_dict('records'):
-        if temp['id'] not in recs:
-            recs[temp['id']] = {}
-        recs[temp['id']][temp['variable']] = temp['_sn_value']
-    recs
+df_compared = df_edited_melt.compare(df_with_tag_melt)
+changed=df_compared.index.to_list()
+df_temp = df_edited_melt.loc[changed]
+df_temp
+recs=dict()
+for temp in df_temp.to_dict('records'):
+    if temp['id'] not in recs:
+        recs[temp['id']] = {}
+    recs[temp['id']][temp['variable']] = temp['_sn_value']
+recs
 if st.button('upload'):
     for row_id in recs:
         st.toast(f'{row_id}:{recs[row_id]}')
