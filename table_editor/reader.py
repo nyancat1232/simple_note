@@ -1,5 +1,5 @@
 import streamlit as st
-from pre import table_selector
+import pre as stglobal
 
 import pyplus.sql as sqlp
 import pyplus.streamlit as stp
@@ -8,7 +8,7 @@ import pyplus.pandas as pdp
 import pyplus.builtin as bp
 
 with st.sidebar:
-    second_ts = table_selector('select a table')
+    second_ts = stglobal.table_selector('select a table')
 
     current_tz = st.text_input('current timezone',placeholder='like UTC',value=st.secrets['default_timezone'])
 
