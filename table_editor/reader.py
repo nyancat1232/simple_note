@@ -10,7 +10,7 @@ import pyplus.builtin as bp
 with st.sidebar:
     second_ts = stglobal.table_selector('select a table')
 
-df_with_tag = bp.select_yielder(stglobal.iter_tag_process(second_ts),'filter_tag')
+df_with_tag:pd.DataFrame = bp.select_yielder(stglobal.iter_tag_process(second_ts),'filter_tag')
 
 temp=second_ts.get_foreign_tables()
 for col in temp:
