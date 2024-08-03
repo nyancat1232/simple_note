@@ -27,11 +27,11 @@ def get_comparison(df_new,df_old):
     def func_melt(df:pd.DataFrame):
         df_reset = df.copy().reset_index()
         return df_reset.melt(id_vars='id',value_name='_sn_value')
-    df_edited_melt=func_melt(df_new)
-    df_with_tag_melt=func_melt(df_old)
-    df_compared = df_edited_melt.compare(df_with_tag_melt)
+    df_new_melt=func_melt(df_new)
+    df_old_melt=func_melt(df_old)
+    df_compared = df_new_melt.compare(df_old_melt)
     changed=df_compared.index.to_list()
-    df_temp = df_edited_melt.loc[changed]
+    df_temp = df_new_melt.loc[changed]
     recs=dict()
     for temp in df_temp.to_dict('records'):
         if temp['id'] not in recs:
