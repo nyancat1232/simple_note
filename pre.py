@@ -68,8 +68,6 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
 
     types = ts.get_types_expanded().to_dict(orient='index').copy()
 
-    with st.expander('debug types of the current table.'):
-        types
     for col in types:
         disable_this_col = False
         if types[col]['is_generated'] == 'ALWAYS':
