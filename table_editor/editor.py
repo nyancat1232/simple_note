@@ -18,7 +18,6 @@ df_with_tag = bp.select_yielder(stglobal.iter_tag_process(second_ts),'filter_tag
 temp=second_ts.get_foreign_tables()
 for col in temp:
     bb=second_ts.check_selfref_table(temp[col])
-    bb
 
 st.subheader('edit mode')
 custom_configs_rw:dict = bp.select_yielder(stglobal.iter_custom_column_configs(second_ts),'edit')
