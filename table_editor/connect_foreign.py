@@ -30,6 +30,8 @@ def apply_foreign(val):
 
 override = st.checkbox('override a column')
 if override:
+    #Overriding a column
+
     ser_override_column=df_left[left_column].apply(lambda val:apply_foreign(val))
     df_left[left_column]=ser_override_column
     df_left
@@ -49,6 +51,7 @@ if override:
 
 else:
     local_column = st.text_input('new id column name')
+
     ser_new_col=df_left[left_column].apply(lambda val:apply_foreign(val))
     ser_new_col=ser_new_col.astype("Int64")
     ser_new_col.name = local_column
