@@ -30,9 +30,23 @@ def apply_foreign(val):
 
 override = st.checkbox('override a column')
 if override:
-    df_left[left_column]=df_left[left_column].apply(lambda val:apply_foreign(val))
+    ser_override_column=df_left[left_column].apply(lambda val:apply_foreign(val))
+    df_left[left_column]=ser_override_column
     df_left
-    raise NotImplementedError('No override')
+    "changing column to"
+    ser_override_column
+    "connect"
+    f"{left_column} and {ts_right.column_identity[0]}"
+    if st.button('upload'):
+        upload_val = ser_override_column.to_dict()
+        st.toast('override existing column')
+        for id in upload_val:
+            ts_left.upload(id,**{ser_override_column.name:upload_val[id]})
+            st.toast([id,{ser_override_column.name:upload_val[id]}])
+        st.toast('connect foreign column')
+        ts_left.connect_foreign_column(ts_right,left_column)
+        st.rerun()
+
 else:
     local_column = st.text_input('new id column name')
     ser_new_col=df_left[left_column].apply(lambda val:apply_foreign(val))
