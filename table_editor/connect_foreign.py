@@ -62,6 +62,7 @@ else:
     "connect"
     f"{ser_new_col.name} and {ts_right.column_identity[0]}"
     if st.button('upload'):
+        st.toast(f'create a column {ser_new_col.name}')
         ts_left.append_column(**{ser_new_col.name:"bigint"})
         upload_val = ser_new_col.to_dict()
         for id in upload_val:
