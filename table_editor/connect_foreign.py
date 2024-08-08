@@ -54,6 +54,10 @@ else:
     ser_new_col.name = local_column
     df_disp_res=pd.concat([df_left,ser_new_col],axis=1)
     df_disp_res
+    "append column"
+    ser_new_col
+    "connect"
+    f"{ser_new_col.name} and {ts_right.column_identity[0]}"
     if st.button('upload'):
         ts_left.append_column(**{ser_new_col.name:"bigint"})
         upload_val = ser_new_col.to_dict()
