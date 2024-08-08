@@ -65,8 +65,10 @@ else:
         st.toast(f'create a column {ser_new_col.name}')
         ts_left.append_column(**{ser_new_col.name:"bigint"})
         upload_val = ser_new_col.to_dict()
+        st.toast('upload a column')
         for id in upload_val:
             ts_left.upload(id,**{ser_new_col.name:upload_val[id]})
             st.toast([id,{ser_new_col.name:upload_val[id]}])
+        st.toast('connect foreign column')
         ts_left.connect_foreign_column(ts_right,ser_new_col.name)
         st.rerun()
