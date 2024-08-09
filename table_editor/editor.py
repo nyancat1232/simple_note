@@ -10,14 +10,14 @@ import pyplus.builtin as bp
 with st.sidebar:
     second_ts = stglobal.table_selector('select a table')
 
-df_with_tag = bp.select_yielder(stglobal.iter_tag_process(second_ts),'filter_tag')
+df_with_tag = bp.CheckPointFunction(stglobal.iter_tag_process).filter_tag(second_ts)
 
 temp=second_ts.get_foreign_tables()
 for col in temp:
     bb=second_ts.check_selfref_table(temp[col])
 
 st.subheader('edit mode')
-custom_configs_rw_def:dict = bp.select_yielder(stglobal.iter_custom_column_configs(second_ts),'edit')
+custom_configs_rw_def:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs).edit(second_ts)
 custom_configs_rw_edit=custom_configs_rw_def.copy()
 df_edited = st.data_editor(df_with_tag,disabled=second_ts.column_identity,column_config=custom_configs_rw_edit)
 
@@ -60,7 +60,7 @@ tab_or_col=stp.TabsPlus(layout='column',titles=tss_foreign,hide_titles=False)
 for col_local_foreign in tss_foreign:
     ts_sub = tss_foreign[col_local_foreign]
     df_display=ts_sub.read_expand()
-    conf = bp.select_yielder(stglobal.iter_custom_column_configs(ts_sub),'readonly')
+    conf = bp.CheckPointFunction(stglobal.iter_custom_column_configs).readonly(ts_sub)
     
     #display
     with tab_or_col[col_local_foreign]:
