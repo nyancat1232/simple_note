@@ -17,8 +17,9 @@ for col in temp:
     bb=second_ts.check_selfref_table(temp[col])
 
 st.subheader('edit mode')
-custom_configs_rw:dict = bp.select_yielder(stglobal.iter_custom_column_configs(second_ts),'edit')
-df_edited = st.data_editor(df_with_tag,disabled=second_ts.column_identity,column_config=custom_configs_rw)
+custom_configs_rw_def:dict = bp.select_yielder(stglobal.iter_custom_column_configs(second_ts),'edit')
+custom_configs_rw_edit=custom_configs_rw_def.copy()
+df_edited = st.data_editor(df_with_tag,disabled=second_ts.column_identity,column_config=custom_configs_rw_edit)
 
 def get_comparison(df_new,df_old):
     def func_melt(df:pd.DataFrame):
@@ -46,12 +47,15 @@ if st.button('upload'):
 
 
 st.subheader('append mode')
+custom_configs_rw_append=custom_configs_rw_def.copy()
 
 df_append = pdp.empty_records(second_ts.read())
 df_append = df_append.reset_index(drop=True)
 
 tss_foreign = second_ts.get_foreign_tables()
 
+selected_col_convert=dict()
+"Select a column"
 tab_or_col=stp.TabsPlus(layout='column',titles=tss_foreign,hide_titles=False)
 for col_local_foreign in tss_foreign:
     ts_sub = tss_foreign[col_local_foreign]
@@ -69,7 +73,7 @@ cond_satisfies_warning = len(df_append.columns)<2
 if cond_satisfies_warning:
     st.warning('Problem when column is only one. ValueError: setting an array element with a sequence')
     df_append['__hidden']=df_append.index
-df_append = st.data_editor(df_append,num_rows='dynamic',column_config=custom_configs_rw)
+df_append = st.data_editor(df_append,num_rows='dynamic',column_config=custom_configs_rw_append)
 if cond_satisfies_warning:
     st.warning('Problem when column is only one. ValueError: setting an array element with a sequence')
     del df_append['__hidden']
