@@ -16,6 +16,7 @@ df_with_tag = bp.CheckPointFunction(stglobal.iter_tag_process).filter_tag(second
 temp=second_ts.get_foreign_tables()
 for col in temp:
     bb=second_ts.check_selfref_table(temp[col])
+del col
 
 st.subheader('edit mode')
 custom_configs_rw_def:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs).edit(second_ts)
@@ -44,6 +45,7 @@ if st.button('upload'):
     for row_id in recs:
         st.toast(f'{row_id}:{recs[row_id]}')
         second_ts.upload(id_row=row_id,**recs[row_id])
+    del row_id
     st.rerun()
 
 
@@ -72,10 +74,13 @@ for col_local_foreign in tss_foreign:
             custom_configs_rw_append[col_local_foreign+'__conversion']=st.column_config.SelectboxColumn(f'{col_local_foreign}(conversion from {selected_col_convert[col_local_foreign]})',options=selections)
             df_append[col_local_foreign+'__conversion']=pd.Series()
             del df_append[col_local_foreign]
+del col_local_foreign
 
 for col in df_append.columns.to_list():
     if col.startswith('_'):
         del df_append[col]
+del col
+
 cond_satisfies_warning = len(df_append.columns)<2
 if cond_satisfies_warning:
     st.warning('Problem when column is only one. ValueError: setting an array element with a sequence')
