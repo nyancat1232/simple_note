@@ -11,6 +11,8 @@ from contextlib import contextmanager
 with st.sidebar:
     second_ts = stglobal.table_selector('select a table')
 
+st.subheader('edit mode')
+
 df_with_tag = bp.CheckPointFunction(stglobal.iter_tag_process).filter_tag(second_ts)
 
 temp=second_ts.get_foreign_tables()
@@ -18,7 +20,6 @@ for col in temp:
     bb=second_ts.check_selfref_table(temp[col])
 del col
 
-st.subheader('edit mode')
 custom_configs_rw_def:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs).edit(second_ts)
 custom_configs_rw_edit=custom_configs_rw_def.copy()
 df_edited = st.data_editor(df_with_tag,disabled=second_ts.column_identity,column_config=custom_configs_rw_edit)
