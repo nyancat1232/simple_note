@@ -12,9 +12,17 @@ def upload_button(func,label):
         func()
         st.rerun()
 
-st.toast('refreshed')
+with st.sidebar:
+    all_records_list= sqlp.get_table_list(st.session_state['conn'].engine).to_dict('records')
+    all_table_list = [None]+[".".join([row['table_schema'],row['table_name']]) for row in all_records_list]
+    current_address = st.selectbox('select address',all_table_list)
+    if current_address is not None:
+        current_address = current_address.split('.')
+        ts_first = sqlp.TableStructure(schema_name=current_address[0],table_name=current_address[1],engine=st.session_state['conn'].engine)
+    else:
+        ts_first = None
 
-if (ts_first := stglobal.table_selector()) is not None:
+if ts_first is not None:
     read_result = ts_first.read()
     read_result
 

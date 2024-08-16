@@ -6,10 +6,12 @@ import pyplus.streamlit as stp
 import pandas as pd
 import pyplus.pandas as pdp
 import pyplus.builtin as bp
-from contextlib import contextmanager
 
 with st.sidebar:
-    second_ts = stglobal.table_selector('select a table')
+    all_records_list= sqlp.get_table_list(st.session_state['conn'].engine).to_dict('records')
+    all_table_list = [".".join([row['table_schema'],row['table_name']]) for row in all_records_list]
+    current_address = st.selectbox('select address',all_table_list).split('.')
+    second_ts = sqlp.TableStructure(schema_name=current_address[0],table_name=current_address[1],engine=st.session_state['conn'].engine)
 
 df_with_tag = bp.CheckPointFunction(stglobal.iter_tag_process).filter_tag(second_ts)
 

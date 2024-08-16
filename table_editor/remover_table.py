@@ -4,14 +4,13 @@ import pyplus.sql as sqlp
 import pandas as pd
 
 
-df_list = sqlp.get_table_list(st.session_state['conn'])
-event = st.dataframe(df_list,on_select='rerun',selection_mode='single-row')
-row = event['selection']['rows']
-address=df_list.loc[row].to_dict('records')[0]
-address
+with st.sidebar:
+    all_records_list= sqlp.get_table_list(st.session_state['conn'].engine).to_dict('records')
+    all_table_list = [".".join([row['table_schema'],row['table_name']]) for row in all_records_list]
+    current_address = st.selectbox('select address',all_table_list).split('.')
 
 "load"
-ts = sqlp.TableStructure(address['table_schema'],address['table_name'],st.session_state['conn'].engine)
+ts = sqlp.TableStructure(schema_name=current_address[0],table_name=current_address[1],engine=st.session_state['conn'].engine)
 df_expand = ts.read_expand()
 df_expand
 
