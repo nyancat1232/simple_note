@@ -6,11 +6,7 @@ import pandas as pd
 import pyplus.pandas as pdp
 import pyplus.builtin as bp
 
-with st.sidebar:
-    all_records_list= sqlp.get_table_list(st.session_state['conn'].engine).to_dict('records')
-    all_table_list = [".".join([row['table_schema'],row['table_name']]) for row in all_records_list]
-    current_address = st.selectbox('select address',all_table_list).split('.')
-    second_ts = sqlp.TableStructure(schema_name=current_address[0],table_name=current_address[1],engine=st.session_state['conn'].engine)
+second_ts = sqlp.TableStructure(schema_name=st.session_state['current_address'][0][0],table_name=st.session_state['current_address'][0][1],engine=st.session_state['conn'].engine)
 
 df_with_tag:pd.DataFrame = bp.select_yielder(stglobal.iter_tag_process(second_ts),'filter_tag')
 

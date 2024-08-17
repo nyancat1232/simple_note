@@ -28,4 +28,10 @@ pg = st.navigation({'main':[st.Page('table_editor/reader.py',title='reader'),
                             st.Page('new_page/init_domain.py',title='initialization'),
                     ]
                     })
+
+with st.sidebar:
+    all_records_list= sqlp.get_table_list(st.session_state['conn'].engine).to_dict('records')
+    all_table_list = [".".join([row['table_schema'],row['table_name']]) for row in all_records_list]
+    st.session_state['current_address']=[st.selectbox('select address global',all_table_list).split('.')]
+
 pg.run()
