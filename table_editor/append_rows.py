@@ -9,7 +9,8 @@ import pyplus.builtin as bp
 
 second_ts = sqlp.TableStructure(schema_name=st.session_state['current_address'][0][0],table_name=st.session_state['current_address'][0][1],engine=st.session_state['conn'].engine)
 
-df_with_tag = bp.CheckPointFunction(stglobal.iter_tag_process).filter_tag(second_ts)
+with st.sidebar:
+    df_with_tag = bp.CheckPointFunction(stglobal.iter_tag_process).filter_tag(second_ts)
 
 temp=second_ts.get_foreign_tables()
 for col in temp:

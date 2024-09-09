@@ -8,18 +8,20 @@ import pyplus.builtin as bp
 
 second_ts = sqlp.TableStructure(schema_name=st.session_state['current_address'][0][0],table_name=st.session_state['current_address'][0][1],engine=st.session_state['conn'].engine)
 
-df_with_tag:pd.DataFrame = bp.CheckPointFunction(stglobal.iter_tag_process).filter_tag(second_ts)
+with st.sidebar:
+    df_with_tag:pd.DataFrame = bp.CheckPointFunction(stglobal.iter_tag_process).filter_tag(second_ts)
 
 temp=second_ts.get_foreign_tables()
 for col in temp:
     bb=second_ts.check_selfref_table(temp[col])
 
-order_nums=st.slider('size',min_value=1,max_value=len(df_with_tag.columns))
-order_selections=[st.selectbox(f'{num} selection',df_with_tag.columns) for num in range(order_nums)]
-result_list=[]
-for row in df_with_tag.to_dict('records'):
-    for ind,col in enumerate(order_selections):
-        result_list.append('\t'*ind+f'- {row[col]}')
+with st.sidebar:
+    order_nums=st.slider('size',min_value=1,max_value=len(df_with_tag.columns))
+    order_selections=[st.selectbox(f'{num} selection',df_with_tag.columns) for num in range(order_nums)]
+    result_list=[]
+    for row in df_with_tag.to_dict('records'):
+        for ind,col in enumerate(order_selections):
+            result_list.append('\t'*ind+f'- {row[col]}')
 result_str="\n".join(result_list)
 st.code(result_str)
 
