@@ -8,7 +8,7 @@ import pyplus.builtin as bp
 
 second_ts = sqlp.TableStructure(schema_name=st.session_state['current_address'][0][0],table_name=st.session_state['current_address'][0][1],engine=st.session_state['conn'].engine)
 
-df_with_tag:pd.DataFrame = bp.select_yielder(stglobal.iter_tag_process(second_ts),'filter_tag')
+df_with_tag:pd.DataFrame = bp.CheckPointFunction(stglobal.iter_tag_process).filter_tag(second_ts)
 
 temp=second_ts.get_foreign_tables()
 for col in temp:
@@ -23,7 +23,7 @@ for row in df_with_tag.to_dict('records'):
 result_str="\n".join(result_list)
 st.code(result_str)
 
-custom_configs_ro:dict = bp.select_yielder(stglobal.iter_custom_column_configs(second_ts),'readonly')
+custom_configs_ro:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs).readonly(second_ts)
 event=st.dataframe(df_with_tag,column_config=custom_configs_ro,on_select='rerun',selection_mode='single-row')
 row = df_with_tag.iloc[event['selection']['rows']].to_dict('records')[0]
 types = second_ts.get_types_expanded().to_dict(orient='index')
