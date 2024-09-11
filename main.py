@@ -1,17 +1,17 @@
 import streamlit as st
 import pyplus.streamlit as stp
 import pyplus.sql as sqlp
+from sqlalchemy import create_engine
+import os
 
 page_title = 'Simple note'
 page_icon='📒'
 st.set_page_config(page_title=page_title,page_icon=page_icon,layout='wide')
 
-if stp.check_password() != True:
-    st.stop()
-
 #Set global vars
 if 'conn' not in st.session_state:
-    st.session_state['conn'] = st.connection('myaddress',type='sql')
+    st.session_state['conn'] = create_engine(os.environ['DatabaseURL'])
+
 st.session_state['types']=['bigint','double precision','text','timestamp with time zone','boolean','url','image_url','video_url','text_with_tag']
 
 pg = st.navigation({'main':[st.Page('table_editor/reader.py',title='reader'),

@@ -5,6 +5,11 @@ Simple Note(codename) is a table-based note-taking app that is based on Postgres
 A database of Postgres.
 Tables must have a primary key with a bigint type.
 
+## Environment Variabl
+- DatabaseURL
+    - Database url for access.
+        - See https://docs.sqlalchemy.org/en/20/core/engines.html#sqlalchemy.create_engine
+
 ## Custom Database Types
 - url
     - A column that includes url.
@@ -22,10 +27,10 @@ Tables must have a primary key with a bigint type.
 - Customization of the dashboard.
 - Convert column types
 - Expanding an array of self-referencing a column.
-- Using for any database of Postgresql. 
 
 ## Done
 - Appending a foreign column
 - Connecting between tables by foreign column.
 - Expanding a Self-referencing column. 
 - Tag filter 
+- Using for any database of Postgresql. 
