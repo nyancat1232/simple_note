@@ -10,13 +10,13 @@ second_ts = sqlp.TableStructure(schema_name=st.session_state['current_address'][
 st.subheader('edit mode')
 
 with st.sidebar:
-    df_with_tag = bp.CheckPointFunction(stglobal.iter_tag_process).filter_tag(second_ts)
+    df_with_tag = bp.CheckPointFunction(stglobal.iter_tag_process)(second_ts).filter_tag()
 
 temp=second_ts.get_foreign_tables()
 for col in temp:
     bb=second_ts.check_selfref_table(temp[col])
 
-custom_configs_rw_def:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs).edit(second_ts)
+custom_configs_rw_def:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs)(second_ts).edit()
 custom_configs_rw_edit=custom_configs_rw_def.copy()
 df_edited = st.data_editor(df_with_tag,disabled=second_ts.column_identity,column_config=custom_configs_rw_edit)
 

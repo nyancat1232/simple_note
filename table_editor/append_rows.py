@@ -10,18 +10,18 @@ import pyplus.builtin as bp
 second_ts = sqlp.TableStructure(schema_name=st.session_state['current_address'][0][0],table_name=st.session_state['current_address'][0][1],engine=st.session_state['conn'].engine)
 
 with st.sidebar:
-    df_with_tag = bp.CheckPointFunction(stglobal.iter_tag_process).filter_tag(second_ts)
+    df_with_tag = bp.CheckPointFunction(stglobal.iter_tag_process)(second_ts).filter_tag()
 
 temp=second_ts.get_foreign_tables()
 for col in temp:
     bb=second_ts.check_selfref_table(temp[col])
 
-custom_configs_rw_def:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs).edit(second_ts)
+custom_configs_rw_def:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs)(second_ts).edit()
 custom_configs_rw_edit=custom_configs_rw_def.copy()
 st.dataframe(df_with_tag,column_config=custom_configs_rw_edit)
 
 
-custom_configs_rw_def:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs).edit(second_ts)
+custom_configs_rw_def:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs)(second_ts).edit()
 
 st.subheader('append mode')
 custom_configs_rw_append=custom_configs_rw_def.copy()
@@ -37,7 +37,7 @@ tab_or_col=stp.TabsPlus(layout='column',titles=tss_foreign,hide_titles=False)
 for col_local_foreign in tss_foreign:
     ts_sub = tss_foreign[col_local_foreign]
     df_display=ts_sub.read_expand()
-    conf = bp.CheckPointFunction(stglobal.iter_custom_column_configs).readonly(ts_sub)
+    conf = bp.CheckPointFunction(stglobal.iter_custom_column_configs)(ts_sub).readonly()
     
     #display
     with tab_or_col[col_local_foreign]:
