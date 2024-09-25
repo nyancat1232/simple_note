@@ -20,9 +20,6 @@ with st.form('append form',clear_on_submit=True):
     custom_configs_rw_edit=custom_configs_rw_def.copy()
     st.dataframe(df_with_tag,column_config=custom_configs_rw_edit)
 
-
-    custom_configs_rw_def:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs)(second_ts).edit()
-
     st.subheader('append mode')
     custom_configs_rw_append=custom_configs_rw_def.copy()
 
