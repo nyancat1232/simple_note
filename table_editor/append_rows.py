@@ -11,15 +11,16 @@ second_ts = sqlp.TableStructure(schema_name=st.session_state['current_address'][
 
 with st.sidebar:
     df_with_tag = bp.CheckPointFunction(stglobal.iter_tag_process)(second_ts).filter_tag()
+
+temp=second_ts.get_foreign_tables()
+for col in temp:
+    bb=second_ts.check_selfref_table(temp[col])
+
+custom_configs_rw_def:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs)(second_ts).edit()
+custom_configs_rw_edit=custom_configs_rw_def.copy()
+st.dataframe(df_with_tag,column_config=custom_configs_rw_edit)
+
 with st.form('append form',clear_on_submit=True):
-    temp=second_ts.get_foreign_tables()
-    for col in temp:
-        bb=second_ts.check_selfref_table(temp[col])
-
-    custom_configs_rw_def:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs)(second_ts).edit()
-    custom_configs_rw_edit=custom_configs_rw_def.copy()
-    st.dataframe(df_with_tag,column_config=custom_configs_rw_edit)
-
     st.subheader('append mode')
     custom_configs_rw_append=custom_configs_rw_def.copy()
 
