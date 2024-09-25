@@ -1,6 +1,8 @@
 import streamlit as st
 import pyplus.sql as sqlp
 
+current_tz = st.secrets['default_timezone']
+
 def init_schema():
     lists=sqlp.get_table_list(st.session_state['conn'].engine)
     return st.selectbox('select a schema',['public']+lists['table_schema'].unique().tolist())
@@ -62,7 +64,6 @@ def table_selector(key:str='select a table',conn=st.session_state['conn'].engine
     except:
         return None
 
-current_tz = st.secrets['default_timezone']
 
 def iter_custom_column_configs(ts:sqlp.TableStructure):
     column_configs = dict()
