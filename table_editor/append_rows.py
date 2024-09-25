@@ -17,8 +17,7 @@ for col in temp:
     bb=second_ts.check_selfref_table(temp[col])
 
 custom_configs_rw_def:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs)(second_ts).edit()
-custom_configs_rw_edit=custom_configs_rw_def.copy()
-st.dataframe(df_with_tag,column_config=custom_configs_rw_edit)
+st.dataframe(df_with_tag,column_config=custom_configs_rw_def)
 
 with st.form('append form',clear_on_submit=True):
     st.subheader('append mode')
