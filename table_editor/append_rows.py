@@ -19,18 +19,18 @@ for col in temp:
 custom_configs_rw_def:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs)(second_ts).edit()
 st.dataframe(df_with_tag,column_config=custom_configs_rw_def)
 
+st.subheader('append mode')
+custom_configs_rw_append=custom_configs_rw_def.copy()
+
+df_append = pdp.empty_records(second_ts.read())
+df_append = df_append.reset_index(drop=True)
+
+tss_foreign = second_ts.get_foreign_tables()
+
+selected_col_convert=dict()
+"Select a column"
+tab_or_col=stp.TabsPlus(layout='column',titles=tss_foreign,hide_titles=False)
 with st.form('append form',clear_on_submit=True):
-    st.subheader('append mode')
-    custom_configs_rw_append=custom_configs_rw_def.copy()
-
-    df_append = pdp.empty_records(second_ts.read())
-    df_append = df_append.reset_index(drop=True)
-
-    tss_foreign = second_ts.get_foreign_tables()
-
-    selected_col_convert=dict()
-    "Select a column"
-    tab_or_col=stp.TabsPlus(layout='column',titles=tss_foreign,hide_titles=False)
     for col_local_foreign in tss_foreign:
         ts_sub = tss_foreign[col_local_foreign]
         df_display=ts_sub.read_expand()
