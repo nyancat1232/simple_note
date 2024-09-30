@@ -13,8 +13,6 @@ with st.sidebar:
     df_with_tag = bp.CheckPointFunction(stglobal.iter_tag_process)(second_ts).filter_tag()
 
 temp=second_ts.get_foreign_tables()
-for col in temp:
-    bb=second_ts.check_selfref_table(temp[col])
 
 custom_configs_rw_def:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs)(second_ts).edit()
 st.dataframe(df_with_tag,column_config=custom_configs_rw_def)
