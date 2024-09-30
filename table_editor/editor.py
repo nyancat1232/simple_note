@@ -15,8 +15,6 @@ with st.sidebar:
 with st.form('edit form',clear_on_submit=True):
 
     temp=second_ts.get_foreign_tables()
-    for col in temp:
-        bb=second_ts.check_selfref_table(temp[col])
 
     custom_configs_rw_def:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs)(second_ts).edit()
     custom_configs_rw_edit=custom_configs_rw_def.copy()
