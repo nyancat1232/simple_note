@@ -20,7 +20,7 @@ with st.form('edit form',clear_on_submit=True):
 
     custom_configs_rw_def:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs)(second_ts).edit()
     custom_configs_rw_edit=custom_configs_rw_def.copy()
-    df_edited = st.data_editor(df_with_tag,disabled=second_ts.column_identity,column_config=custom_configs_rw_edit)
+    df_edited = st.data_editor(df_with_tag,disabled=second_ts.get_identity(),column_config=custom_configs_rw_edit)
 
     def get_comparison(df_new,df_old):
         def func_melt(df:pd.DataFrame):
