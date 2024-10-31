@@ -33,8 +33,8 @@ pg = st.navigation({'main':[st.Page('table_editor/reader.py',title='reader'),
 with st.sidebar:
     all_records_list= sqlp.get_table_list(st.session_state['conn'].engine).to_dict('records')
     all_table_list = [".".join([row['table_schema'],row['table_name']]) for row in all_records_list]
-    st.session_state['current_address']=[st.selectbox('select address global',all_table_list).split('.')]
+    current_address=[st.selectbox('select address global',all_table_list).split('.')]
 
-st.session_state['second_ts'] = sqlp.TableStructure(schema_name=st.session_state['current_address'][0][0],table_name=st.session_state['current_address'][0][1],engine=st.session_state['conn'].engine)
+st.session_state['second_ts'] = sqlp.TableStructure(schema_name=current_address[0][0],table_name=current_address[0][1],engine=st.session_state['conn'].engine)
 
 pg.run()
