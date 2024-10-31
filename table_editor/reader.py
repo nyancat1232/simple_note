@@ -12,8 +12,6 @@ with st.sidebar:
     df_with_tag:pd.DataFrame = bp.CheckPointFunction(stglobal.iter_tag_process)(second_ts).filter_tag()
 
 temp=second_ts.get_foreign_tables()
-for col in temp:
-    bb=second_ts.check_selfref_table(temp[col])
 
 with st.sidebar:
     order_nums=st.slider('size',min_value=1,max_value=len(df_with_tag.columns))
