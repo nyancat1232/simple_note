@@ -5,7 +5,7 @@ import pandas as pd
 
 
 "load"
-ts = sqlp.TableStructure(schema_name=st.session_state['current_address'][0][0],table_name=st.session_state['current_address'][0][1],engine=st.session_state['conn'].engine)
+ts:sqlp.TableStructure = st.session_state['second_ts']
 df_expand = ts.read_expand()
 df_expand
 
