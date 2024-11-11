@@ -11,8 +11,6 @@ second_ts:sqlp.TableStructure = st.session_state['selected_table']
 with st.sidebar:
     df_with_tag:pd.DataFrame = bp.CheckPointFunction(stglobal.iter_tag_process)(second_ts).filter_tag()
 
-temp=second_ts.get_foreign_tables()
-
 with st.sidebar:
     order_nums=st.slider('size',min_value=1,max_value=len(df_with_tag.columns))
     order_selections=[st.selectbox(f'{num} selection',df_with_tag.columns) for num in range(order_nums)]
