@@ -10,7 +10,7 @@ df_with_tag = st.session_state['selected_table_dataframe']
 custom_configs_ro = st.session_state['selected_table_column_config_ro']
 custom_configs_rw_def = st.session_state['selected_table_column_config_rw_def']
 
-st.dataframe(df_with_tag,column_config=custom_configs_rw_def)
+st.dataframe(df_with_tag,column_config=custom_configs_ro)
 
 df_append = pdp.empty_records(second_ts.read())
 df_append = df_append.reset_index(drop=True)
