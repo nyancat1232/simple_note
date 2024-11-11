@@ -35,6 +35,7 @@ with st.sidebar:
     all_table_list = [".".join([row['table_schema'],row['table_name']]) for row in all_records_list]
     current_address=[st.selectbox('select address global',all_table_list).split('.')]
 
-st.session_state['selected_table'] = sqlp.TableStructure(schema_name=current_address[0][0],table_name=current_address[0][1],engine=st.session_state['conn'].engine)
+selected_table = sqlp.TableStructure(schema_name=current_address[0][0],table_name=current_address[0][1],engine=st.session_state['conn'].engine)
+st.session_state['selected_table'] = selected_table
 
 pg.run()
