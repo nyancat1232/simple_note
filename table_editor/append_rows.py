@@ -14,7 +14,6 @@ temp=second_ts.get_foreign_tables()
 
 st.dataframe(df_with_tag,column_config=custom_configs_rw_def)
 
-st.subheader('append mode')
 custom_configs_rw_append=custom_configs_rw_def.copy()
 
 df_append = pdp.empty_records(second_ts.read())

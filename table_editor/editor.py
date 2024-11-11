@@ -9,8 +9,6 @@ df_with_tag = st.session_state['selected_table_dataframe']
 custom_configs_ro = st.session_state['selected_table_column_config_ro']
 custom_configs_rw_def = st.session_state['selected_table_column_config_rw_def']
 
-st.subheader('edit mode')
-
 with st.form('edit form',clear_on_submit=True):
 
     temp=second_ts.get_foreign_tables()
