@@ -7,7 +7,7 @@ import pandas as pd
 import pyplus.pandas as pdp
 import pyplus.builtin as bp
 
-second_ts:sqlp.TableStructure = st.session_state['second_ts']
+second_ts:sqlp.TableStructure = st.session_state['selected_table']
 
 with st.sidebar:
     df_with_tag = bp.CheckPointFunction(stglobal.iter_tag_process)(second_ts).filter_tag()

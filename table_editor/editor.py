@@ -5,7 +5,7 @@ import pyplus.sql as sqlp
 import pandas as pd
 import pyplus.builtin as bp
 
-second_ts:sqlp.TableStructure = st.session_state['second_ts']
+second_ts:sqlp.TableStructure = st.session_state['selected_table']
 
 st.subheader('edit mode')
 
