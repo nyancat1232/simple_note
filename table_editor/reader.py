@@ -1,15 +1,11 @@
 import streamlit as st
-import pre as stglobal
-
-import pyplus.sql as sqlp
 import pandas as pd
+import pyplus.sql as sqlp
 import pyplus.pandas as pdp
-import pyplus.builtin as bp
 
 second_ts:sqlp.TableStructure = st.session_state['selected_table']
-
-with st.sidebar:
-    df_with_tag:pd.DataFrame = bp.CheckPointFunction(stglobal.iter_tag_process)(second_ts).filter_tag()
+df_with_tag = st.session_state['selected_table_dataframe']
+custom_configs_ro = st.session_state['selected_table_column_config_ro']
 
 with st.sidebar:
     order_nums=st.slider('size',min_value=1,max_value=len(df_with_tag.columns))
@@ -21,7 +17,6 @@ with st.sidebar:
 result_str="\n".join(result_list)
 st.code(result_str)
 
-custom_configs_ro:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs)(second_ts).readonly()
 event=st.dataframe(df_with_tag,column_config=custom_configs_ro,on_select='rerun',selection_mode='single-row')
 row = df_with_tag.iloc[event['selection']['rows']].to_dict('records')[0]
 types = second_ts.get_types_expanded().to_dict(orient='index')

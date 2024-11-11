@@ -8,13 +8,12 @@ import pyplus.pandas as pdp
 import pyplus.builtin as bp
 
 second_ts:sqlp.TableStructure = st.session_state['selected_table']
-
-with st.sidebar:
-    df_with_tag = bp.CheckPointFunction(stglobal.iter_tag_process)(second_ts).filter_tag()
+df_with_tag = st.session_state['selected_table_dataframe']
+custom_configs_ro = st.session_state['selected_table_column_config_ro']
+custom_configs_rw_def = st.session_state['selected_table_column_config_rw_def']
 
 temp=second_ts.get_foreign_tables()
 
-custom_configs_rw_def:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs)(second_ts).edit()
 st.dataframe(df_with_tag,column_config=custom_configs_rw_def)
 
 st.subheader('append mode')

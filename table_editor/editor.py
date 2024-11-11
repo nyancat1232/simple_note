@@ -6,17 +6,16 @@ import pandas as pd
 import pyplus.builtin as bp
 
 second_ts:sqlp.TableStructure = st.session_state['selected_table']
+df_with_tag = st.session_state['selected_table_dataframe']
+custom_configs_ro = st.session_state['selected_table_column_config_ro']
+custom_configs_rw_def = st.session_state['selected_table_column_config_rw_def']
 
 st.subheader('edit mode')
-
-with st.sidebar:
-    df_with_tag = bp.CheckPointFunction(stglobal.iter_tag_process)(second_ts).filter_tag()
 
 with st.form('edit form',clear_on_submit=True):
 
     temp=second_ts.get_foreign_tables()
 
-    custom_configs_rw_def:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs)(second_ts).edit()
     custom_configs_rw_edit=custom_configs_rw_def.copy()
     df_edited = st.data_editor(df_with_tag,disabled=second_ts.get_identity(),column_config=custom_configs_rw_edit)
 
