@@ -14,7 +14,7 @@ ts_first:sqlp.TableStructure = st.session_state['selected_table']
 read_result= st.session_state['selected_table_dataframe']
 read_result
 
-tp = stp.TabsPlus(layout='tab',titles=['append a column','change column name','change a column order'])
+tp = stp.TabsPlus(layout='tab',titles=['change column name','change a column order'])
 
 with tp['change column name']:
     df_change = pd.DataFrame({'before':read_result.columns,'after':read_result.columns})
