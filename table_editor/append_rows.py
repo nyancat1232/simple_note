@@ -17,10 +17,10 @@ df_append = df_append.reset_index(drop=True)
 
 tss_foreign = second_ts.get_foreign_tables()
 
-selected_col_convert=dict()
 "Select a column"
 tab_or_col=stp.TabsPlus(layout='column',titles=tss_foreign,hide_titles=False)
 with st.form('append form',clear_on_submit=True):
+    selected_col_convert=dict()
     for col_local_foreign in tss_foreign:
         ts_sub = tss_foreign[col_local_foreign]
         df_display=ts_sub.read_expand()
