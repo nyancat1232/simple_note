@@ -1,7 +1,9 @@
 import streamlit as st
-from pre import table_selector
 import pyplus.streamlit as stp
 import pandas as pd
+
+"Need to implement second table selection"
+st.stop()
 
 tp=stp.TabsPlus(layout='column',titles=['original','foreign'])
 with tp['original']:
