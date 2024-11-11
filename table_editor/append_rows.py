@@ -24,11 +24,10 @@ with st.form('append form',clear_on_submit=True):
     for col_local_foreign in tss_foreign:
         ts_sub = tss_foreign[col_local_foreign]
         df_display=ts_sub.read_expand()
-        conf = custom_configs_ro.copy()
         
         #display
         with tab_or_col[col_local_foreign]:
-            selected_col_convert[col_local_foreign]=st.dataframe(df_display,column_config=conf,selection_mode='single-column',on_select='rerun',key=f'convert_of_{col_local_foreign}')['selection']['columns']
+            selected_col_convert[col_local_foreign]=st.dataframe(df_display,selection_mode='single-column',on_select='rerun',key=f'convert_of_{col_local_foreign}')['selection']['columns']
             if len(selected_col_convert[col_local_foreign])>0:
                 selected_col_convert[col_local_foreign]=selected_col_convert[col_local_foreign][0]
                 selections=df_display[selected_col_convert[col_local_foreign]].unique().dropna().tolist()
