@@ -1,6 +1,4 @@
 import streamlit as st
-import pre as stglobal
-
 import pyplus.sql as sqlp
 import pyplus.streamlit as stp
 import pandas as pd
@@ -31,7 +29,7 @@ with st.form('append form',clear_on_submit=True):
     for col_local_foreign in tss_foreign:
         ts_sub = tss_foreign[col_local_foreign]
         df_display=ts_sub.read_expand()
-        conf = bp.CheckPointFunction(stglobal.iter_custom_column_configs)(ts_sub).readonly()
+        conf = custom_configs_ro.copy()
         
         #display
         with tab_or_col[col_local_foreign]:

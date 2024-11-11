@@ -1,5 +1,4 @@
 import streamlit as st
-import pre as stglobal
 
 import pyplus.sql as sqlp
 import pandas as pd

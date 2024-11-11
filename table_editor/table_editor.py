@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
 
-import pre as stglobal
-
 import pyplus.sql as sqlp
 import pyplus.streamlit as stp
 
