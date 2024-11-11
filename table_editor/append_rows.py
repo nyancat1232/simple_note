@@ -10,11 +10,7 @@ df_with_tag = st.session_state['selected_table_dataframe']
 custom_configs_ro = st.session_state['selected_table_column_config_ro']
 custom_configs_rw_def = st.session_state['selected_table_column_config_rw_def']
 
-temp=second_ts.get_foreign_tables()
-
 st.dataframe(df_with_tag,column_config=custom_configs_rw_def)
-
-custom_configs_rw_append=custom_configs_rw_def.copy()
 
 df_append = pdp.empty_records(second_ts.read())
 df_append = df_append.reset_index(drop=True)
@@ -36,7 +32,7 @@ with st.form('append form',clear_on_submit=True):
             if len(selected_col_convert[col_local_foreign])>0:
                 selected_col_convert[col_local_foreign]=selected_col_convert[col_local_foreign][0]
                 selections=df_display[selected_col_convert[col_local_foreign]].unique().dropna().tolist()
-                custom_configs_rw_append[col_local_foreign+'__conversion']=st.column_config.SelectboxColumn(f'{col_local_foreign}(conversion from {selected_col_convert[col_local_foreign]})',options=selections)
+                custom_configs_rw_def[col_local_foreign+'__conversion']=st.column_config.SelectboxColumn(f'{col_local_foreign}(conversion from {selected_col_convert[col_local_foreign]})',options=selections)
                 df_append[col_local_foreign+'__conversion']=pd.Series()
                 del df_append[col_local_foreign]
 
@@ -47,7 +43,7 @@ with st.form('append form',clear_on_submit=True):
     if cond_satisfies_warning:
         st.warning('Problem when column is only one. ValueError: setting an array element with a sequence')
         df_append['__hidden']=df_append.index
-    df_append = st.data_editor(df_append,num_rows='dynamic',column_config=custom_configs_rw_append)
+    df_append = st.data_editor(df_append,num_rows='dynamic',column_config=custom_configs_rw_def)
     if cond_satisfies_warning:
         st.warning('Problem when column is only one. ValueError: setting an array element with a sequence')
         del df_append['__hidden']
