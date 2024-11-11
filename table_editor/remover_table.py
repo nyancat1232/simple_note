@@ -6,7 +6,7 @@ import pandas as pd
 
 "load"
 ts:sqlp.TableStructure = st.session_state['selected_table']
-df_expand = ts.read_expand()
+df_expand= st.session_state['selected_table_dataframe']
 df_expand
 
 "select"
