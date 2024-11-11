@@ -62,3 +62,17 @@ with tabs_axis_selection['row']:
             second_ts.upload_appends(*appends)
             st.toast('append')
             st.rerun()
+
+with tabs_axis_selection['column']:
+    df = pd.DataFrame({'name':pd.Series(dtype=pd.StringDtype),'type':pd.Series(dtype=pd.StringDtype)})
+    sttype = {'name':st.column_config.TextColumn('name'),'type':st.column_config.SelectboxColumn('type',options=st.session_state['types'])}
+    result = st.data_editor(df,num_rows='dynamic',column_config=sttype)
+    result = {rec['name']:rec['type'] for rec in result.to_dict(orient='records')}
+    result
+
+    def append_columns():
+        second_ts.append_column(**result)
+
+    if st.button('append columns'):
+        append_columns()
+        st.rerun()

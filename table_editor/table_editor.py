@@ -16,17 +16,6 @@ read_result
 
 tp = stp.TabsPlus(layout='tab',titles=['append a column','change column name','change a column order'])
 
-with tp['append a column']:
-    df = pd.DataFrame({'name':pd.Series(dtype=pd.StringDtype),'type':pd.Series(dtype=pd.StringDtype)})
-    sttype = {'name':st.column_config.TextColumn('name'),'type':st.column_config.SelectboxColumn('type',options=st.session_state['types'])}
-    result = st.data_editor(df,num_rows='dynamic',column_config=sttype)
-    result = {rec['name']:rec['type'] for rec in result.to_dict(orient='records')}
-    result
-
-    def append_columns():
-        ts_first.append_column(**result)
-    upload_button(append_columns,'append columns')
-
 with tp['change column name']:
     df_change = pd.DataFrame({'before':read_result.columns,'after':read_result.columns})
     df_change = st.data_editor(df_change,column_config={'before':st.column_config.Column(disabled=True)})
