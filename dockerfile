@@ -15,7 +15,6 @@ COPY new_page ./new_page
 COPY table_editor ./table_editor
 COPY main.py ./
 COPY pre.py ./
-COPY .streamlit ./.streamlit
 
 RUN pip3 install -r requirements.txt
 
