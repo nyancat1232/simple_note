@@ -2,7 +2,7 @@
 
 # Prompt for user input
 read -p "Enter your address: " SN_ADDRESS
-read -p "Enter your default timezone: "SN_DEFAULT_TIMEZONE
+read -p "Enter your default timezone: " SN_DEFAULT_TIMEZONE
 
 # Export the variable
 export SN_ADDRESS
