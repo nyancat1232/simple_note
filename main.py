@@ -4,6 +4,7 @@ import pyplus.builtin as bp
 import pre as stglobal
 import pandas as pd
 import os
+from sqlalchemy import create_engine
 
 page_title = 'Simple note'
 page_icon='📒'
@@ -11,7 +12,7 @@ st.set_page_config(page_title=page_title,page_icon=page_icon,layout='wide')
 
 #Set global vars
 if 'conn' not in st.session_state:
-    st.session_state['conn'] = st.connection(os.environ['SN_ADDRESS'],'sql')
+    st.session_state['conn'] = create_engine(os.environ['SN_ADDRESS'])
 
 st.session_state['types']=['bigint','double precision','text','timestamp with time zone','boolean','url','image_url','video_url','text_with_tag']
 
