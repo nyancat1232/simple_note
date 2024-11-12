@@ -11,3 +11,4 @@ pages/test.py
 .venv
 .vscode
 .devcontainer
+compose.yaml

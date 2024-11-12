@@ -1,20 +1,17 @@
 import streamlit as st
-import pyplus.streamlit as stp
 import pyplus.sql as sqlp
 import pyplus.builtin as bp
 import pre as stglobal
 import pandas as pd
+import os
 
 page_title = 'Simple note'
 page_icon='📒'
 st.set_page_config(page_title=page_title,page_icon=page_icon,layout='wide')
 
-if stp.check_password() != True:
-    st.stop()
-
 #Set global vars
 if 'conn' not in st.session_state:
-    st.session_state['conn'] = st.connection('myaddress','sql')
+    st.session_state['conn'] = st.connection(os.environ['SN_ADDRESS'],'sql')
 
 st.session_state['types']=['bigint','double precision','text','timestamp with time zone','boolean','url','image_url','video_url','text_with_tag']
 

@@ -1,7 +1,6 @@
 import streamlit as st
 import pyplus.sql as sqlp
-
-current_tz = st.secrets['default_timezone']
+import os
 
 def init_schema():
     lists=sqlp.get_table_list(st.session_state['conn'].engine)
@@ -20,7 +19,7 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
             case 'date':
                 column_configs[col] = st.column_config.DateColumn(disabled=disable_this_col)
             case 'timestamp with time zone':
-                column_configs[col] = st.column_config.DatetimeColumn(timezone=current_tz,disabled=disable_this_col)
+                column_configs[col] = st.column_config.DatetimeColumn(timezone=os.environ['SN_DEFAULT_TIMEZONE'],disabled=disable_this_col)
             case 'url':
                 column_configs[col] = st.column_config.LinkColumn(disabled=disable_this_col)
             case 'image_url':

@@ -1,11 +1,12 @@
-echo "Input server's url"
-read SERVERURL
-CONTAINER_NAME=simple_note_container
-APP_NAME=simple_note
+#!/bin/bash
 
+# Prompt for user input
+read -p "Enter your address: " SN_ADDRESS
+read -p "Enter your default timezone: "SN_DEFAULT_TIMEZONE
 
-docker --host tcp://$SERVERURL:2375 stop $CONTAINER_NAME
-docker --host tcp://$SERVERURL:2375 rm $CONTAINER_NAME
-docker --host tcp://$SERVERURL:2375 image rm $APP_NAME
-docker --host tcp://$SERVERURL:2375 buildx build --tag $APP_NAME .
-docker --host tcp://$SERVERURL:2375 run --detach --publish 8044:8044 --restart always --name $CONTAINER_NAME $APP_NAME 
+# Export the variable
+export SN_ADDRESS
+export SN_DEFAULT_TIMEZONE
+
+# Run docker-compose
+docker-compose up
