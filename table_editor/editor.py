@@ -5,7 +5,7 @@ import pandas as pd
 import pyplus.builtin as bp
 
 second_ts:sqlp.TableStructure = st.session_state['selected_table']
-df_with_tag = st.session_state['selected_table_dataframe']
+df_with_tag:pd.DataFrame = st.session_state['selected_table_dataframe']
 custom_configs_ro = st.session_state['selected_table_column_config_ro']
 custom_configs_rw_def = st.session_state['selected_table_column_config_rw_def']
 
