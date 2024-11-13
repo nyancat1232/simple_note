@@ -4,8 +4,8 @@ import pyplus.sql as sqlp
 import pandas as pd
 import pyplus.builtin as bp
 
-second_ts:sqlp.TableStructure = st.session_state['selected_table']
-df_with_tag:pd.DataFrame = st.session_state['selected_table_dataframe']
+ts_selected:sqlp.TableStructure = st.session_state['selected_table']
+df_selected:pd.DataFrame = st.session_state['selected_table_dataframe']
 custom_configs_ro = st.session_state['selected_table_column_config_ro']
 custom_configs_rw_def = st.session_state['selected_table_column_config_rw_def']
 
@@ -14,9 +14,9 @@ tp = stp.TabsPlus(titles=['cell','replace'],layout='tab')
 with tp['cell']:
     with st.form('edit form',clear_on_submit=True):
 
-        temp=second_ts.get_foreign_tables()
+        temp=ts_selected.get_foreign_tables()
 
-        df_edited = st.data_editor(df_with_tag,disabled=second_ts.get_identity(),column_config=custom_configs_rw_def)
+        df_edited = st.data_editor(df_selected,disabled=ts_selected.get_identity(),column_config=custom_configs_rw_def)
 
         def get_comparison(df_new,df_old):
             def func_melt(df:pd.DataFrame):
@@ -34,21 +34,21 @@ with tp['cell']:
                 recs[temp['id']][temp['variable']] = temp['_sn_value']
             return recs
 
-        recs=get_comparison(df_edited,df_with_tag)
+        recs=get_comparison(df_edited,df_selected)
 
         if st.form_submit_button('upload'):
             for row_id in recs:
                 st.toast(f'{row_id}:{recs[row_id]}')
-                second_ts.upload(id_row=row_id,**recs[row_id])
+                ts_selected.upload(id_row=row_id,**recs[row_id])
             st.rerun()
 
 with tp['replace']:
-    rrr=st.dataframe(df_with_tag,selection_mode=['multi-column','multi-row'],on_select='rerun')
+    rrr=st.dataframe(df_selected,selection_mode=['multi-column','multi-row'],on_select='rerun')
 
     inp={'from':st.text_input('from'),'to':st.text_input('to')}
 
     "filter"
-    selected_table=df_with_tag.copy()
+    selected_table=df_selected.copy()
     selected_table=selected_table.iloc[rrr['selection']['rows']]
     selected_table=selected_table[rrr['selection']['columns']]
     selected_table
@@ -62,5 +62,5 @@ with tp['replace']:
         upload_dict = selected_table.to_dict(orient='index')
         for rec in upload_dict:
             st.toast([rec,upload_dict[rec]])
-            second_ts.upload(rec,**upload_dict[rec])
+            ts_selected.upload(rec,**upload_dict[rec])
         st.rerun()
