@@ -41,3 +41,26 @@ with tp['cell']:
                 st.toast(f'{row_id}:{recs[row_id]}')
                 second_ts.upload(id_row=row_id,**recs[row_id])
             st.rerun()
+
+with tp['replace']:
+    rrr=st.dataframe(df_with_tag,selection_mode=['multi-column','multi-row'],on_select='rerun')
+
+    inp={'from':st.text_input('from'),'to':st.text_input('to')}
+
+    "filter"
+    selected_table=df_with_tag.copy()
+    selected_table=selected_table.iloc[rrr['selection']['rows']]
+    selected_table=selected_table[rrr['selection']['columns']]
+    selected_table
+
+    "change"
+    #selected_table=selected_table.apply(lambda s:s.replace(inp['from'],inp['to']))
+    selected_table:pd.DataFrame=selected_table.applymap(lambda x: x.replace(inp['from'],inp['to']) if isinstance(x, str) else x)
+    selected_table
+
+    if st.button('upload replace'):
+        upload_dict = selected_table.to_dict(orient='index')
+        for rec in upload_dict:
+            st.toast([rec,upload_dict[rec]])
+            second_ts.upload(rec,**upload_dict[rec])
+        st.rerun()
