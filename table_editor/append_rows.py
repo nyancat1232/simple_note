@@ -56,9 +56,9 @@ with tabs_axis_selection['row']:
             df_append[original_col]=df_append[col].apply(lambda val:tss_foreign[original_col].get_local_val_to_id(selected_col_convert[original_col])[val])
             del df_append[col]
 
-        appends = df_append.to_dict(orient='records')
 
         if st.form_submit_button('append'):
+            appends = df_append.to_dict(orient='records')
             second_ts.upload_appends(*appends)
             st.toast('append',appends)
             st.rerun()
