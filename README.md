@@ -6,9 +6,10 @@ A database of Postgres.
 Tables must have a primary key with a bigint type.
 
 ## Environment Variabl
-- DatabaseURL
-    - Database url for access.
-        - See https://docs.sqlalchemy.org/en/20/core/engines.html#sqlalchemy.create_engine
+- SN_ADDRESS
+    - An address of database.
+- SN_DEFAULT_TIMEZONE
+    - A default timezone of this app.
 
 ## Custom Database Types
 - url
@@ -25,11 +26,11 @@ Tables must have a primary key with a bigint type.
 - Multiple timers and stopwatches
 - Customization of the clock such as hours from wake up.
 - Customization of the dashboard.
-- Convert column types
-- Expanding an array of self-referencing a column.
 
 ## Done
 - Appending a foreign column
+- Expanding an array of self-referencing a column.
+- Convert column types.
 - Connecting between tables by foreign column.
 - Expanding a Self-referencing column. 
 - Tag filter 
