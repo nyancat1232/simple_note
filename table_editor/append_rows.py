@@ -60,7 +60,7 @@ with tabs_axis_selection['row']:
 
         if st.form_submit_button('append'):
             second_ts.upload_appends(*appends)
-            st.toast('append')
+            st.toast('append',appends)
             st.rerun()
 
 with tabs_axis_selection['column']:
