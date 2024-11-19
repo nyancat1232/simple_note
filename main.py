@@ -1,6 +1,6 @@
 import streamlit as st
 import pyplus.sql as sqlp
-import pyplus.builtin as bp
+import checkpoint as cp
 import pre as stglobal
 import pandas as pd
 import os
@@ -39,9 +39,9 @@ with st.sidebar:
 selected_table = sqlp.TableStructure(schema_name=current_address[0][0],table_name=current_address[0][1],engine=st.session_state['conn'].engine)
 
 with st.sidebar:
-    df_with_tag:pd.DataFrame = bp.CheckPointFunction(stglobal.iter_tag_process)(selected_table).filter_tag()
-custom_configs_ro:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs)(selected_table).readonly()
-custom_configs_rw_def:dict = bp.CheckPointFunction(stglobal.iter_custom_column_configs)(selected_table).edit()
+    df_with_tag:pd.DataFrame = cp.CheckPointFunction(stglobal.iter_tag_process)(selected_table).filter_tag()
+custom_configs_ro:dict = cp.CheckPointFunction(stglobal.iter_custom_column_configs)(selected_table).readonly()
+custom_configs_rw_def:dict = cp.CheckPointFunction(stglobal.iter_custom_column_configs)(selected_table).edit()
 
 st.session_state['selected_table'] = selected_table
 st.session_state['selected_table_dataframe'] = df_with_tag

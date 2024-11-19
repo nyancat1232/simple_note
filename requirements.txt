@@ -5,8 +5,9 @@ cachetools==5.3.3
 certifi==2024.7.4
 cffi==1.16.0
 charset-normalizer==3.3.2
+checkpoint @ git+https://github.com/nyancat1232/checkpoint_function.git@f47744036a5a1bff82b44db1a6a22fd0303d6519
 click==8.1.7
-cryptography==43.0.1
+cryptography==42.0.5
 gitdb==4.0.11
 GitPython==3.1.42
 greenlet==3.0.3
@@ -25,7 +26,7 @@ pdfminer.six==20231228
 pdfplumber==0.11.0
 pillow==10.4.0
 protobuf==4.25.3
-psycopg2-binary
+psycopg2-binary==2.9.10
 pyarrow==15.0.1
 pycparser==2.21
 pydeck==0.8.1b0
@@ -40,7 +41,7 @@ rpds-py==0.18.0
 six==1.16.0
 smmap==5.0.1
 SQLAlchemy==2.0.28
-streamlit==1.38.0
+streamlit==1.40.0
 tenacity==8.2.3
 toml==0.10.2
 toolz==0.12.1
