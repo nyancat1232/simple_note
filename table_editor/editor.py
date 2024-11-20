@@ -2,7 +2,6 @@ import streamlit as st
 import pyplus.streamlit as stp
 import pyplus.sql as sqlp
 import pandas as pd
-import pyplus.builtin as bp
 
 ts_selected:sqlp.TableStructure = st.session_state['selected_table']
 df_selected:pd.DataFrame = st.session_state['selected_table_dataframe']

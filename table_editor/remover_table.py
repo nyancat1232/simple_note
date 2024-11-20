@@ -1,8 +1,5 @@
 import streamlit as st
-import pyplus.streamlit as stp
 import pyplus.sql as sqlp
-import pandas as pd
-
 
 "load"
 ts:sqlp.TableStructure = st.session_state['selected_table']

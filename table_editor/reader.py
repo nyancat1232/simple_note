@@ -1,7 +1,5 @@
 import streamlit as st
-import pandas as pd
 import pyplus.sql as sqlp
-import pyplus.pandas as pdp
 
 second_ts:sqlp.TableStructure = st.session_state['selected_table']
 df_with_tag = st.session_state['selected_table_dataframe']
