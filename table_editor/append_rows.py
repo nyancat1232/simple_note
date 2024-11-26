@@ -21,7 +21,7 @@ tabs_axis_selection = stp.TabsPlus(titles=['row','column'],layout='tab')
 with tabs_axis_selection['row']:
     "Select a column"
     tab_or_col=stp.TabsPlus(layout='column',titles=tss_foreign,hide_titles=False)
-    with st.form('append form',clear_on_submit=True):
+    with st.form('append form',clear_on_submit=False):
         selected_col_convert=dict()
         for col_local_foreign in tss_foreign:
             ts_sub = tss_foreign[col_local_foreign]

@@ -11,7 +11,7 @@ custom_configs_rw_def = st.session_state['selected_table_column_config_rw_def']
 tp = stp.TabsPlus(titles=['cell','replace'],layout='tab')
 
 with tp['cell']:
-    with st.form('edit form',clear_on_submit=True):
+    with st.form('edit form',clear_on_submit=False):
 
         temp=ts_selected.get_foreign_tables()
 
