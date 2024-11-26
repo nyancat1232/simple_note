@@ -3,7 +3,6 @@ import pyplus.sql as sqlp
 import pyplus.streamlit as stp
 import pandas as pd
 import pyplus.pandas as pdp
-import pyplus.builtin as bp
 
 second_ts:sqlp.TableStructure = st.session_state['selected_table']
 df_with_tag = st.session_state['selected_table_dataframe']
