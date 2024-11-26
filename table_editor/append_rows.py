@@ -58,9 +58,12 @@ with tabs_axis_selection['row']:
 
         if st.form_submit_button('append'):
             appends = df_append.to_dict(orient='records')
-            second_ts.upload_appends(*appends)
-            st.toast(f'append {appends}')
-            st.rerun()
+            if not appends:
+                st.error('No appends')
+            else:
+                second_ts.upload_appends(*appends)
+                st.toast(f'append {appends}')
+                st.rerun()
 
 with tabs_axis_selection['column']:
     df = pd.DataFrame({'name':pd.Series(dtype=pd.StringDtype),'type':pd.Series(dtype=pd.StringDtype)})
