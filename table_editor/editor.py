@@ -36,6 +36,7 @@ with tp['cell']:
         recs=get_comparison(df_edited,df_selected)
 
         if st.form_submit_button('upload'):
+            st.toast(f'uploading {recs}')
             for row_id in recs:
                 st.toast(f'{row_id}:{recs[row_id]}')
                 ts_selected.upload(id_row=row_id,**recs[row_id])
