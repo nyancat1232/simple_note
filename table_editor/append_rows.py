@@ -40,14 +40,7 @@ with tabs_axis_selection['row']:
         for col in df_append.columns.to_list():
             if col.startswith('_'):
                 del df_append[col]
-        cond_satisfies_warning = len(df_append.columns)<2
-        if cond_satisfies_warning:
-            st.warning('Problem when column is only one. ValueError: setting an array element with a sequence')
-            df_append['__hidden']=df_append.index
         df_append = st.data_editor(df_append,num_rows='dynamic',column_config=custom_configs_rw_def)
-        if cond_satisfies_warning:
-            st.warning('Problem when column is only one. ValueError: setting an array element with a sequence')
-            del df_append['__hidden']
 
         "Conversion to ids"
         for col in [col for col in df_append.columns.to_list() if col.endswith('__conversion')]:
