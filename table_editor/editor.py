@@ -10,28 +10,27 @@ custom_configs_rw_def = st.session_state['selected_table_column_config_rw_def']
 
 tp = stp.TabsPlus(titles=['cell','replace'],layout='tab')
 
+def get_comparison(df_new,df_old):
+    def func_melt(df:pd.DataFrame):
+        df_reset = df.copy().reset_index()
+        return df_reset.melt(id_vars='id',value_name='_sn_value')
+    df_new_melt=func_melt(df_new)
+    df_old_melt=func_melt(df_old)
+    df_compared = df_new_melt.compare(df_old_melt)
+    changed=df_compared.index.to_list()
+    df_temp = df_new_melt.loc[changed]
+    recs=dict()
+    for temp in df_temp.to_dict('records'):
+        if temp['id'] not in recs:
+            recs[temp['id']] = {}
+        recs[temp['id']][temp['variable']] = temp['_sn_value']
+    return recs
+
 with tp['cell']:
     with st.form('edit form',clear_on_submit=False):
-
         temp=ts_selected.get_foreign_tables()
 
         df_edited = st.data_editor(df_selected,disabled=ts_selected.get_identity(),column_config=custom_configs_rw_def)
-
-        def get_comparison(df_new,df_old):
-            def func_melt(df:pd.DataFrame):
-                df_reset = df.copy().reset_index()
-                return df_reset.melt(id_vars='id',value_name='_sn_value')
-            df_new_melt=func_melt(df_new)
-            df_old_melt=func_melt(df_old)
-            df_compared = df_new_melt.compare(df_old_melt)
-            changed=df_compared.index.to_list()
-            df_temp = df_new_melt.loc[changed]
-            recs=dict()
-            for temp in df_temp.to_dict('records'):
-                if temp['id'] not in recs:
-                    recs[temp['id']] = {}
-                recs[temp['id']][temp['variable']] = temp['_sn_value']
-            return recs
 
         recs=get_comparison(df_edited,df_selected)
 
