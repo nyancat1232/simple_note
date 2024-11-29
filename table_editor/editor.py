@@ -49,7 +49,8 @@ with tp['replace']:
 
     "filter"
     selected_table=df_selected.copy()
-    selected_table=selected_table.iloc[rrr['selection']['rows']]
+    if rrr['selection']['rows']:
+        selected_table=selected_table.iloc[rrr['selection']['rows']]
     selected_table=selected_table[rrr['selection']['columns']]
     selected_table
 
