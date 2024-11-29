@@ -43,11 +43,12 @@ with tp['cell']:
 
 with tp['replace']:
     rrr=st.dataframe(df_selected,selection_mode=['multi-column','multi-row'],on_select='rerun')
+    df_replace_original=df_selected.copy()[rrr['selection']['columns']]
 
     inp={'from':st.text_input('from'),'to':st.text_input('to')}
 
     "filter"
-    df_replace_after=df_selected.copy()
+    df_replace_after=df_replace_original.copy()
     if rrr['selection']['rows']:
         df_replace_after=df_replace_after.iloc[rrr['selection']['rows']]
     df_replace_after=df_replace_after[rrr['selection']['columns']]
