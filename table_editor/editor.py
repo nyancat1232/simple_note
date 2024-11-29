@@ -47,19 +47,19 @@ with tp['replace']:
     inp={'from':st.text_input('from'),'to':st.text_input('to')}
 
     "filter"
-    selected_table=df_selected.copy()
+    df_replace_after=df_selected.copy()
     if rrr['selection']['rows']:
-        selected_table=selected_table.iloc[rrr['selection']['rows']]
-    selected_table=selected_table[rrr['selection']['columns']]
-    selected_table
+        df_replace_after=df_replace_after.iloc[rrr['selection']['rows']]
+    df_replace_after=df_replace_after[rrr['selection']['columns']]
+    df_replace_after
 
     "change"
     #selected_table=selected_table.apply(lambda s:s.replace(inp['from'],inp['to']))
-    selected_table:pd.DataFrame=selected_table.applymap(lambda x: x.replace(inp['from'],inp['to']) if isinstance(x, str) else x)
-    selected_table
+    df_replace_after:pd.DataFrame=df_replace_after.applymap(lambda x: x.replace(inp['from'],inp['to']) if isinstance(x, str) else x)
+    df_replace_after
 
     if st.button('upload replace'):
-        upload_dict = selected_table.to_dict(orient='index')
+        upload_dict = df_replace_after.to_dict(orient='index')
         for rec in upload_dict:
             st.toast([rec,upload_dict[rec]])
             ts_selected.upload(rec,**upload_dict[rec])
