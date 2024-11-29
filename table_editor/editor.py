@@ -62,11 +62,14 @@ def func_replace():
     df_replace_after:pd.DataFrame=df_replace_after.applymap(lambda x: x.replace(inp['from'],inp['to']) if isinstance(x, str) else x)
     df_replace_after
 
+    "compare"
+    recs=get_comparison(df_replace_after,df_replace_original)
+    recs 
+
     if st.button('upload replace'):
-        upload_dict = df_replace_after.to_dict(orient='index')
-        for rec in upload_dict:
-            st.toast([rec,upload_dict[rec]])
-            ts_selected.upload(rec,**upload_dict[rec])
+        for rec in recs:
+            st.toast([rec,recs[rec]])
+            ts_selected.upload(rec,**recs[rec])
         st.rerun()
 
 with tp['replace']:
