@@ -26,7 +26,7 @@ def get_comparison(df_new,df_old):
         recs[temp['id']][temp['variable']] = temp['_sn_value']
     return recs
 
-with tp['cell']:
+def func_cell():
     with st.form('edit form',clear_on_submit=False):
         temp=ts_selected.get_foreign_tables()
 
@@ -41,7 +41,10 @@ with tp['cell']:
                 ts_selected.upload(id_row=row_id,**recs[row_id])
             st.rerun()
 
-with tp['replace']:
+with tp['cell']:
+    func_cell()
+
+def func_replace():
     rrr=st.dataframe(df_selected,selection_mode=['multi-column','multi-row'],on_select='rerun')
     df_replace_original=df_selected.copy()[rrr['selection']['columns']]
 
@@ -65,3 +68,6 @@ with tp['replace']:
             st.toast([rec,upload_dict[rec]])
             ts_selected.upload(rec,**upload_dict[rec])
         st.rerun()
+
+with tp['replace']:
+    func_replace()
