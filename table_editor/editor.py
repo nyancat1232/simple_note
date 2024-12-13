@@ -5,7 +5,6 @@ import pandas as pd
 
 ts:sqlp.TableStructure = st.session_state['selected_table']
 df:pd.DataFrame = st.session_state['selected_table_dataframe']
-custom_configs_ro = st.session_state['selected_table_column_config_ro']
 custom_configs_rw_def = st.session_state['selected_table_column_config_rw_def']
 
 def get_comparison(df_new,df_old):
