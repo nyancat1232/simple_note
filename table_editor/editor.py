@@ -68,7 +68,7 @@ def func_replace():
         st.rerun()
 
 tp = stp.TabsPlus(titles=['cell','replace'],layout='tab')
-with tp['cell']:
+with tp.cell:
     func_cell()
-with tp['replace']:
+with tp.replace:
     func_replace()
