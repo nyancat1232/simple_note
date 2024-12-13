@@ -26,8 +26,6 @@ def get_comparison(df_new,df_old):
 
 def func_cell():
     with st.form('edit form',clear_on_submit=False):
-        temp=ts.get_foreign_tables()
-
         df_edited = st.data_editor(df,disabled=ts.get_identity(),column_config=custom_configs_rw_def)
 
         recs=get_comparison(df_edited,df)
