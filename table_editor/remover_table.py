@@ -3,15 +3,15 @@ import pyplus.sql as sqlp
 
 "load"
 ts:sqlp.TableStructure = st.session_state['selected_table']
-df_expand= st.session_state['selected_table_dataframe']
-df_expand
+df= st.session_state['selected_table_dataframe']
+df
 
 "select"
-event = st.dataframe(df_expand,on_select='rerun',selection_mode=['multi-column','multi-row'])
+event = st.dataframe(df,on_select='rerun',selection_mode=['multi-column','multi-row'])
 event
 
 "remove col"
-df_expand[event['selection']['columns']]
+df[event['selection']['columns']]
 event['selection']['columns']
 if st.button('delete columns'):
     for col in event['selection']['columns']:
@@ -20,7 +20,7 @@ if st.button('delete columns'):
     st.rerun()
 
 "remove row"
-df_filtered_row=df_expand.iloc[event['selection']['rows']]
+df_filtered_row=df.iloc[event['selection']['rows']]
 rows=df_filtered_row.index.to_list()
 rows
 if st.button('delete rows'):

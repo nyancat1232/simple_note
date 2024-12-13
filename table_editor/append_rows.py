@@ -4,17 +4,17 @@ import pyplus.streamlit as stp
 import pandas as pd
 import pyplus.pandas as pdp
 
-second_ts:sqlp.TableStructure = st.session_state['selected_table']
-df_with_tag = st.session_state['selected_table_dataframe']
+ts:sqlp.TableStructure = st.session_state['selected_table']
+df = st.session_state['selected_table_dataframe']
 custom_configs_ro = st.session_state['selected_table_column_config_ro']
 custom_configs_rw_def = st.session_state['selected_table_column_config_rw_def']
 
-st.dataframe(df_with_tag,column_config=custom_configs_ro)
+st.dataframe(df,column_config=custom_configs_ro)
 
-df_append = pdp.empty_records(second_ts.read())
+df_append = pdp.empty_records(ts.read())
 df_append = df_append.reset_index(drop=True)
 
-tss_foreign = second_ts.get_foreign_tables()
+tss_foreign = ts.get_foreign_tables()
 
 tabs_axis_selection = stp.TabsPlus(titles=['row','column'],layout='tab')
 
@@ -54,7 +54,7 @@ with tabs_axis_selection['row']:
             if not appends:
                 st.error('No appends')
             else:
-                second_ts.upload_appends(*appends)
+                ts.upload_appends(*appends)
                 st.toast(f'append {appends}')
                 st.rerun()
 
@@ -66,7 +66,7 @@ with tabs_axis_selection['column']:
     result
 
     def append_columns():
-        second_ts.append_column(**result)
+        ts.append_column(**result)
 
     if st.button('append columns'):
         append_columns()
