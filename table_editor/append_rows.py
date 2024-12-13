@@ -18,7 +18,8 @@ tss_foreign = ts.get_foreign_tables()
 
 tabs_axis_selection = stp.TabsPlus(titles=['row','column'],layout='tab')
 
-with tabs_axis_selection['row']:
+def append_rows(df_append:pd.DataFrame):
+    df_append = df_append.copy()
     "Select a column"
     tab_or_col=stp.TabsPlus(layout='column',titles=tss_foreign,hide_titles=False)
     with st.form('append form',clear_on_submit=False):
@@ -58,7 +59,10 @@ with tabs_axis_selection['row']:
                 st.toast(f'append {appends}')
                 st.rerun()
 
-with tabs_axis_selection['column']:
+with tabs_axis_selection.row:
+    append_rows(df_append)
+
+def append_columns():
     df = pd.DataFrame({'name':pd.Series(dtype=pd.StringDtype),'type':pd.Series(dtype=pd.StringDtype)})
     sttype = {'name':st.column_config.TextColumn('name'),'type':st.column_config.SelectboxColumn('type',options=st.session_state['types'])}
     result = st.data_editor(df,num_rows='dynamic',column_config=sttype)
@@ -71,3 +75,6 @@ with tabs_axis_selection['column']:
     if st.button('append columns'):
         append_columns()
         st.rerun()
+
+with tabs_axis_selection.column:
+    append_columns()
