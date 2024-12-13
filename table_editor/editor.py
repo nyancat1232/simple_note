@@ -24,7 +24,7 @@ def get_comparison(df_new,df_old):
         recs[temp['id']][temp['variable']] = temp['_sn_value']
     return recs
 
-def func_cell(df:pd.DataFrame):
+def func_cell(df:pd.DataFrame,ts:sqlp.TableStructure):
     with st.form('edit form',clear_on_submit=False):
         df_edited = st.data_editor(df,disabled=ts.get_identity(),column_config=custom_configs_rw_def)
 
@@ -37,7 +37,7 @@ def func_cell(df:pd.DataFrame):
                 ts.upload(id_row=row_id,**recs[row_id])
             st.rerun()
 
-def func_replace(df:pd.DataFrame):
+def func_replace(df:pd.DataFrame,ts:sqlp.TableStructure):
     rrr=st.dataframe(df,selection_mode=['multi-column','multi-row'],on_select='rerun')
     df_replace_original=df.copy()[rrr['selection']['columns']]
 
@@ -67,6 +67,6 @@ def func_replace(df:pd.DataFrame):
 
 tp = stp.TabsPlus(titles=['cell','replace'],layout='tab')
 with tp.cell:
-    func_cell(df)
+    func_cell(df,ts)
 with tp.replace:
-    func_replace(df)
+    func_replace(df,ts)
