@@ -1,11 +1,13 @@
 import streamlit as st
 import pyplus.sql as sqlp
 import os
+import checkpoint as cp
 
 def init_schema():
     lists=sqlp.get_table_list(st.session_state['conn'].engine)
     return st.selectbox('select a schema',['public']+lists['table_schema'].unique().tolist())
 
+@cp.CheckPointFunctionDecoration
 def iter_custom_column_configs(ts:sqlp.TableStructure):
     column_configs = dict()
 
@@ -54,6 +56,7 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
                 column_configs[col] = None
     yield column_configs.copy(), 'readonly' 
 
+@cp.CheckPointFunctionDecoration
 def iter_tag_process(ts:sqlp.TableStructure):
     df=ts.read_expand()
     col_expanded_tag=ts.get_types_expanded().to_dict('index')
