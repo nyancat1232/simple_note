@@ -8,8 +8,6 @@ df_selected:pd.DataFrame = st.session_state['selected_table_dataframe']
 custom_configs_ro = st.session_state['selected_table_column_config_ro']
 custom_configs_rw_def = st.session_state['selected_table_column_config_rw_def']
 
-tp = stp.TabsPlus(titles=['cell','replace'],layout='tab')
-
 def get_comparison(df_new,df_old):
     def func_melt(df:pd.DataFrame):
         df_reset = df.copy().reset_index()
@@ -41,9 +39,6 @@ def func_cell():
                 ts_selected.upload(id_row=row_id,**recs[row_id])
             st.rerun()
 
-with tp['cell']:
-    func_cell()
-
 def func_replace():
     rrr=st.dataframe(df_selected,selection_mode=['multi-column','multi-row'],on_select='rerun')
     df_replace_original=df_selected.copy()[rrr['selection']['columns']]
@@ -72,5 +67,8 @@ def func_replace():
             ts_selected.upload(rec,**recs[rec])
         st.rerun()
 
+tp = stp.TabsPlus(titles=['cell','replace'],layout='tab')
+with tp['cell']:
+    func_cell()
 with tp['replace']:
     func_replace()
