@@ -16,8 +16,6 @@ df_append = df_append.reset_index(drop=True)
 
 tss_foreign = ts.get_foreign_tables()
 
-tabs_axis_selection = stp.TabsPlus(titles=['row','column'],layout='tab')
-
 def append_rows(df_append:pd.DataFrame):
     df_append = df_append.copy()
     "Select a column"
@@ -59,9 +57,6 @@ def append_rows(df_append:pd.DataFrame):
                 st.toast(f'append {appends}')
                 st.rerun()
 
-with tabs_axis_selection.row:
-    append_rows(df_append)
-
 def append_columns():
     df = pd.DataFrame({'name':pd.Series(dtype=pd.StringDtype),'type':pd.Series(dtype=pd.StringDtype)})
     sttype = {'name':st.column_config.TextColumn('name'),'type':st.column_config.SelectboxColumn('type',options=st.session_state['types'])}
@@ -76,5 +71,8 @@ def append_columns():
         append_columns()
         st.rerun()
 
+tabs_axis_selection = stp.TabsPlus(titles=['row','column'],layout='tab')
+with tabs_axis_selection.row:
+    append_rows(df_append)
 with tabs_axis_selection.column:
     append_columns()
