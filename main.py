@@ -31,8 +31,8 @@ pg = st.navigation({'main':[st.Page('table_editor/reader.py',title='reader'),
                     })
 
 with st.sidebar:
-    all_records_list= sqlp.get_table_list(st.session_state['conn'].engine).to_dict('records')
-    current_address=st.selectbox('select address global',all_records_list,format_func=lambda x:f"{x['table_schema']}/{x['table_name']}")
+    all_tables= sqlp.get_table_list(st.session_state['conn'].engine).to_dict('records')
+    current_address=st.selectbox('select address global',all_tables,format_func=lambda x:f"{x['table_schema']}/{x['table_name']}")
 
 selected_table = sqlp.TableStructure(schema_name=current_address['table_schema'],table_name=current_address['table_name'],engine=st.session_state['conn'].engine)
 df_with_tag:pd.DataFrame = stglobal.iter_tag_process(selected_table).filter_tag()
