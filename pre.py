@@ -58,13 +58,16 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
 
 @cp.CheckPointFunctionDecoration
 def iter_tag_process(ts:sqlp.TableStructure):
+    hashtag_init_symbol = '#'
+    hashtag_sub_symbol = ':'
+
     df=ts.read_expand()
     col_expanded_tag=ts.get_types_expanded().to_dict('index')
 
     for col in col_expanded_tag:
         match col_expanded_tag[col]['display_type']:
             case 'text_with_tag':
-                df[f'_tags_{col}']=df[col].str.split('#')
+                df[f'_tags_{col}']=df[col].str.split(hashtag_init_symbol)
                 def extract_tags(cols:list):
                     try:
                         match len(cols):
@@ -91,8 +94,8 @@ def iter_tag_process(ts:sqlp.TableStructure):
                     def apply_each(s:str):
                         if s is None:
                             return [s]
-                        spl = s.split(':')
-                        return [':'.join(spl[0:1+ind]) for ind,_ in enumerate(spl)]
+                        spl = s.split(hashtag_sub_symbol)
+                        return [hashtag_sub_symbol.join(spl[0:1+ind]) for ind,_ in enumerate(spl)]
                     ret_pre = [apply_each(val) for val in vals]
                     ret = []
                     for l in ret_pre:
