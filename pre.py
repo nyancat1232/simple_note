@@ -57,7 +57,7 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
     yield column_configs.copy(), 'readonly' 
 
 @cp.CheckPointFunctionDecoration
-def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_sub_symbol:str=':'):
+def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_sub_symbol:str='/'):
     df=ts.read_expand()
     col_expanded_tag=ts.get_types_expanded().to_dict('index')
 
