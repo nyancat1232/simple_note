@@ -3,10 +3,6 @@ import pyplus.sql as sqlp
 import os
 import checkpoint as cp
 
-def init_schema():
-    lists=sqlp.get_table_list(st.session_state['conn'].engine)
-    return st.selectbox('select a schema',['public']+lists['table_schema'].unique().tolist())
-
 @cp.CheckPointFunctionDecoration
 def iter_custom_column_configs(ts:sqlp.TableStructure):
     column_configs = dict()
