@@ -31,6 +31,12 @@ pg = st.navigation({'main':[st.Page('table_editor/reader.py',title='reader'),
                     })
 
 with st.sidebar:
+    with st.form(key='create_table'):
+        #Create table
+        schema_name = st.text_input('schema name')
+        table_name = st.text_input('table name')
+        if st.form_submit_button(label='create table'):
+                sqlp.SchemaStructure(schema_name,st.session_state['conn'].engine).create_table(table_name)
     all_tables= sqlp.get_table_list(st.session_state['conn'].engine).to_dict('records')
     current_address=st.selectbox('select address global',all_tables,format_func=lambda x:f"{x['table_schema']}/{x['table_name']}")
 
