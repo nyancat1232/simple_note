@@ -43,7 +43,7 @@ with st.sidebar:
     current_address=st.selectbox('select address global',all_tables,format_func=lambda x:f"{x['table_schema']}/{x['table_name']}")
 
 selected_table = sqlp.TableStructure(schema_name=current_address['table_schema'],table_name=current_address['table_name'],engine=st.session_state['conn'].engine)
-df_with_tag:pd.DataFrame = stglobal.iter_tag_process(selected_table).filter_tag()
+df_with_tag:pd.DataFrame = stglobal.iter_tag_process(selected_table).filter_rows()
 custom_configs_ro:dict = stglobal.iter_custom_column_configs(selected_table).readonly()
 custom_configs_rw_def:dict = stglobal.iter_custom_column_configs(selected_table).edit()
 

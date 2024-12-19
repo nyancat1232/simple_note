@@ -116,5 +116,4 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
             df = df[sr_contain_all]
         else:
             st.warning('empty')
-    yield df, 'filter_tag'
-    
+    yield df, 'filter_rows'
