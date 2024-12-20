@@ -33,7 +33,7 @@ pg = st.navigation({'main':[st.Page('table_editor/reader.py',title='reader'),
 with st.sidebar:
     with st.form(key='create_table'):
         #Create table
-        schema_name = st.text_input('schema name',help='schema name that is already exist.')
+        schema_name = st.selectbox('schema name',sqlp.get_schema_list(st.session_state['conn'].engine))
         table_name = st.text_input('table name')
         if st.form_submit_button(label='create table'):
                 sqlp.SchemaStructure(schema_name,st.session_state['conn'].engine).create_table(table_name)
