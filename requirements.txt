@@ -5,9 +5,9 @@ cachetools==5.3.3
 certifi==2024.7.4
 cffi==1.16.0
 charset-normalizer==3.3.2
-checkpoint @ git+https://github.com/nyancat1232/checkpoint_function.git@f47744036a5a1bff82b44db1a6a22fd0303d6519
+checkpoint @ git+https://github.com/nyancat1232/checkpoint_function.git@4020e5f83562b6a036cea8db40f524dfdd8144d6
 click==8.1.7
-cryptography==43.0.1
+cryptography==42.0.5
 gitdb==4.0.11
 GitPython==3.1.42
 greenlet==3.0.3
@@ -41,11 +41,11 @@ rpds-py==0.18.0
 six==1.16.0
 smmap==5.0.1
 SQLAlchemy==2.0.28
-streamlit==1.40.0
+streamlit==1.41.1
 tenacity==8.2.3
 toml==0.10.2
 toolz==0.12.1
-tornado==6.4.2
+tornado==6.4.1
 typing_extensions==4.10.0
 tzdata==2024.1
 urllib3==2.2.2

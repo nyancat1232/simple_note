@@ -64,11 +64,8 @@ def append_columns():
     result = {rec['name']:rec['type'] for rec in result.to_dict(orient='records')}
     result
 
-    def append_columns():
-        ts.append_column(**result)
-
     if st.button('append columns'):
-        append_columns()
+        ts.append_column(**result)
         st.rerun()
 
 tabs_axis_selection = stp.TabsPlus(titles=['row','column'],layout='tab')
