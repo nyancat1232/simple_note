@@ -62,7 +62,7 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
     filt_rows={}
     for col_3 in col_expanded_tag:
         match col_expanded_tag[col_3]['display_type']:
-            case 'text_with_tag':
+            case 'text'|'text_with_tag':
                 def extract_tags(vals:list):
                     try:
                         match len(vals):
