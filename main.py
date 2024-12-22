@@ -96,9 +96,6 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
                     for l in ret_pre:
                         ret += l
                     return ret
-                sr_tags_extracted=df[col_3].str.split(hashtag_init_symbol)\
-                .apply(extract_tags).apply(remove_spaces).apply(duplicate_super_tags)
-    
                 def find_all_tags(sr_tag:pd.Series):
                     return sr_tag.explode().sort_values()\
                                 .unique().tolist()
@@ -110,6 +107,9 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
                         return False
                     else:
                         return True
+                
+                sr_tags_extracted=df[col_3].str.split(hashtag_init_symbol)\
+                .apply(extract_tags).apply(remove_spaces).apply(duplicate_super_tags)
                 selected_tags = st.multiselect(f'select tags of {f'_tags_{col_3}'}',find_all_tags(sr_tags_extracted),[])
                 sr_selected_rows = sr_tags_extracted.apply(lambda ll:contains_tags(ll,selected_tags))
                 filt_rows[f'_tags_{col_3}'] = sr_selected_rows
