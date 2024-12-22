@@ -160,7 +160,7 @@ with st.sidebar:
 
     #Select address
     all_tables= sqlp.get_table_list(st.session_state['conn'].engine).to_dict('records')
-    current_address=st.selectbox('select address global',all_tables,format_func=lambda x:f"{x['table_schema']}/{x['table_name']}")
+    current_address=st.selectbox('select address global',all_tables,format_func=lambda x:f"{x['table_schema']}.{x['table_name']}")
 
 selected_table = sqlp.TableStructure(schema_name=current_address['table_schema'],table_name=current_address['table_name'],engine=st.session_state['conn'].engine)
 df_with_tag:pd.DataFrame = iter_tag_process(selected_table).filter_rows()
