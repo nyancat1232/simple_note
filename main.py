@@ -59,10 +59,10 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
     df=ts.read_expand()
     col_expanded_tag=ts.get_types_expanded().to_dict('index')
 
-    for col in col_expanded_tag:
-        match col_expanded_tag[col]['display_type']:
+    for col_3 in col_expanded_tag:
+        match col_expanded_tag[col_3]['display_type']:
             case 'text_with_tag':
-                df[f'_tags_{col}']=df[col].str.split(hashtag_init_symbol)
+                df[f'_tags_{col_3}']=df[col_3].str.split(hashtag_init_symbol)
                 def extract_tags(cols:list):
                     try:
                         match len(cols):
@@ -97,15 +97,15 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
                         ret += l
                     return ret
 
-                df[f'_tags_{col}']=df[f'_tags_{col}'].apply(extract_tags).apply(remove_spaces).apply(duplicate_super_tags)
+                df[f'_tags_{col_3}']=df[f'_tags_{col_3}'].apply(extract_tags).apply(remove_spaces).apply(duplicate_super_tags)
     yield df, 'add_tag_column'
     
     col_tags = [a for a  in df.columns.to_list() if a.startswith('_tags_')]
-    for col in col_tags:
+    for col_2 in col_tags:
         def find_all_tags(col_tag:str):
                 sr_tag = df[col_tag].explode().sort_values()
                 return sr_tag.unique().tolist()
-        selected_tags = st.multiselect(f'select tags of {col}',find_all_tags(col),[])
+        selected_tags = st.multiselect(f'select tags of {col_2}',find_all_tags(col_2),[])
         def contains_tags(ll:list,tags:list)->bool:
             left = set(ll)
             right = set(tags)
@@ -114,7 +114,7 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
                 return False
             else:
                 return True
-        sr_contain_all = df[col].apply(lambda ll:contains_tags(ll,selected_tags))
+        sr_contain_all = df[col_2].apply(lambda ll:contains_tags(ll,selected_tags))
         if len(df.index)>0:
             df = df[sr_contain_all]
         else:
