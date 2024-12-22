@@ -14,7 +14,6 @@ COPY pyplus ./pyplus
 COPY new_page ./new_page
 COPY table_editor ./table_editor
 COPY main.py ./
-COPY pre.py ./
 
 RUN pip3 install -r requirements.txt
 
