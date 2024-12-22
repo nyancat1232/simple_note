@@ -117,9 +117,12 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
                     return sr_tags_extracted.apply(lambda ll:contains_tags(ll,[]))
                 
     filt_rows={col:filter_rows(col) for col in col_expanded_tag}
-    df_bool_filter = pd.concat(filt_rows,axis=1)
-    sr_total_filter = df_bool_filter.all(axis=1)
-    df_res = df[sr_total_filter]
+    try:
+        df_bool_filter = pd.concat(filt_rows,axis=1)
+        sr_total_filter = df_bool_filter.all(axis=1)
+        df_res = df[sr_total_filter]
+    except:
+        df_res = df
     yield df_res, 'filter_rows'
 
 
