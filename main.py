@@ -59,8 +59,7 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
     df=ts.read_expand()
     col_expanded_tag=ts.get_types_expanded().to_dict('index')
 
-    filt_rows={}
-    for col_3 in col_expanded_tag:
+    def filter_rows(col_3:str):
         match col_expanded_tag[col_3]['display_type']:
             case 'text'|'text_with_tag':
                 def extract_tags(vals:list):
@@ -111,9 +110,9 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
                 sr_tags_extracted=df[col_3].str.split(hashtag_init_symbol)\
                 .apply(extract_tags).apply(remove_spaces).apply(duplicate_super_tags)
                 selected_tags = st.multiselect(f'select tags of {col_3}',find_all_tags(sr_tags_extracted),[])
-                sr_selected_rows = sr_tags_extracted.apply(lambda ll:contains_tags(ll,selected_tags))
-                filt_rows[col_3] = sr_selected_rows
-
+                return sr_tags_extracted.apply(lambda ll:contains_tags(ll,selected_tags))
+                
+    filt_rows={col:filter_rows(col) for col in col_expanded_tag}
     df_bool_filter = pd.concat(filt_rows,axis=1)
     sr_total_filter = df_bool_filter.all(axis=1)
     df_res = df[sr_total_filter]
