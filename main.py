@@ -112,7 +112,7 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
                 .apply(extract_tags).apply(remove_spaces).apply(duplicate_super_tags)
                 selected_tags = st.multiselect(f'select tags of {col_3}',find_all_tags(sr_tags_extracted),[])
                 sr_selected_rows = sr_tags_extracted.apply(lambda ll:contains_tags(ll,selected_tags))
-                filt_rows[f'_tags_{col_3}'] = sr_selected_rows
+                filt_rows[col_3] = sr_selected_rows
 
     df_bool_filter = pd.concat(filt_rows,axis=1)
     sr_total_filter = df_bool_filter.all(axis=1)
