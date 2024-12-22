@@ -109,7 +109,8 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
                 
                 sr_tags_extracted=df[col_3].str.split(hashtag_init_symbol)\
                 .apply(extract_tags).apply(remove_spaces).apply(duplicate_super_tags)
-                selected_tags = st.multiselect(f'select tags of {col_3}',find_all_tags(sr_tags_extracted),[])
+                all_tags_list = find_all_tags(sr_tags_extracted)
+                selected_tags = st.multiselect(f'select tags of {col_3}',all_tags_list,[])
                 return sr_tags_extracted.apply(lambda ll:contains_tags(ll,selected_tags))
                 
     filt_rows={col:filter_rows(col) for col in col_expanded_tag}
