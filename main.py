@@ -104,8 +104,6 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
         def find_all_tags(sr_tag:pd.Series):
             return sr_tag.explode().sort_values()\
                         .unique().tolist()
-        
-        selected_tags = st.multiselect(f'select tags of {col_2}',find_all_tags(df[col_2]),[])
         def contains_tags(ll:list,tags:list)->bool:
             left = set(ll)
             right = set(tags)
@@ -114,6 +112,7 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
                 return False
             else:
                 return True
+        selected_tags = st.multiselect(f'select tags of {col_2}',find_all_tags(df[col_2]),[])
         sr_contain_all = df[col_2].apply(lambda ll:contains_tags(ll,selected_tags))
         if len(df.index)>0:
             df = df[sr_contain_all]
