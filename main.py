@@ -62,7 +62,6 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
     for col_3 in col_expanded_tag:
         match col_expanded_tag[col_3]['display_type']:
             case 'text_with_tag':
-                df[f'_tags_{col_3}']=df[col_3].str.split(hashtag_init_symbol)
                 def extract_tags(vals:list):
                     try:
                         match len(vals):
@@ -96,8 +95,8 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
                     for l in ret_pre:
                         ret += l
                     return ret
-
-                df[f'_tags_{col_3}']=df[f'_tags_{col_3}'].apply(extract_tags).apply(remove_spaces).apply(duplicate_super_tags)
+                df[f'_tags_{col_3}']=df[col_3].str.split(hashtag_init_symbol)\
+                .apply(extract_tags).apply(remove_spaces).apply(duplicate_super_tags)
     yield df, 'add_tag_column'
     
     col_tags = [a for a  in df.columns.to_list() if a.startswith('_tags_')]
