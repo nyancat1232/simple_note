@@ -102,8 +102,8 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
     col_tags = [a for a  in df.columns.to_list() if a.startswith('_tags_')]
     for col_2 in col_tags:
         def find_all_tags(col_tag:str):
-                sr_tag = df[col_tag].explode().sort_values()
-                return sr_tag.unique().tolist()
+            sr_tag = df[col_tag].explode().sort_values()
+            return sr_tag.unique().tolist()
         selected_tags = st.multiselect(f'select tags of {col_2}',find_all_tags(col_2),[])
         def contains_tags(ll:list,tags:list)->bool:
             left = set(ll)
