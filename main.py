@@ -96,7 +96,7 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
                         ret += l
                     return ret
                 def find_all_tags(sr_tag:pd.Series):
-                    return sr_tag.explode().sort_values()\
+                    return sr_tag.explode().dropna().sort_values()\
                                 .unique().tolist()
                 def contains_tags(ll:list,tags:list)->bool:
                     left = set(ll)
