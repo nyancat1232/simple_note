@@ -63,15 +63,15 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
         match col_expanded_tag[col_3]['display_type']:
             case 'text_with_tag':
                 df[f'_tags_{col_3}']=df[col_3].str.split(hashtag_init_symbol)
-                def extract_tags(cols:list):
+                def extract_tags(vals:list):
                     try:
-                        match len(cols):
+                        match len(vals):
                             case 1:
-                                return [cols[1]]
+                                return [vals[1]]
                             case 0:
                                 return [None]
                             case _:
-                                return cols[1:]
+                                return vals[1:]
                     except:
                         return [None]
                 def remove_spaces(vals:list):
