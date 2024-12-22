@@ -98,6 +98,8 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
                 df[f'_tags_{col_3}']=df[col_3].str.split(hashtag_init_symbol)\
                 .apply(extract_tags).apply(remove_spaces).apply(duplicate_super_tags)
     yield df, 'add_tag_column'
+
+    filt_rows={}
     
     col_tags = [a for a  in df.columns.to_list() if a.startswith('_tags_')]
     for col_2 in col_tags:
@@ -114,11 +116,12 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
                 return True
         selected_tags = st.multiselect(f'select tags of {col_2}',find_all_tags(df[col_2]),[])
         sr_selected_rows = df[col_2].apply(lambda ll:contains_tags(ll,selected_tags))
-        if len(df.index)>0:
-            df = df[sr_selected_rows]
-        else:
-            st.warning('empty')
-    yield df, 'filter_rows'
+        filt_rows[col_2] = sr_selected_rows
+
+    df_bool_filter = pd.concat(filt_rows,axis=1)
+    sr_total_filter = df_bool_filter.all(axis=1)
+    df_res = df[sr_total_filter]
+    yield df_res, 'filter_rows'
 
 
 page_title = 'Simple note'
