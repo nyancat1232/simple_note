@@ -113,9 +113,9 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
             else:
                 return True
         selected_tags = st.multiselect(f'select tags of {col_2}',find_all_tags(df[col_2]),[])
-        sr_contain_all = df[col_2].apply(lambda ll:contains_tags(ll,selected_tags))
+        sr_selected_rows = df[col_2].apply(lambda ll:contains_tags(ll,selected_tags))
         if len(df.index)>0:
-            df = df[sr_contain_all]
+            df = df[sr_selected_rows]
         else:
             st.warning('empty')
     yield df, 'filter_rows'
