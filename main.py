@@ -163,13 +163,10 @@ with st.sidebar:
     current_address=st.selectbox('select address global',all_tables,format_func=lambda x:f"{x['table_schema']}.{x['table_name']}")
 
 selected_table = sqlp.TableStructure(schema_name=current_address['table_schema'],table_name=current_address['table_name'],engine=st.session_state['conn'].engine)
-df_with_tag:pd.DataFrame = iter_tag_process(selected_table).filter_rows()
-custom_configs_ro:dict = iter_custom_column_configs(selected_table).readonly()
-custom_configs_rw_def:dict = iter_custom_column_configs(selected_table).edit()
 
 st.session_state['selected_table'] = selected_table
-st.session_state['selected_table_dataframe'] = df_with_tag
-st.session_state['selected_table_column_config_ro'] = custom_configs_ro
-st.session_state['selected_table_column_config_rw_def'] = custom_configs_rw_def
+st.session_state['selected_table_dataframe']= iter_tag_process(selected_table).filter_rows()
+st.session_state['selected_table_column_config_ro']= iter_custom_column_configs(selected_table).readonly()
+st.session_state['selected_table_column_config_rw_def']= iter_custom_column_configs(selected_table).edit()
 
 pg.run()
