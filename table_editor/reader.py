@@ -1,4 +1,5 @@
 import streamlit as st
+import pyplus.streamlit as stp
 import pyplus.sql as sqlp
 
 second_ts:sqlp.TableStructure = st.session_state['selected_table']
@@ -21,8 +22,12 @@ with st.sidebar:
                     display_element = row[col]
             result_list.append('\t'*ind+f'- {display_element}')
 result_str="\n".join(result_list)
+tp = stp.TabsPlus(titles=['view','code'])
 with st.container():
-    st.markdown(result_str)
+    with tp.view:
+        st.markdown(result_str)
+    with tp.code:
+        st.code(result_str)
 
 event=st.dataframe(df_with_tag,column_config=custom_configs_ro,on_select='rerun',selection_mode='single-row')
 row = df_with_tag.iloc[event['selection']['rows']].to_dict('records')[0]
