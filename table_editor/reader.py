@@ -6,12 +6,20 @@ df_with_tag = st.session_state['selected_table_dataframe']
 custom_configs_ro = st.session_state['selected_table_column_config_ro']
 
 with st.sidebar:
+    dtypes = second_ts.get_types_expanded().display_type.to_dict()
     order_nums=st.slider('size',min_value=1,max_value=len(df_with_tag.columns))
     order_selections=[st.selectbox(f'{num} selection',df_with_tag.columns) for num in range(order_nums)]
     result_list=[]
     for row in df_with_tag.to_dict('records'):
         for ind,col in enumerate(order_selections):
-            result_list.append('\t'*ind+f'- {row[col]}')
+            match dtypes[col]:
+                case 'image_url':
+                    display_element = f"![image]({row[col]})"
+                case 'video_url':
+                    display_element = f"[video link]({row[col]})"
+                case _:
+                    display_element = row[col]
+            result_list.append('\t'*ind+f'- {display_element}')
 result_str="\n".join(result_list)
 st.code(result_str)
 
