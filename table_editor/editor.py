@@ -7,6 +7,8 @@ ts:sqlp.TableStructure = st.session_state['selected_table']
 df:pd.DataFrame = st.session_state['selected_table_dataframe']
 custom_configs_rw_def = st.session_state['selected_table_column_config_rw_def']
 
+identity = ts.get_identity()
+
 def get_comparison(df_new,df_old):
     def func_melt(df:pd.DataFrame):
         df_reset = df.copy().reset_index()
@@ -25,7 +27,7 @@ def get_comparison(df_new,df_old):
 
 @st.fragment
 def func_cell(df:pd.DataFrame,ts:sqlp.TableStructure):
-    df_edited = st.data_editor(df,disabled=ts.get_identity(),column_config=custom_configs_rw_def)
+    df_edited = st.data_editor(df,disabled=identity,column_config=custom_configs_rw_def)
 
     recs=get_comparison(df_edited,df)
 
