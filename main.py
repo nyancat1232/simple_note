@@ -5,6 +5,8 @@ import pandas as pd
 import os
 from sqlalchemy import create_engine
 
+debug = True
+
 @cp.CheckPointFunctionDecoration
 def iter_custom_column_configs(ts:sqlp.TableStructure):
     column_configs = dict()
@@ -168,5 +170,16 @@ st.session_state['selected_table'] = selected_table
 st.session_state['selected_table_dataframe']= iter_tag_process(selected_table).filter_rows()
 st.session_state['selected_table_column_config_ro']= iter_custom_column_configs(selected_table).readonly()
 st.session_state['selected_table_column_config_rw_def']= iter_custom_column_configs(selected_table).edit()
+
+if debug == True:
+    if 'count' not in st.session_state:
+        st.session_state.count = 0
+    else:
+        st.session_state.count += 1
+
+    if 'pending_upload' not in st.session_state:
+        st.session_state.pending_upload = []
+
+    st.json(st.session_state,expanded=False)
 
 pg.run()
