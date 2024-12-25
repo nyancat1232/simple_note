@@ -23,19 +23,20 @@ def get_comparison(df_new,df_old):
         recs[temp['id']][temp['variable']] = temp['_sn_value']
     return recs
 
+@st.fragment
 def func_cell(df:pd.DataFrame,ts:sqlp.TableStructure):
-    with st.form('edit form',clear_on_submit=False):
-        df_edited = st.data_editor(df,disabled=ts.get_identity(),column_config=custom_configs_rw_def)
+    df_edited = st.data_editor(df,disabled=ts.get_identity(),column_config=custom_configs_rw_def)
 
-        recs=get_comparison(df_edited,df)
+    recs=get_comparison(df_edited,df)
 
-        if st.form_submit_button('upload'):
-            st.toast(f'uploading {recs}')
-            for row_id in recs:
-                st.toast(f'{row_id}:{recs[row_id]}')
-                ts.upload(id_row=row_id,**recs[row_id])
-            st.rerun()
+    if st.button('upload'):
+        st.toast(f'uploading {recs}')
+        for row_id in recs:
+            st.toast(f'{row_id}:{recs[row_id]}')
+            ts.upload(id_row=row_id,**recs[row_id])
+        st.rerun()
 
+@st.fragment
 def func_replace(df:pd.DataFrame,ts:sqlp.TableStructure):
     rrr=st.dataframe(df,selection_mode=['multi-column','multi-row'],on_select='rerun')
     df_replace_original=df.copy()[rrr['selection']['columns']]
