@@ -70,8 +70,26 @@ def append_columns():
         ts.append_column(**result)
         st.rerun()
 
-tabs_axis_selection = stp.TabsPlus(titles=['row','column'],layout='tab')
+@st.fragment
+def append_foreign_column():
+    all_tables= sqlp.get_table_list(st.session_state['conn'].engine).to_dict('records')
+    address_right=st.selectbox('select a second table',all_tables,format_func=lambda x:f"{x['table_schema']}/{x['table_name']}")
+    new_column_name = st.text_input('New column name')
+
+    ts_right = sqlp.TableStructure(schema_name=address_right['table_schema'],table_name=address_right['table_name'],engine=st.session_state['conn'].engine)
+    df_right = ts_right.read()
+    df_right
+
+    if st.button('upload'):
+        st.toast('uploading')
+        ts.append_column(**{new_column_name:'bigint'})
+        ts.connect_foreign_column(ts_right,new_column_name)
+        st.rerun()
+
+tabs_axis_selection = stp.TabsPlus(titles=['row','column','foreign_column'],layout='tab')
 with tabs_axis_selection.row:
     append_rows(df_append)
 with tabs_axis_selection.column:
     append_columns()
+with tabs_axis_selection.foreign_column:
+    append_foreign_column()
