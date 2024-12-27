@@ -15,6 +15,12 @@ df_append = pdp.empty_records(ts.read())
 df_append = df_append.reset_index(drop=True)
 
 tss_foreign = ts.get_foreign_tables()
+dfs_foreign:dict[pd.DataFrame] = {}
+for col_local_foreign in tss_foreign:
+    ts_sub = tss_foreign[col_local_foreign]
+    dfs_foreign[col_local_foreign]=ts_sub.read_expand()
+
+dfs_foreign
 
 @st.fragment
 def append_rows(df_append:pd.DataFrame):
@@ -23,16 +29,14 @@ def append_rows(df_append:pd.DataFrame):
     tab_or_col=stp.TabsPlus(layout='column',titles=tss_foreign,hide_titles=False)
 
     selected_col_convert=dict()
+
     for col_local_foreign in tss_foreign:
-        ts_sub = tss_foreign[col_local_foreign]
-        df_foreign_display=ts_sub.read_expand()
-        
         #display
         with tab_or_col[col_local_foreign]:
-            selected_col_convert[col_local_foreign]=st.dataframe(df_foreign_display,selection_mode='single-column',on_select='rerun',key=f'convert_of_{col_local_foreign}')['selection']['columns']
+            selected_col_convert[col_local_foreign]=st.dataframe(dfs_foreign[col_local_foreign],selection_mode='single-column',on_select='rerun',key=f'convert_of_{col_local_foreign}')['selection']['columns']
             if len(selected_col_convert[col_local_foreign])>0:
                 selected_col_convert[col_local_foreign]=selected_col_convert[col_local_foreign][0]
-                selections=df_foreign_display[selected_col_convert[col_local_foreign]].unique().dropna().tolist()
+                selections=dfs_foreign[col_local_foreign][selected_col_convert[col_local_foreign]].unique().dropna().tolist()
                 custom_configs_rw_def[col_local_foreign+'__conversion']=st.column_config.SelectboxColumn(f'{col_local_foreign}(conversion from {selected_col_convert[col_local_foreign]})',options=selections)
                 df_append[col_local_foreign+'__conversion']=pd.Series()
                 del df_append[col_local_foreign]
