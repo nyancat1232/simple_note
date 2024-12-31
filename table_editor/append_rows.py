@@ -20,8 +20,6 @@ for col_local_foreign in tss_foreign:
     ts_sub = tss_foreign[col_local_foreign]
     dfs_foreign[col_local_foreign]=ts_sub.read_expand()
 
-dfs_foreign
-
 def inverse_dict(di:dict)->dict:
     return {di[key]:key for key in di}
 
