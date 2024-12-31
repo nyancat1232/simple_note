@@ -29,26 +29,26 @@ def inverse_dict(di:dict)->dict:
 def append_rows(df_append:pd.DataFrame):
     df_append = df_append.copy()
     "Select a column"
-    tab_or_col=stp.TabsPlus(layout='column',titles=tss_foreign,hide_titles=False)
+    tab_or_col=stp.TabsPlus(layout='column',titles=dfs_foreign,hide_titles=False)
 
-    selected_col_convert=dict()
-
-    for col_local_foreign in tss_foreign:
+    selected_col_convert_result={}
+    for col_local_foreign in dfs_foreign:
         #display
         with tab_or_col[col_local_foreign]:
             try:
-                selected_col_convert[col_local_foreign]=st.dataframe(dfs_foreign[col_local_foreign],
-                                                                    selection_mode='single-column',
-                                                                    on_select='rerun',
-                                                                    key=f'convert_of_{col_local_foreign}'
-                                                                    )['selection']['columns'][0]
-                ser_convert = dfs_foreign[col_local_foreign][selected_col_convert[col_local_foreign]]
+                col_selected_foreign=st.dataframe(dfs_foreign[col_local_foreign],
+                                                  selection_mode='single-column',
+                                                  on_select='rerun',
+                                                  key=f'convert_of_{col_local_foreign}'
+                                                  )['selection']['columns'][0]
+                ser_convert = dfs_foreign[col_local_foreign][col_selected_foreign]
+                selected_col_convert_result[col_local_foreign]= inverse_dict(ser_convert.to_dict())
                 selections=(ser_convert.unique()
                                        .dropna()
                                        .tolist()
                 )
                 new_column=col_local_foreign+'__conversion'
-                custom_configs_rw_def[new_column]=st.column_config.SelectboxColumn(f'{col_local_foreign}(conversion from {selected_col_convert[col_local_foreign]})',
+                custom_configs_rw_def[new_column]=st.column_config.SelectboxColumn(f'{col_local_foreign}(conversion from {col_selected_foreign})',
                                                                                                             options=selections)
                 df_append[new_column]=pd.Series()
                 del df_append[col_local_foreign]
@@ -63,9 +63,10 @@ def append_rows(df_append:pd.DataFrame):
     "Conversion to ids"
     for col in [col for col in df_append.columns.to_list() if col.endswith('__conversion')]:
         original_col=col[:col.find('__conversion')]
-        df_append[original_col]=df_append[col].apply(lambda val:tss_foreign[original_col].get_local_val_to_id(selected_col_convert[original_col])[val])
+        ser_converted = df_append[col].apply(lambda val:selected_col_convert_result[original_col][val])
+        df_append[original_col]=ser_converted
         del df_append[col]
-
+    df_append
 
     if st.button('append'):
         appends = df_append.to_dict(orient='records')
