@@ -24,8 +24,9 @@ def inverse_dict(di:dict)->dict:
     return {di[key]:key for key in di}
 
 @st.fragment
-def append_rows(df_append:pd.DataFrame):
+def append_rows(df_append:pd.DataFrame,custom_configs_rw_def:dict):
     df_append = df_append.copy()
+    custom_configs_rw_def = custom_configs_rw_def.copy()
     "Select a column"
     tab_or_col=stp.TabsPlus(layout='column',titles=dfs_foreign,hide_titles=False)
 
@@ -45,11 +46,10 @@ def append_rows(df_append:pd.DataFrame):
                                        .dropna()
                                        .tolist()
                 )
-                new_column=col_local_foreign+'__conversion'
-                custom_configs_rw_def[new_column]=st.column_config.SelectboxColumn(f'{col_local_foreign}(conversion from {col_selected_foreign})',
+                custom_configs_rw_def[col_local_foreign]=st.column_config.SelectboxColumn(f'{col_local_foreign}(conversion from {col_selected_foreign})',
                                                                                                             options=selections)
-                df_append[new_column]=pd.Series()
                 del df_append[col_local_foreign]
+                df_append[col_local_foreign]=pd.Series()
             except:
                 pass
 
@@ -59,11 +59,8 @@ def append_rows(df_append:pd.DataFrame):
     df_append = st.data_editor(df_append,num_rows='dynamic',column_config=custom_configs_rw_def)
 
     "Conversion to ids"
-    for col in [col for col in df_append.columns.to_list() if col.endswith('__conversion')]:
-        original_col=col[:col.find('__conversion')]
-        ser_converted = df_append[col].apply(lambda val:selected_col_convert_result[original_col][val])
-        df_append[original_col]=ser_converted
-        del df_append[col]
+    for col in selected_col_convert_result:
+        df_append[col] = df_append[col].apply(lambda val:selected_col_convert_result[col][val])
     df_append
 
     if st.button('append'):
@@ -105,7 +102,7 @@ def append_foreign_column():
 
 tabs_axis_selection = stp.TabsPlus(titles=['row','column','foreign_column'],layout='tab')
 with tabs_axis_selection.row:
-    append_rows(df_append)
+    append_rows(df_append,custom_configs_rw_def)
 with tabs_axis_selection.column:
     append_columns()
 with tabs_axis_selection.foreign_column:
