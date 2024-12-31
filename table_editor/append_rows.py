@@ -22,6 +22,9 @@ for col_local_foreign in tss_foreign:
 
 dfs_foreign
 
+def inverse_dict(di:dict)->dict:
+    return {di[key]:key for key in di}
+
 @st.fragment
 def append_rows(df_append:pd.DataFrame):
     df_append = df_append.copy()
