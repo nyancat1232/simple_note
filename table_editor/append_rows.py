@@ -15,7 +15,7 @@ df_append = pdp.empty_records(ts.read())
 df_append = df_append.reset_index(drop=True)
 
 tss_foreign = ts.get_foreign_tables()
-dfs_foreign:dict[pd.DataFrame] = {}
+dfs_foreign:dict[str,pd.DataFrame] = {}
 for col_local_foreign in tss_foreign:
     ts_sub = tss_foreign[col_local_foreign]
     dfs_foreign[col_local_foreign]=ts_sub.read_expand()
