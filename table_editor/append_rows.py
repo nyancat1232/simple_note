@@ -43,9 +43,10 @@ def append_rows(df_append:pd.DataFrame):
                                                                                                    .dropna()
                                                                                                    .tolist()
                 )
-                custom_configs_rw_def[col_local_foreign+'__conversion']=st.column_config.SelectboxColumn(f'{col_local_foreign}(conversion from {selected_col_convert[col_local_foreign]})',
+                new_column=col_local_foreign+'__conversion'
+                custom_configs_rw_def[new_column]=st.column_config.SelectboxColumn(f'{col_local_foreign}(conversion from {selected_col_convert[col_local_foreign]})',
                                                                                                             options=selections)
-                df_append[col_local_foreign+'__conversion']=pd.Series()
+                df_append[new_column]=pd.Series()
                 del df_append[col_local_foreign]
             except:
                 pass
