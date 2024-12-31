@@ -40,8 +40,8 @@ def append_rows(df_append:pd.DataFrame):
                                                                     key=f'convert_of_{col_local_foreign}'
                                                                     )['selection']['columns'][0]
                 selections=(dfs_foreign[col_local_foreign][selected_col_convert[col_local_foreign]].unique()
-                                                                                                        .dropna()
-                                                                                                        .tolist()
+                                                                                                   .dropna()
+                                                                                                   .tolist()
                 )
                 custom_configs_rw_def[col_local_foreign+'__conversion']=st.column_config.SelectboxColumn(f'{col_local_foreign}(conversion from {selected_col_convert[col_local_foreign]})',
                                                                                                             options=selections)
