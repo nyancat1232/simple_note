@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit import column_config as stcc
 import pyplus.sql as sqlp
 import checkpoint as cp
 import pandas as pd
@@ -19,31 +20,31 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
             disable_this_col = True
         match types[col]['display_type']:
             case 'date':
-                column_configs[col] = st.column_config.DateColumn(disabled=disable_this_col)
+                column_configs[col] = stcc.DateColumn(disabled=disable_this_col)
             case 'timestamp with time zone':
-                column_configs[col] = st.column_config.DatetimeColumn(timezone=os.environ['SN_DEFAULT_TIMEZONE'],disabled=disable_this_col)
+                column_configs[col] = stcc.DatetimeColumn(timezone=os.environ['SN_DEFAULT_TIMEZONE'],disabled=disable_this_col)
             case 'url':
-                column_configs[col] = st.column_config.LinkColumn(disabled=disable_this_col)
+                column_configs[col] = stcc.LinkColumn(disabled=disable_this_col)
             case 'image_url':
-                column_configs[col] = st.column_config.LinkColumn(disabled=disable_this_col)
+                column_configs[col] = stcc.LinkColumn(disabled=disable_this_col)
             case 'video_url':
-                column_configs[col] = st.column_config.LinkColumn(disabled=disable_this_col)
+                column_configs[col] = stcc.LinkColumn(disabled=disable_this_col)
             case _:
-                column_configs[col] = st.column_config.Column(disabled=disable_this_col)
+                column_configs[col] = stcc.Column(disabled=disable_this_col)
     
     tss_foreign = ts.get_foreign_tables()
     for col in tss_foreign:
         ids_foreign=tss_foreign[col].read().index.to_list()
-        column_configs[col] = st.column_config.SelectboxColumn(f'{col}',options=ids_foreign,width='small')
+        column_configs[col] = stcc.SelectboxColumn(f'{col}',options=ids_foreign,width='small')
 
-    column_configs['__hidden']=st.column_config.Column(disabled=True)
+    column_configs['__hidden']=stcc.Column(disabled=True)
 
     yield column_configs.copy(),'edit'
 
     for col in types:
         match types[col]['display_type']:
             case 'image_url':
-                column_configs[col] = st.column_config.ImageColumn(f'{col}',)
+                column_configs[col] = stcc.ImageColumn(f'{col}',)
 
     #Hide columns
     for col in tss_foreign:
