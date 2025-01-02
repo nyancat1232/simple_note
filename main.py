@@ -99,8 +99,12 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
                         ret += l
                     return ret
                 def find_all_tags(sr_tag:pd.Series):
-                    return sr_tag.explode().dropna().sort_values()\
-                                .unique().tolist()
+                    return (sr_tag.explode()
+                                  .dropna()
+                                  .sort_values()
+                                  .unique()
+                                  .tolist()
+                    )
                 def contains_tags(ll:list,tags:list)->bool:
                     left = set(ll)
                     right = set(tags)
@@ -110,8 +114,11 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
                     else:
                         return True
                 
-                sr_tags_extracted=df[col_3].str.split(hashtag_init_symbol)\
-                .apply(extract_tags).apply(remove_spaces).apply(duplicate_super_tags)
+                sr_tags_extracted=(df[col_3].str.split(hashtag_init_symbol)
+                                                .apply(extract_tags)
+                                                .apply(remove_spaces)
+                                                .apply(duplicate_super_tags)
+                )
                 all_tags_list = find_all_tags(sr_tags_extracted)
                 if len(all_tags_list)>0:
                     selected_tags = st.multiselect(f'select tags of {col_3}',all_tags_list)
@@ -121,9 +128,7 @@ def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_
                 
     filt_rows={col:filter_rows(col) for col in col_expanded_tag}
     try:
-        df_bool_filter = pd.concat(filt_rows,axis=1)
-        sr_total_filter = df_bool_filter.all(axis=1)
-        df_res = df[sr_total_filter]
+        df_res = df[pd.concat(filt_rows,axis=1).all(axis=1)]
     except:
         df_res = df
     yield df_res, 'filter_rows'
