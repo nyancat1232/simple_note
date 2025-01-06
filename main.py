@@ -124,7 +124,9 @@ def iter_column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hasht
                 else:
                     return sr_tags_extracted.apply(lambda ll:contains_tags(ll,[]))
                 
-    filt_rows={col:filter_rows(col) for col in col_expanded_tag}
+    filt_rows={}
+    for col in col_expanded_tag:
+        filt_rows[col]=filter_rows(col)
     try:
         df_res = df[pd.concat(filt_rows,axis=1).all(axis=1)]
     except:
