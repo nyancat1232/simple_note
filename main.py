@@ -58,7 +58,7 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
     yield column_configs.copy(), 'readonly' 
 
 @cp.CheckPointFunctionDecoration
-def iter_tag_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_sub_symbol:str='/'):
+def iter_column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_sub_symbol:str='/'):
     df=ts.read_expand()
     col_expanded_tag=ts.get_types_expanded().to_dict('index')
 
@@ -171,7 +171,7 @@ with st.sidebar:
 selected_table = sqlp.TableStructure(schema_name=current_address['table_schema'],table_name=current_address['table_name'],engine=st.session_state['conn'].engine)
 
 st.session_state['selected_table'] = selected_table
-st.session_state['selected_table_dataframe']= iter_tag_process(selected_table).filter_rows()
+st.session_state['selected_table_dataframe']= iter_column_process(selected_table).filter_rows()
 st.session_state['selected_table_column_config_ro']= iter_custom_column_configs(selected_table).readonly()
 st.session_state['selected_table_column_config_rw_def']= iter_custom_column_configs(selected_table).edit()
 
