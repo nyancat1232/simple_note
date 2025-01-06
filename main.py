@@ -1,6 +1,7 @@
 import streamlit as st
 from streamlit import column_config as stcc
 import pyplus.sql as sqlp
+import pyplus.streamlit as stp
 import checkpoint as cp
 import pandas as pd
 import os
@@ -124,9 +125,11 @@ def iter_column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hasht
                 else:
                     return sr_tags_extracted.apply(lambda ll:contains_tags(ll,[]))
                 
+    tp = stp.TabsPlus(titles=col_expanded_tag,layout='tab')
     filt_rows={}
     for col in col_expanded_tag:
-        filt_rows[col]=filter_rows(col)
+        with tp[col]:
+            filt_rows[col]=filter_rows(col)
     try:
         df_res = df[pd.concat(filt_rows,axis=1).all(axis=1)]
     except:
