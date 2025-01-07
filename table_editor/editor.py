@@ -67,8 +67,24 @@ def func_replace(df:pd.DataFrame,ts:sqlp.TableStructure):
             ts.upload(rec,**recs[rec])
         st.rerun()
 
-tp = stp.TabsPlus(titles=['cell','replace'],layout='tab')
+@st.fragment
+def func_default(df:pd.DataFrame,ts:sqlp.Table):
+    ser_default_value = ts.get_default_value()
+    ser_edited=st.data_editor(ser_default_value,disabled=['column_name'])
+    upload_default=(ser_default_value.compare(ser_edited)['other']
+                          .to_dict()
+    )
+    upload_default
+    if st.button('upload default'):
+        for key in upload_default:
+            ts.set_default_value(key,upload_default[key])
+        st.rerun()
+
+
+tp = stp.TabsPlus(titles=['cell','replace','default'],layout='tab')
 with tp.cell:
     func_cell(df,ts)
 with tp.replace:
     func_replace(df,ts)
+with tp.default:
+    func_default(df,ts)
