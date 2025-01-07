@@ -7,12 +7,12 @@ import pyplus.pandas as pdp
 ts:sqlp.TableStructure = st.session_state['selected_table']
 df = st.session_state['selected_table_dataframe']
 custom_configs_ro = st.session_state['selected_table_column_config_ro']
-custom_configs_rw_def = st.session_state['selected_table_column_config_rw_def']
+custom_configs_rw_def_pre = st.session_state['selected_table_column_config_rw_def']
 
 st.dataframe(df,column_config=custom_configs_ro)
 
-df_append = pdp.empty_records(ts.read())
-df_append = df_append.reset_index(drop=True)
+df_append_pre = pdp.empty_records(ts.read())
+df_append_pre = df_append_pre.reset_index(drop=True)
 
 tss_foreign = ts.get_foreign_tables()
 dfs_foreign:dict[str,pd.DataFrame] = {}
@@ -102,7 +102,7 @@ def append_foreign_column():
 
 tabs_axis_selection = stp.TabsPlus(titles=['row','column','foreign_column'],layout='tab')
 with tabs_axis_selection.row:
-    append_rows(df_append,custom_configs_rw_def)
+    append_rows(df_append_pre,custom_configs_rw_def_pre)
 with tabs_axis_selection.column:
     append_columns()
 with tabs_axis_selection.foreign_column:
