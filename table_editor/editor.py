@@ -62,9 +62,10 @@ def func_replace(df:pd.DataFrame,ts:sqlp.TableStructure):
     recs 
 
     if st.button('upload replace'):
-        for rec in recs:
-            st.toast([rec,recs[rec]])
+        prog = st.progress(0.,'Upload replace')
+        for ind,rec in enumerate(recs):
             ts.upload(rec,**recs[rec])
+            prog.progress(float(ind)/len(recs),f"{rec}:{recs[rec]}")
         st.rerun()
 
 @st.fragment
@@ -76,8 +77,10 @@ def func_default(df:pd.DataFrame,ts:sqlp.Table):
     )
     upload_default
     if st.button('upload default'):
-        for key in upload_default:
+        prog = st.progress(0,'Uploading default')
+        for ind,key in enumerate(upload_default):
             ts.set_default_value(key,upload_default[key])
+            prog.progress(float(ind)/len(upload_default),f"{key}:{upload_default[key]}")
         st.rerun()
 
 
