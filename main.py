@@ -6,6 +6,7 @@ import checkpoint as cp
 import pandas as pd
 import os
 from sqlalchemy import create_engine
+from typing import Literal
 
 debug = True
 
@@ -112,20 +113,31 @@ def iter_column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hasht
                                                   .tolist()
                 ) #find_all_tags
 
-                def contains_tags(ll:list,tags:list)->bool:
+                def contains_tags(ll:list,tags:list,logic:Literal['and','or'])->bool:
                     left = set(ll)
                     right = set(tags)
-                    res = right-left
-                    if len(res)>0:
-                        return False
-                    else:
-                        return True
+                    match logic:
+                        case 'and':
+                            res = right-left
+                            if len(res)>0:
+                                return False
+                            else:
+                                return True
+                        case 'or':
+                            res = left-right
+                            if res == left:
+                                return False
+                            else:
+                                return True
+                        case _:
+                            raise NotImplementedError('This logic is not implemented')
                 
+                logic = 'and' if st.checkbox(f'{col_3} : Subtract rows that is not selected(True), Show row that is selected(False)',True) else 'or'
                 if len(all_tags_list)>0:
                     selected_tags = st.multiselect(f'select tags of {col_3}',all_tags_list)
-                    return sr_tags_extracted.apply(lambda ll:contains_tags(ll,selected_tags))
+                    return sr_tags_extracted.apply(lambda ll:contains_tags(ll,selected_tags,logic))
                 else:
-                    return sr_tags_extracted.apply(lambda ll:contains_tags(ll,[]))
+                    return sr_tags_extracted.apply(lambda ll:contains_tags(ll,[],logic))
                 
     tp = stp.TabsPlus(titles=col_expanded_tag,layout='tab')
     filt_rows={}
