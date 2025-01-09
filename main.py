@@ -60,48 +60,65 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
                 column_configs[col] = None
     yield column_configs.copy(), 'readonly' 
 
+def extract_tags(vals:list):
+    try:
+        match len(vals):
+            case 1:
+                return [vals[1]]
+            case 0:
+                return [None]
+            case _:
+                return vals[1:]
+    except:
+        return [None]
+def remove_spaces(vals:list):
+    def apply_each(s:str):
+        try:
+            ret = s
+            for ch in ' \n':
+                ll = ret.split(ch)
+                ret = ll[0]
+            return ret
+        except:
+            return s
+    return [apply_each(val) for val in vals]
+def duplicate_super_tags(vals:list,hashtag_sub_symbol:str='/'):
+    def apply_each(s:str):
+        if s is None:
+            return [s]
+        spl = s.split(hashtag_sub_symbol)
+        return [hashtag_sub_symbol.join(spl[0:1+ind]) for ind,_ in enumerate(spl)]
+    ret_pre = [apply_each(val) for val in vals]
+    ret = []
+    for l in ret_pre:
+        ret += l
+    return ret
+def contains_tags(ll:list,tags:list,logic:Literal['and','or'])->bool:
+    left = set(ll)
+    right = set(tags)
+    match logic:
+        case 'and':
+            res = right-left
+            if len(res)>0:
+                return False
+            else:
+                return True
+        case 'or':
+            res = left-right
+            if res == left:
+                return False
+            else:
+                return True
+        case _:
+            raise NotImplementedError('This logic is not implemented')
 @cp.CheckPointFunctionDecoration
-def iter_column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hashtag_sub_symbol:str='/'):
+def iter_column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
     df=ts.read_expand()
     col_expanded_tag=ts.get_types_expanded().to_dict('index')
 
     def filter_rows(col_3:str):
         match col_expanded_tag[col_3]['display_type']:
             case 'text'|'text_with_tag':
-                def extract_tags(vals:list):
-                    try:
-                        match len(vals):
-                            case 1:
-                                return [vals[1]]
-                            case 0:
-                                return [None]
-                            case _:
-                                return vals[1:]
-                    except:
-                        return [None]
-                def remove_spaces(vals:list):
-                    def apply_each(s:str):
-                        try:
-                            ret = s
-                            for ch in ' \n':
-                                ll = ret.split(ch)
-                                ret = ll[0]
-                            return ret
-                        except:
-                            return s
-                    return [apply_each(val) for val in vals]
-                def duplicate_super_tags(vals:list):
-                    def apply_each(s:str):
-                        if s is None:
-                            return [s]
-                        spl = s.split(hashtag_sub_symbol)
-                        return [hashtag_sub_symbol.join(spl[0:1+ind]) for ind,_ in enumerate(spl)]
-                    ret_pre = [apply_each(val) for val in vals]
-                    ret = []
-                    for l in ret_pre:
-                        ret += l
-                    return ret
-                
                 sr_tags_extracted=(df[col_3].str.split(hashtag_init_symbol)
                                                 .apply(extract_tags)
                                                 .apply(remove_spaces)
@@ -145,25 +162,6 @@ def iter_column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hasht
                         )
                         st.altair_chart(base)
 
-                def contains_tags(ll:list,tags:list,logic:Literal['and','or'])->bool:
-                    left = set(ll)
-                    right = set(tags)
-                    match logic:
-                        case 'and':
-                            res = right-left
-                            if len(res)>0:
-                                return False
-                            else:
-                                return True
-                        case 'or':
-                            res = left-right
-                            if res == left:
-                                return False
-                            else:
-                                return True
-                        case _:
-                            raise NotImplementedError('This logic is not implemented')
-                
                 logic = 'and' if st.checkbox(f'{col_3} : Subtract rows that is not selected(True), Show row that is selected(False)',True) else 'or'
                 if len(all_tags_list)>0:
                     selected_tags = st.multiselect(f'select tags of {col_3}',all_tags_list)
