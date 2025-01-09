@@ -7,6 +7,7 @@ import pandas as pd
 import os
 from sqlalchemy import create_engine
 from typing import Literal
+import altair as alt
 
 debug = True
 
@@ -112,6 +113,37 @@ def iter_column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#',hasht
                                                   .unique()
                                                   .tolist()
                 ) #find_all_tags
+
+                #Statistic
+                tp_statistic = stp.TabsPlus(titles=['count'])
+                with tp_statistic.count:
+                    max_depth = (sr_tags_extracted.apply(lambda l:len(l))
+                                                  .max()
+                    )
+                    sr_explode = sr_tags_extracted
+                    if max_depth>1:
+                        depth_apply = st.slider(f'depth of {col_3}',1,max_depth)
+                        filter_depth = lambda l:set(['/'.join(v.split('/')[:depth_apply]) for v in l])
+                        def skip_if_error(val,func):
+                            try:
+                                return func(val)
+                            except:
+                                pass
+                        sr_explode = sr_explode.apply(skip_if_error,args=(filter_depth,))
+                    sr_explode = (sr_explode.explode()
+                                            .dropna()
+                    )
+
+                    if len(sr_explode)>0:
+                        df_explode = pd.DataFrame({'tags':sr_explode})
+                        base = (alt.Chart(df_explode)
+                                   .mark_arc()
+                                   .encode(
+                                       alt.Color(field='tags',type='nominal'),
+                                       alt.Theta(field='tags',type='nominal',aggregate='count'),
+                                   )
+                        )
+                        st.altair_chart(base)
 
                 def contains_tags(ll:list,tags:list,logic:Literal['and','or'])->bool:
                     left = set(ll)
