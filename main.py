@@ -111,8 +111,7 @@ def contains_tags(ll:list,tags:list,logic:Literal['and','or'])->bool:
                 return True
         case _:
             raise NotImplementedError('This logic is not implemented')
-@cp.CheckPointFunctionDecoration
-def iter_column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
+def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
     df=ts.read_expand()
     col_expanded_tag=ts.get_types_expanded().to_dict('index')
 
@@ -178,7 +177,7 @@ def iter_column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
         df_res = df[pd.concat(filt_rows,axis=1).all(axis=1)]
     except:
         df_res = df
-    yield df_res, 'filter_rows'
+    return df_res
 
 
 page_title = 'Simple note'
@@ -220,7 +219,7 @@ with st.sidebar:
 selected_table = sqlp.TableStructure(schema_name=current_address['table_schema'],table_name=current_address['table_name'],engine=st.session_state['conn'].engine)
 
 st.session_state['selected_table'] = selected_table
-st.session_state['selected_table_dataframe']= iter_column_process(selected_table).filter_rows()
+st.session_state['selected_table_dataframe']= column_process(selected_table)
 st.session_state['selected_table_column_config_ro']= iter_custom_column_configs(selected_table).readonly()
 st.session_state['selected_table_column_config_rw_def']= iter_custom_column_configs(selected_table).edit()
 
