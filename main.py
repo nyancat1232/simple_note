@@ -15,8 +15,10 @@ debug = True
 def iter_custom_column_configs(ts:sqlp.TableStructure):
     column_configs = dict()
 
-    types = ts.get_types_expanded().to_dict(orient='index').copy()
-
+    types = (ts.get_types_expanded()
+               .to_dict(orient='index')
+               .copy()
+    )
     for col in types:
         disable_this_col = False
         if types[col]['is_generated'] == 'ALWAYS':
@@ -25,7 +27,8 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
             case 'date':
                 column_configs[col] = stcc.DateColumn(disabled=disable_this_col)
             case 'timestamp with time zone':
-                column_configs[col] = stcc.DatetimeColumn(timezone=os.environ['SN_DEFAULT_TIMEZONE'],disabled=disable_this_col)
+                column_configs[col] = stcc.DatetimeColumn(timezone=os.environ['SN_DEFAULT_TIMEZONE'],
+                                                          disabled=disable_this_col)
             case 'url':
                 column_configs[col] = stcc.LinkColumn(disabled=disable_this_col)
             case 'image_url':
@@ -37,8 +40,13 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
     
     tss_foreign = ts.get_foreign_tables()
     for col in tss_foreign:
-        ids_foreign=tss_foreign[col].read().index.to_list()
-        column_configs[col] = stcc.SelectboxColumn(f'{col}',options=ids_foreign,width='small')
+        ids_foreign=(tss_foreign[col].read()
+                                     .index.to_list()
+        )
+        column_configs[col] = stcc.SelectboxColumn(f'{col}',
+                                                   options=ids_foreign,
+                                                   width='small'
+                                                   )
 
     column_configs['__hidden']=stcc.Column(disabled=True)
 
@@ -53,7 +61,9 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
     for col in tss_foreign:
         column_configs[col] = None
 
-    col_expanded_tag=ts.get_types_expanded().to_dict('index')
+    col_expanded_tag=(ts.get_types_expanded()
+                        .to_dict('index')
+    )
     for col in col_expanded_tag:
         match col_expanded_tag[col]['display_type']:
             case 'tag_string':
@@ -139,13 +149,17 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
                     sr_explode = sr_tags_extracted
                     if max_depth>1:
                         depth_apply = st.slider(f'depth of {col_3}',1,max_depth)
-                        filter_depth = lambda l:set(['/'.join(v.split('/')[:depth_apply]) for v in l])
+                        filter_depth = lambda l:set(
+                            ['/'.join(v.split('/')[:depth_apply]) for v in l]
+                        )
                         def skip_if_error(val,func):
                             try:
                                 return func(val)
                             except:
                                 pass
-                        sr_explode = sr_explode.apply(skip_if_error,args=(filter_depth,))
+                        sr_explode = sr_explode.apply(skip_if_error,
+                                                      args=(filter_depth,)
+                                                      )
                     sr_explode = (sr_explode.explode()
                                             .dropna()
                     )
@@ -156,17 +170,28 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
                                    .mark_arc()
                                    .encode(
                                        alt.Color(field='tags',type='nominal'),
-                                       alt.Theta(field='tags',type='nominal',aggregate='count'),
+                                       alt.Theta(field='tags',type='nominal',
+                                                 aggregate='count'),
                                    )
                         )
                         st.altair_chart(base)
 
-                logic = 'and' if st.checkbox(f'{col_3} : Subtract rows that is not selected(True), Show row that is selected(False)',True) else 'or'
+                logic = 'and' if st.checkbox(
+                                            f'{col_3} : Subtract rows that is not selected(True), Show row that is selected(False)',
+                                            True
+                                            ) else 'or'
                 if len(all_tags_list)>0:
-                    selected_tags = st.multiselect(f'select tags of {col_3}',all_tags_list)
-                    return sr_tags_extracted.apply(lambda ll:contains_tags(ll,selected_tags,logic))
+                    selected_tags = st.multiselect(
+                        f'select tags of {col_3}',
+                        all_tags_list
+                    )
+                    return sr_tags_extracted.apply(
+                        lambda ll:contains_tags(ll,selected_tags,logic)
+                    )
                 else:
-                    return sr_tags_extracted.apply(lambda ll:contains_tags(ll,[],logic))
+                    return sr_tags_extracted.apply(
+                        lambda ll:contains_tags(ll,[],logic)
+                    )
                 
     tp = stp.TabsPlus(titles=col_expanded_tag,layout='tab')
     filt_rows={}
@@ -188,7 +213,16 @@ st.set_page_config(page_title=page_title,page_icon=page_icon,layout='wide')
 if 'conn' not in st.session_state:
     st.session_state['conn'] = create_engine(os.environ['SN_ADDRESS'])
 
-st.session_state['types']=['bigint','double precision','text','timestamp with time zone','boolean','url','image_url','video_url','text_with_tag']
+st.session_state['types']=['bigint',
+                           'double precision',
+                           'text',
+                           'timestamp with time zone',
+                           'boolean',
+                           'url',
+                           'image_url',
+                           'video_url',
+                           'text_with_tag'
+                          ]
 
 pg = st.navigation({'main':[st.Page('table_editor/reader.py',title='reader'),
                             st.Page('table_editor/editor.py',title='editor'),
@@ -207,16 +241,28 @@ pg = st.navigation({'main':[st.Page('table_editor/reader.py',title='reader'),
 with st.sidebar:
     with st.form(key='create_table'):
         #Create table
-        schema_name = st.selectbox('schema name',sqlp.get_schema_list(st.session_state['conn'].engine))
+        schema_name = st.selectbox('schema name',
+                                   sqlp.get_schema_list(st.session_state['conn'].engine)
+                                   )
         table_name = st.text_input('table name')
         if st.form_submit_button(label='create table'):
-                sqlp.SchemaStructure(schema_name,st.session_state['conn'].engine).create_table(table_name)
+                (sqlp.SchemaStructure(schema_name,st.session_state['conn'].engine)
+                     .create_table(table_name)
+                )
 
     #Select address
-    all_tables= sqlp.get_table_list(st.session_state['conn'].engine).to_dict('records')
-    current_address=st.selectbox('select address global',all_tables,format_func=lambda x:f"{x['table_schema']}.{x['table_name']}")
+    all_tables= (sqlp.get_table_list(st.session_state['conn'].engine)
+                     .to_dict('records')
+    )
+    current_address=st.selectbox('select address global',
+                                 all_tables,
+                                 format_func=lambda x:f"{x['table_schema']}.{x['table_name']}"
+                                )
 
-selected_table = sqlp.TableStructure(schema_name=current_address['table_schema'],table_name=current_address['table_name'],engine=st.session_state['conn'].engine)
+selected_table = sqlp.TableStructure(schema_name=current_address['table_schema'],
+                                     table_name=current_address['table_name'],
+                                     engine=st.session_state['conn'].engine
+                                    )
 
 st.session_state['selected_table'] = selected_table
 st.session_state['selected_table_dataframe']= column_process(selected_table)
