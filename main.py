@@ -121,6 +121,11 @@ def contains_tags(ll:list,tags:list,logic:Literal['and','or'])->bool:
                 return True
         case _:
             raise NotImplementedError('This logic is not implemented')
+def skip_if_error(val,func):
+    try:
+        return func(val)
+    except:
+        pass
 def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
     df=ts.read_expand()
     col_expanded_tag=ts.get_types_expanded().to_dict('index')
@@ -152,11 +157,6 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
                         filter_depth = lambda l:set(
                             ['/'.join(v.split('/')[:depth_apply]) for v in l]
                         )
-                        def skip_if_error(val,func):
-                            try:
-                                return func(val)
-                            except:
-                                pass
                         sr_explode = sr_explode.apply(skip_if_error,
                                                       args=(filter_depth,)
                                                       )
