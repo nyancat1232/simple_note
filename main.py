@@ -133,11 +133,11 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
     def filter_rows(col_3:str):
         match col_expanded_tag[col_3]['display_type']:
             case 'text'|'text_with_tag':
-                sr_tags_extracted=(df[col_3].str.split(hashtag_init_symbol)
-                                            .apply(extract_tags)
-                                            .apply(remove_spaces)
-                                            .apply(duplicate_super_tags)
+                sr_tags_original=(df[col_3].str.split(hashtag_init_symbol)
+                                           .apply(extract_tags)
+                                           .apply(remove_spaces)
                 )
+                sr_tags_extracted=sr_tags_original.apply(duplicate_super_tags)
                 all_tags_list = (sr_tags_extracted.explode()
                                                   .dropna()
                                                   .sort_values()
