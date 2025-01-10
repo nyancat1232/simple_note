@@ -185,13 +185,13 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
                         f'select tags of {col_3}',
                         all_tags_list
                     )
-                    return sr_tags_extracted.apply(
-                        lambda ll:contains_tags(ll,selected_tags,logic)
-                    )
+                    return sr_tags_extracted.apply(contains_tags,
+                                                    args=(selected_tags,logic)
+                                                  )
                 else:
-                    return sr_tags_extracted.apply(
-                        lambda ll:contains_tags(ll,[],logic)
-                    )
+                    return sr_tags_extracted.apply(contains_tags,
+                                                    args=([],logic)
+                                                  )
                 
     tp = stp.TabsPlus(titles=col_expanded_tag,layout='tab')
     filt_rows={}
@@ -199,10 +199,9 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
         with tp[col]:
             filt_rows[col]=filter_rows(col)
     try:
-        df_res = df[pd.concat(filt_rows,axis=1).all(axis=1)]
+        return df[pd.concat(filt_rows,axis=1).all(axis=1)]
     except:
-        df_res = df
-    return df_res
+        return df
 
 
 page_title = 'Simple note'
