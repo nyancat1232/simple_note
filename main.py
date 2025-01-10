@@ -165,9 +165,9 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
                                             .value_counts()
                     )
 
-                    if len(ser_agg_count)>0:
+                    if len(ser_agg_count)>2:
                         count_of_tags = len(ser_agg_count)
-                        exclude_tops = st.slider(f'exclude tops of {col_3}',0,count_of_tags)
+                        exclude_tops = st.slider(f'exclude tops of {col_3}',0,count_of_tags-2)
                         ser_agg_count = ser_agg_count[exclude_tops:]
                         #---exclusion of top tags
 
