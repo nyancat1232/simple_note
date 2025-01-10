@@ -166,6 +166,11 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
                     )
 
                     if len(ser_agg_count)>0:
+                        count_of_tags = len(ser_agg_count)
+                        exclude_tops = st.slider(f'exclude tops of {col_3}',0,count_of_tags)
+                        ser_agg_count = ser_agg_count[exclude_tops:]
+                        #---exclusion of top tags
+
                         df_count_tags = pd.DataFrame({'num_of_tags':ser_agg_count}).reset_index()
                         base = (alt.Chart(df_count_tags)
                                    .mark_arc()
