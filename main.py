@@ -148,10 +148,10 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
                 #Statistic
                 tp_statistic = stp.TabsPlus(titles=['count'])
                 with tp_statistic.count:
-                    max_depth = (sr_tags_extracted.apply(lambda l:len(l))
+                    max_depth = (sr_tags_original.apply(lambda l:len(l))
                                                   .max()
                     )
-                    sr_explode = sr_tags_extracted
+                    sr_explode = sr_tags_original
                     if max_depth>1:
                         depth_apply = st.slider(f'depth of {col_3}',1,max_depth)
                         filter_depth = lambda l:set(
