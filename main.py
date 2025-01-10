@@ -160,18 +160,18 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
                         sr_explode = sr_explode.apply(skip_if_error,
                                                       args=(filter_depth,)
                                                       )
-                    sr_explode = (sr_explode.explode()
+                    ser_agg_count = (sr_explode.explode()
                                             .dropna()
+                                            .value_counts()
                     )
 
-                    if len(sr_explode)>0:
-                        df_explode = pd.DataFrame({'tags':sr_explode})
-                        base = (alt.Chart(df_explode)
+                    if len(ser_agg_count)>0:
+                        df_count_tags = pd.DataFrame({'num_of_tags':ser_agg_count}).reset_index()
+                        base = (alt.Chart(df_count_tags)
                                    .mark_arc()
                                    .encode(
-                                       alt.Color(field='tags',type='nominal'),
-                                       alt.Theta(field='tags',type='nominal',
-                                                 aggregate='count'),
+                                       alt.Color(field=col_3,type='nominal'),
+                                       alt.Theta(field='num_of_tags',type='quantitative')
                                    )
                         )
                         st.altair_chart(base)
