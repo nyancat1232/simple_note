@@ -148,40 +148,43 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
                 #Statistic
                 tp_statistic = stp.TabsPlus(titles=['count'])
                 with tp_statistic.count:
-                    max_depth = (sr_tags_original.apply(lambda l:len(l))
-                                                  .max()
-                    )
-                    sr_explode = sr_tags_original
-                    if max_depth>1:
-                        depth_apply = st.slider(f'depth of {col_3}',1,max_depth)
-                        filter_depth = lambda l:set(
-                            ['/'.join(v.split('/')[:depth_apply]) for v in l]
+                    @st.fragment
+                    def statistic_counts():
+                        max_depth = (sr_tags_original.apply(lambda l:len(l))
+                                                    .max()
                         )
-                        sr_explode = sr_explode.apply(skip_if_error,
-                                                      args=(filter_depth,)
-                                                      )
-                    ser_agg_count = (sr_explode.explode()
-                                            .dropna()
-                                            .value_counts(ascending=True)
-                    )
-
-                    if ser_agg_count.max()>1:
-                        exclude_counts= st.slider(f'exclude if the count of {col_3} is over',
-                                                   min_value=1,
-                                                   max_value=ser_agg_count.max(),
-                                                   value=ser_agg_count.max()
-                                                   )
-                        ser_agg_count=ser_agg_count[ser_agg_count<=exclude_counts]
-
-                        df_count_tags = pd.DataFrame({'num_of_tags':ser_agg_count}).reset_index()
-                        base = (alt.Chart(df_count_tags)
-                                   .mark_arc()
-                                   .encode(
-                                       alt.Color(field=col_3,type='nominal'),
-                                       alt.Theta(field='num_of_tags',type='quantitative')
-                                   )
+                        sr_explode = sr_tags_original
+                        if max_depth>1:
+                            depth_apply = st.slider(f'depth of {col_3}',1,max_depth)
+                            filter_depth = lambda l:set(
+                                ['/'.join(v.split('/')[:depth_apply]) for v in l]
+                            )
+                            sr_explode = sr_explode.apply(skip_if_error,
+                                                        args=(filter_depth,)
+                                                        )
+                        ser_agg_count = (sr_explode.explode()
+                                                .dropna()
+                                                .value_counts(ascending=True)
                         )
-                        st.altair_chart(base)
+
+                        if ser_agg_count.max()>1:
+                            exclude_counts= st.slider(f'exclude if the count of {col_3} is over',
+                                                    min_value=1,
+                                                    max_value=ser_agg_count.max(),
+                                                    value=ser_agg_count.max()
+                                                    )
+                            ser_agg_count=ser_agg_count[ser_agg_count<=exclude_counts]
+
+                            df_count_tags = pd.DataFrame({'num_of_tags':ser_agg_count}).reset_index()
+                            base = (alt.Chart(df_count_tags)
+                                    .mark_arc()
+                                    .encode(
+                                        alt.Color(field=col_3,type='nominal'),
+                                        alt.Theta(field='num_of_tags',type='quantitative')
+                                    )
+                            )
+                            st.altair_chart(base)
+                    statistic_counts()
 
                 logic = 'and' if st.checkbox(
                                             f'{col_3} : Subtract rows that is not selected(True), Show row that is selected(False)',
