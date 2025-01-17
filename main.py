@@ -165,15 +165,13 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
                                             .value_counts(ascending=True)
                     )
 
-                    if len(ser_agg_count)>2:
-                        count_of_tags = len(ser_agg_count)
-                        include_bottoms= st.slider(f'include bottoms of {col_3}',
-                                                   min_value=2,
-                                                   max_value=count_of_tags,
-                                                   value=count_of_tags
+                    if ser_agg_count.max()>1:
+                        exclude_counts= st.slider(f'exclude if the count of {col_3} is over',
+                                                   min_value=1,
+                                                   max_value=ser_agg_count.max(),
+                                                   value=ser_agg_count.max()
                                                    )
-                        ser_agg_count = ser_agg_count[:include_bottoms]
-                        #---exclusion of top tags
+                        ser_agg_count=ser_agg_count[ser_agg_count<=exclude_counts]
 
                         df_count_tags = pd.DataFrame({'num_of_tags':ser_agg_count}).reset_index()
                         base = (alt.Chart(df_count_tags)
