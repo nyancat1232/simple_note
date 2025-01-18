@@ -242,6 +242,9 @@ pg = st.navigation({'main':[st.Page('table_editor/reader.py',title='reader'),
                             st.Page('table_editor/connect_foreign.py',title='foreign connection'),
                             st.Page('table_editor/merge_foreign.py',title='merge foreign'),
                             ],
+                    'experiment':[
+                            st.Page('experiment/reader_pivot.py',title='Read with pivot table')
+                            ],
                     'initialization':[
                             st.Page('new_page/init_domain.py',title='initialization'),
                     ]
