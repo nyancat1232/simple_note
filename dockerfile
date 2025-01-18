@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt ./
 COPY pyplus ./pyplus
 COPY new_page ./new_page
+COPY experiment ./experiment
 COPY table_editor ./table_editor
 COPY main.py ./
 
