@@ -10,7 +10,28 @@ def processing(df:pd.DataFrame):
     tp = stp.TabsPlus(titles=['index','column','value'],layout='column',hide_titles=False)
     with tp.index:
         indexs= st.dataframe(df,on_select='rerun',selection_mode='multi-column',key='reader_pivot_index')['selection']['columns']
-        agg_func = st.selectbox('aggregation',['sum','mean'])
+        agg_func = st.selectbox('aggregation',
+                                ['count',
+                                'sum',
+                                'mean',
+                                'median',
+                                'min',
+                                'max',
+                                'mode',
+                                'abs',
+                                'prod',
+                                'std',
+                                'var',
+                                'sem',
+                                'skew',
+                                'kurt',
+                                'quantile',
+                                'cumsum',
+                                'cumprod',
+                                'cummax',
+                                'cummin']
+                                )
+        
     with tp.column:
         columns= st.dataframe(df,on_select='rerun',selection_mode='multi-column',key='reader_pivot_column')['selection']['columns']
     with tp.value:
