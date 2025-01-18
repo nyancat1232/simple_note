@@ -36,7 +36,7 @@ def processing(df:pd.DataFrame):
         columns= st.dataframe(df,on_select='rerun',selection_mode='multi-column',key='reader_pivot_column')['selection']['columns']
     with tp.value:
         valuees= st.dataframe(df,on_select='rerun',selection_mode='multi-column',key='reader_pivot_value')['selection']['columns']
-    df_pivot = df.pivot_table(index=indexs,columns=columns,values=valuees,aggfunc=agg_func)
+    df_pivot = df.pivot_table(index=indexs,columns=columns,values=valuees,aggfunc=agg_func,margins=True)
     st.dataframe(df_pivot)
 
 processing(df)
