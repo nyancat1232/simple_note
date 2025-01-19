@@ -53,9 +53,6 @@ def append_rows(df_append:pd.DataFrame,custom_configs_rw_def:dict):
             except:
                 pass
 
-    for col in df_append.columns.to_list():
-        if col.startswith('_'):
-            del df_append[col]
     df_append = st.data_editor(df_append,num_rows='dynamic',column_config=custom_configs_rw_def)
 
     "Conversion to ids"

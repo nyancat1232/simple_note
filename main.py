@@ -48,8 +48,6 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
                                                    width='small'
                                                    )
 
-    column_configs['__hidden']=stcc.Column(disabled=True)
-
     yield column_configs.copy(),'edit'
 
     for col in types:
