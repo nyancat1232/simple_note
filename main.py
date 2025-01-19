@@ -146,7 +146,7 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
                 ) #find_all_tags
 
                 #Statistic
-                tp_statistic = stp.TabsPlus(titles=['count'])
+                tp_statistic = stp.TabsPlus(titles=['count','tag_preview'],layout='column',hide_titles=False)
                 with tp_statistic.count:
                     @st.fragment
                     def statistic_counts():
@@ -185,6 +185,11 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
                             )
                             st.altair_chart(base)
                     statistic_counts()
+                with tp_statistic.tag_preview:
+                    @st.fragment
+                    def tag_preview():
+                        pass
+                    tag_preview()
 
                 logic = 'and' if st.checkbox(
                                             f'{col_3} : Subtract rows that is not selected(True), Show row that is selected(False)',
