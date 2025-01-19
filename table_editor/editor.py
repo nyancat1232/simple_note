@@ -32,10 +32,13 @@ def func_cell(df:pd.DataFrame,ts:sqlp.TableStructure):
     recs=get_comparison(df_edited,df)
 
     if st.button('upload'):
-        st.toast(f'uploading {recs}')
-        for row_id in recs:
-            st.toast(f'{row_id}:{recs[row_id]}')
-            ts.upload(id_row=row_id,**recs[row_id])
+        @st.dialog('Cell editing')
+        def process_cell():
+            prog = st.progress(0.,'Upload cells')
+            for ind,row_id in enumerate(recs):
+                ts.upload(id_row=row_id,**recs[row_id])
+                prog.progress(float(ind)/len(recs),f'{row_id}:{recs[row_id]}')
+        process_cell()
         st.rerun()
 
 @st.fragment
