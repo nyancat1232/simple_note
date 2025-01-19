@@ -41,6 +41,7 @@ def append_rows(df_append:pd.DataFrame,custom_configs_rw_def:dict):
                                                   )['selection']['columns'][0]
                 ser_convert = dfs_foreign[col_local_foreign][col_selected_foreign]
                 selected_col_convert_result[col_local_foreign]= inverse_dict(ser_convert.to_dict())
+                selected_col_convert_result[col_local_foreign][None]=None
                 selections=(ser_convert.unique()
                                        .dropna()
                                        .tolist()
