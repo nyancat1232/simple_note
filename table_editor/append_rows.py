@@ -59,8 +59,9 @@ def append_rows(df_append:pd.DataFrame,custom_configs_rw_def:dict):
     df_append = st.data_editor(df_append,num_rows='dynamic',column_config=custom_configs_rw_def)
 
     "Conversion to ids"
-    for col in selected_col_convert_result:
-        df_append[col] = df_append[col].apply(lambda val:selected_col_convert_result[col][val])
+    conv={col:df_append[col].apply(lambda val:selected_col_convert_result[col][val]) 
+          for col in selected_col_convert_result}
+    df_append = df_append.assign(**conv)
     df_append
 
     if st.button('append'):
