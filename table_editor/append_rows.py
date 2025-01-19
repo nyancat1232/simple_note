@@ -80,8 +80,11 @@ def append_rows(df:pd.DataFrame,custom_configs_rw_def:dict):
         if not appends:
             st.error('No appends')
         else:
-            ts.upload_appends(*appends)
-            st.toast(f'append {appends}')
+            @st.dialog("Append rows")
+            def process_append():
+                st.write(f'append {appends}')
+                ts.upload_appends(*appends)
+            process_append()
             st.rerun()
 
 @st.fragment
@@ -93,7 +96,10 @@ def append_columns():
     result
 
     if st.button('append columns'):
-        ts.append_column(**result)
+        @st.dialog("Append columns")
+        def process_append_column():
+            ts.append_column(**result)
+        process_append_column()
         st.rerun()
 
 @st.fragment
