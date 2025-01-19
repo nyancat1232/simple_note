@@ -23,8 +23,8 @@ def inverse_dict(di:dict)->dict:
     return {di[key]:key for key in di}
 
 @st.fragment
-def append_rows(df_append:pd.DataFrame,custom_configs_rw_def:dict):
-    df_append = df_append.copy()
+def append_rows(df:pd.DataFrame,custom_configs_rw_def:dict):
+    df = df.copy()
     custom_configs_rw_def = custom_configs_rw_def.copy()
     "Select a column"
     tab_or_col=stp.TabsPlus(layout='column',titles=dfs_foreign,hide_titles=False)
@@ -48,22 +48,22 @@ def append_rows(df_append:pd.DataFrame,custom_configs_rw_def:dict):
                 )
                 custom_configs_rw_def[col_local_foreign]=st.column_config.SelectboxColumn(f'{col_local_foreign}(conversion from {col_selected_foreign})',
                                                                                                             options=selections)
-                del df_append[col_local_foreign]
-                df_append[col_local_foreign]=pd.Series()
+                del df[col_local_foreign]
+                df[col_local_foreign]=pd.Series()
             except:
                 pass
 
-    df_append = st.data_editor(df_append,num_rows='dynamic',column_config=custom_configs_rw_def)
+    df = st.data_editor(df,num_rows='dynamic',column_config=custom_configs_rw_def)
 
     "Conversion to ids"
-    conv={col:df_append[col].apply(lambda val:selected_col_convert_result[col][val]) 
+    conv={col:df[col].apply(lambda val:selected_col_convert_result[col][val]) 
           for col in selected_col_convert_result}
-    df_append = df_append.assign(**conv)
-    df_append
+    df = df.assign(**conv)
+    df
 
     "Remove blank"
     dict_remove_blank = (
-        df_append
+        df
         .reset_index()
         .melt(id_vars='index')
         .dropna(subset='value')
