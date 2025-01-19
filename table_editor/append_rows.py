@@ -15,9 +15,7 @@ df_empty = pdp.empty_records(ts.read())
 df_empty = df_empty.reset_index(drop=True)
 
 tss_foreign = ts.get_foreign_tables()
-dfs_foreign:dict[str,pd.DataFrame] = {}
-for col_local_foreign in tss_foreign:
-    dfs_foreign[col_local_foreign]=tss_foreign[col_local_foreign].read_expand()
+dfs_foreign:dict[str,pd.DataFrame] = {col_local_foreign:tss_foreign[col_local_foreign].read_expand() for col_local_foreign in tss_foreign}
 
 def inverse_dict(di:dict)->dict:
     return {di[key]:key for key in di}
