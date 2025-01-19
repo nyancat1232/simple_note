@@ -64,8 +64,24 @@ def append_rows(df_append:pd.DataFrame,custom_configs_rw_def:dict):
     df_append = df_append.assign(**conv)
     df_append
 
+    "Remove blank"
+    dict_remove_blank = (
+        df_append
+        .reset_index()
+        .melt(id_vars='index')
+        .dropna(subset='value')
+        .to_dict(orient='records')
+    )
+    appends={}
+    for rec in dict_remove_blank:
+        if rec['index'] in appends:
+            appends[rec['index']][rec['variable']]=rec['value']
+        else:
+            appends[rec['index']]={rec['variable']:rec['value']}
+    appends = [appends[key] for key in appends]
+    appends
+
     if st.button('append'):
-        appends = df_append.to_dict(orient='records')
         if not appends:
             st.error('No appends')
         else:
