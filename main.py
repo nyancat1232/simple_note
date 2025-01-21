@@ -8,6 +8,7 @@ import os
 from sqlalchemy import create_engine
 from typing import Literal
 import altair as alt
+import pytz
 
 debug = True
 
@@ -276,7 +277,9 @@ with st.sidebar:
                                 )
     
     #add timezone selection
-    mytimezone = st.text_input('Timezone setting',value=os.environ['SN_DEFAULT_TIMEZONE'])
+    all_timezones = pytz.all_timezones
+    default_timezone = all_timezones.index(os.environ['SN_DEFAULT_TIMEZONE'])
+    mytimezone = st.selectbox('Timezone setting',index=default_timezone,options=all_timezones)
 
 selected_table = sqlp.TableStructure(schema_name=current_address['table_schema'],
                                      table_name=current_address['table_name'],
