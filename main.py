@@ -228,6 +228,7 @@ if 'conn' not in st.session_state:
 st.session_state['types']=['bigint',
                            'double precision',
                            'text',
+                           'date',
                            'timestamp with time zone',
                            'boolean',
                            'url',
