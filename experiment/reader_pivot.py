@@ -34,9 +34,19 @@ def processing(df:pd.DataFrame):
         
     with tp.column:
         columns= st.dataframe(df,on_select='rerun',selection_mode='multi-column',key='reader_pivot_column')['selection']['columns']
+        compress = st.checkbox('compress columns',value=False)
     with tp.value:
         valuees= st.dataframe(df,on_select='rerun',selection_mode='multi-column',key='reader_pivot_value')['selection']['columns']
     df_pivot = df.pivot_table(index=indexs,columns=columns,values=valuees,aggfunc=agg_func,margins=True)
-    st.dataframe(df_pivot)
+    column_configs={}
+    if compress:
+        df_pivot = df_pivot.fillna(0.)
+        buffer = {}
+        for super_col in valuees:
+            vvvv = df_pivot[super_col].apply(lambda row:[val for val in row],axis=1)
+            buffer[super_col]=vvvv
+            column_configs[super_col]=st.column_config.LineChartColumn(f'{super_col}')
+        df_pivot = pd.DataFrame(buffer)
+    st.dataframe(df_pivot,column_config=column_configs)
 
 processing(df)
