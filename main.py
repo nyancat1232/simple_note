@@ -12,7 +12,7 @@ import altair as alt
 debug = True
 
 @cp.CheckPointFunctionDecoration
-def iter_custom_column_configs(ts:sqlp.TableStructure):
+def iter_custom_column_configs(ts:sqlp.TableStructure,mytz:str):
     column_configs = dict()
 
     types = (ts.get_types_expanded()
@@ -27,7 +27,7 @@ def iter_custom_column_configs(ts:sqlp.TableStructure):
             case 'date':
                 column_configs[col] = stcc.DateColumn(disabled=disable_this_col)
             case 'timestamp with time zone':
-                column_configs[col] = stcc.DatetimeColumn(timezone=os.environ['SN_DEFAULT_TIMEZONE'],
+                column_configs[col] = stcc.DatetimeColumn(timezone=mytz,
                                                           disabled=disable_this_col)
             case 'url':
                 column_configs[col] = stcc.LinkColumn(disabled=disable_this_col)
@@ -274,6 +274,9 @@ with st.sidebar:
                                  all_tables,
                                  format_func=lambda x:f"{x['table_schema']}.{x['table_name']}"
                                 )
+    
+    #add timezone selection
+    mytimezone = st.text_input('Timezone setting',value=os.environ['SN_DEFAULT_TIMEZONE'])
 
 selected_table = sqlp.TableStructure(schema_name=current_address['table_schema'],
                                      table_name=current_address['table_name'],
@@ -282,8 +285,8 @@ selected_table = sqlp.TableStructure(schema_name=current_address['table_schema']
 
 st.session_state['selected_table'] = selected_table
 st.session_state['selected_table_dataframe']= column_process(selected_table)
-st.session_state['selected_table_column_config_ro']= iter_custom_column_configs(selected_table).readonly()
-st.session_state['selected_table_column_config_rw_def']= iter_custom_column_configs(selected_table).edit()
+st.session_state['selected_table_column_config_ro']= iter_custom_column_configs(selected_table,mytimezone).readonly()
+st.session_state['selected_table_column_config_rw_def']= iter_custom_column_configs(selected_table,mytimezone).edit()
 
 if debug == True:
     if 'count' not in st.session_state:
