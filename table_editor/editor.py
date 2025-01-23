@@ -57,7 +57,7 @@ def func_replace(df:pd.DataFrame,ts:sqlp.TableStructure):
 
     "change"
     #selected_table=selected_table.apply(lambda s:s.replace(inp['from'],inp['to']))
-    df_replace_after:pd.DataFrame=df_replace_after.applymap(lambda x: x.replace(inp['from'],inp['to']) if isinstance(x, str) else x)
+    df_replace_after=df_replace_after.map(lambda x: x.replace(inp['from'],inp['to']) if isinstance(x, str) else x)
     df_replace_after
 
     "compare"
