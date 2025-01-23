@@ -127,11 +127,27 @@ def skip_if_error(val,func):
         pass
 def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
     df=ts.read_expand()
+    dfs_foreign_tables=ts.get_foreign_tables()
     col_expanded_tag=ts.get_types_expanded().to_dict('index')
     col_type = {col:col_expanded_tag[col]['display_type'] for col in col_expanded_tag}
+    for col_foreign in dfs_foreign_tables:
+        col_type[col_foreign] = 'sn_foreign'
 
     def filter_rows(col_3:str):
         match col_type[col_3]:
+            case 'sn_foreign':
+                "If not select, select all."
+                "If select, only show you selected"
+                rows=st.dataframe(dfs_foreign_tables[col_3].read_expand(),selection_mode='multi-row',on_select='rerun')['selection']['rows']
+                if len(rows)>0:
+                    filt_foreign_id=(
+                        dfs_foreign_tables[col_3]
+                        .read_expand()
+                        .iloc[rows]
+                        .index
+                        .to_list()
+                    )
+                    return df[col_3].apply(lambda val: val in filt_foreign_id)
             case 'text'|'text_with_tag':
                 sr_tags_original=(df[col_3].str.split(hashtag_init_symbol)
                                            .apply(extract_tags)
