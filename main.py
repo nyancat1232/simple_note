@@ -128,9 +128,10 @@ def skip_if_error(val,func):
 def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
     df=ts.read_expand()
     col_expanded_tag=ts.get_types_expanded().to_dict('index')
+    col_type = {col:col_expanded_tag[col]['display_type'] for col in col_expanded_tag}
 
     def filter_rows(col_3:str):
-        match col_expanded_tag[col_3]['display_type']:
+        match col_type[col_3]:
             case 'text'|'text_with_tag':
                 sr_tags_original=(df[col_3].str.split(hashtag_init_symbol)
                                            .apply(extract_tags)
