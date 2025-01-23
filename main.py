@@ -138,7 +138,7 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
             case 'sn_foreign':
                 "If not select, select all."
                 "If select, only show you selected"
-                rows=st.dataframe(dfs_foreign_tables[col_3].read_expand(),selection_mode='multi-row',on_select='rerun')['selection']['rows']
+                rows=st.dataframe(dfs_foreign_tables[col_3].read_expand(),selection_mode='multi-row',on_select='rerun',key=f'filter_rows_{col_3}')['selection']['rows']
                 if len(rows)>0:
                     filt_foreign_id=(
                         dfs_foreign_tables[col_3]
