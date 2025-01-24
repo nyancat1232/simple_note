@@ -149,16 +149,20 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
                     )
                     return df[col_3].apply(lambda val: val in filt_foreign_id)
             case 'text'|'text_with_tag':
-                sr_tags_original=(df[col_3].str.split(hashtag_init_symbol)
-                                           .apply(extract_tags)
-                                           .apply(remove_spaces)
+                sr_tags_original=(
+                    df[col_3]
+                    .str.split(hashtag_init_symbol)
+                    .apply(extract_tags)
+                    .apply(remove_spaces)
                 )
                 sr_tags_extracted=sr_tags_original.apply(duplicate_super_tags)
-                all_tags_list = (sr_tags_extracted.explode()
-                                                  .dropna()
-                                                  .sort_values()
-                                                  .unique()
-                                                  .tolist()
+                all_tags_list = (
+                    sr_tags_extracted
+                    .explode()
+                    .dropna()
+                    .sort_values()
+                    .unique()
+                    .tolist()
                 ) #find_all_tags
 
                 #Statistic
@@ -166,8 +170,10 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
                 with tp_statistic.count:
                     @st.fragment
                     def statistic_counts():
-                        max_depth = (sr_tags_original.apply(lambda l:len(l))
-                                                    .max()
+                        max_depth = (
+                            sr_tags_original
+                            .apply(lambda l:len(l))
+                            .max()
                         )
                         sr_explode = sr_tags_original
                         if max_depth>1:
@@ -175,12 +181,15 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
                             filter_depth = lambda l:set(
                                 ['/'.join(v.split('/')[:depth_apply]) for v in l]
                             )
-                            sr_explode = sr_explode.apply(skip_if_error,
-                                                        args=(filter_depth,)
-                                                        )
-                        ser_agg_count = (sr_explode.explode()
-                                                .dropna()
-                                                .value_counts(ascending=True)
+                            sr_explode = (
+                                sr_explode
+                                .apply(skip_if_error,args=(filter_depth,))
+                            )
+                        ser_agg_count = (
+                            sr_explode
+                            .explode()
+                            .dropna()
+                            .value_counts(ascending=True)
                         )
 
                         if ser_agg_count.max()>1:
@@ -191,7 +200,10 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
                                                     )
                             ser_agg_count=ser_agg_count[ser_agg_count<=exclude_counts]
 
-                            df_count_tags = pd.DataFrame({'num_of_tags':ser_agg_count}).reset_index()
+                            df_count_tags = (
+                                pd.DataFrame({'num_of_tags':ser_agg_count})
+                                .reset_index()
+                            )
                             base = (alt.Chart(df_count_tags)
                                     .mark_arc()
                                     .encode(
