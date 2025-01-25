@@ -297,12 +297,17 @@ with st.sidebar:
                      .create_table(table_name)
                 )
 
-    #Select address
+    # Select address
     all_tables= (sqlp.get_table_list(st.session_state['conn'].engine)
                      .to_dict('records')
     )
+    ## Accept query parameters
+    default_index=0
+    if ('table_schema' in st.query_params) and ('table_name' in st.query_params):
+        default_index = all_tables.index({'table_schema':st.query_params.table_schema,'table_name':st.query_params.table_name})
     current_address=st.selectbox('select address global',
                                  all_tables,
+                                 index=default_index,
                                  format_func=lambda x:f"{x['table_schema']}.{x['table_name']}"
                                 )
     
