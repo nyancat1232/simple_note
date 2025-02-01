@@ -32,9 +32,10 @@ def func_cell(df:pd.DataFrame,ts:sqlp.TableStructure):
     recs=get_comparison(df_edited,df)
 
     if st.button('upload'):
-        @st.dialog('Cell editing')
+        display_process = 'cell'
+        @st.dialog(f'dialog {display_process}')
         def process_cell():
-            prog = st.progress(0.,'Upload cells')
+            prog = st.progress(0.,f'Progression {display_process}')
             for ind,row_id in enumerate(recs):
                 ts.upload(row_id,**recs[row_id])
                 prog.progress(float(ind)/len(recs),f'{row_id}:{recs[row_id]}')
@@ -65,9 +66,10 @@ def func_replace(df:pd.DataFrame,ts:sqlp.TableStructure):
     recs 
 
     if st.button('upload replace'):
-        @st.dialog("Replacing...")
+        display_process = 'replacement of value'
+        @st.dialog(f'dialog {display_process}')
         def process_replace():
-            prog = st.progress(0.,'Upload replace')
+            prog = st.progress(0.,f'Progression {display_process}')
             for ind,rec in enumerate(recs):
                 ts.upload(rec,**recs[rec])
                 prog.progress(float(ind)/len(recs),f"{rec}:{recs[rec]}")
@@ -83,9 +85,10 @@ def func_default(df:pd.DataFrame,ts:sqlp.Table):
     )
     upload_default
     if st.button('upload default'):
-        @st.dialog("Upload default values")
+        display_process = 'default'
+        @st.dialog(f'dialog {display_process}')
         def process_edit_default():
-            prog = st.progress(0,'Uploading default')
+            prog = st.progress(0.,f'Progression {display_process}')
             for ind,key in enumerate(upload_default):
                 ts.set_default_value(key,upload_default[key])
                 prog.progress(float(ind)/len(upload_default),f"{key}:{upload_default[key]}")
