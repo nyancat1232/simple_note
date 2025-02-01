@@ -21,13 +21,6 @@ Tables must have a primary key with a bigint type.
     - ~~A text with tags.~~
     - Use plain type 'text' instead
 
-
-## Roadmap
-- Column type of Interval support (e.g. duration)
-- Multiple timers and stopwatches
-- Customization of the clock such as hours from wake up.
-- Customization of the dashboard.
-
 ## Done
 - Appending a foreign column
 - Expanding an array of self-referencing a column.
