@@ -29,16 +29,17 @@ def get_comparison(df_new,df_old):
 def func_cell(df:pd.DataFrame,ts:sqlp.TableStructure):
     df_edited = st.data_editor(df,disabled=identity,column_config=custom_configs_rw_def)
 
-    recs=get_comparison(df_edited,df)
+    upload_pendings=get_comparison(df_edited,df)
+    upload_pendings 
 
     if st.button('upload'):
         display_process = 'cell'
         @st.dialog(f'dialog {display_process}')
         def process_cell():
             prog = st.progress(0.,f'Progression {display_process}')
-            for ind,row_id in enumerate(recs):
-                ts.upload(row_id,**recs[row_id])
-                prog.progress(float(ind)/len(recs),f'{row_id}:{recs[row_id]}')
+            for ind,row_id in enumerate(upload_pendings):
+                ts.upload(row_id,**upload_pendings[row_id])
+                prog.progress(float(ind)/len(upload_pendings),f'{row_id}:{upload_pendings[row_id]}')
         process_cell()
         st.rerun()
 
@@ -62,17 +63,17 @@ def func_replace(df:pd.DataFrame,ts:sqlp.TableStructure):
     df_replace_after
 
     "compare"
-    recs=get_comparison(df_replace_after,df_replace_original)
-    recs 
+    upload_pendings=get_comparison(df_replace_after,df_replace_original)
+    upload_pendings 
 
     if st.button('upload replace'):
         display_process = 'replacement of value'
         @st.dialog(f'dialog {display_process}')
         def process_replace():
             prog = st.progress(0.,f'Progression {display_process}')
-            for ind,rec in enumerate(recs):
-                ts.upload(rec,**recs[rec])
-                prog.progress(float(ind)/len(recs),f"{rec}:{recs[rec]}")
+            for ind,rec in enumerate(upload_pendings):
+                ts.upload(rec,**upload_pendings[rec])
+                prog.progress(float(ind)/len(upload_pendings),f"{rec}:{upload_pendings[rec]}")
         process_replace()
         st.rerun()
 
@@ -80,18 +81,19 @@ def func_replace(df:pd.DataFrame,ts:sqlp.TableStructure):
 def func_default(df:pd.DataFrame,ts:sqlp.Table):
     ser_default_value = ts.get_default_value()
     ser_edited=st.data_editor(ser_default_value,disabled=['column_name'])
-    upload_default=(ser_default_value.compare(ser_edited)['other']
+    upload_pendings=(ser_default_value.compare(ser_edited)['other']
                           .to_dict()
     )
-    upload_default
+    upload_pendings
+
     if st.button('upload default'):
         display_process = 'default'
         @st.dialog(f'dialog {display_process}')
         def process_edit_default():
             prog = st.progress(0.,f'Progression {display_process}')
-            for ind,key in enumerate(upload_default):
-                ts.set_default_value(key,upload_default[key])
-                prog.progress(float(ind)/len(upload_default),f"{key}:{upload_default[key]}")
+            for ind,key in enumerate(upload_pendings):
+                ts.set_default_value(key,upload_pendings[key])
+                prog.progress(float(ind)/len(upload_pendings),f"{key}:{upload_pendings[key]}")
         process_edit_default()
         st.rerun()
 
