@@ -35,12 +35,12 @@ def func_cell(df:pd.DataFrame,ts:sqlp.TableStructure):
     if st.button('upload'):
         display_process = 'cell'
         @st.dialog(f'dialog {display_process}')
-        def process_cell():
+        def commit():
             prog = st.progress(0.,f'Progression {display_process}')
-            for ind,row_id in enumerate(upload_pendings):
-                ts.upload(row_id,**upload_pendings[row_id])
-                prog.progress(float(ind)/len(upload_pendings),f'{row_id}:{upload_pendings[row_id]}')
-        process_cell()
+            for ind,key in enumerate(upload_pendings):
+                ts.upload(key,**upload_pendings[key])
+                prog.progress(float(ind)/len(upload_pendings),f"{key}:{upload_pendings[key]}")
+        commit()
         st.rerun()
 
 @st.fragment
@@ -69,12 +69,12 @@ def func_replace(df:pd.DataFrame,ts:sqlp.TableStructure):
     if st.button('upload replace'):
         display_process = 'replacement of value'
         @st.dialog(f'dialog {display_process}')
-        def process_replace():
+        def commit():
             prog = st.progress(0.,f'Progression {display_process}')
-            for ind,rec in enumerate(upload_pendings):
-                ts.upload(rec,**upload_pendings[rec])
-                prog.progress(float(ind)/len(upload_pendings),f"{rec}:{upload_pendings[rec]}")
-        process_replace()
+            for ind,key in enumerate(upload_pendings):
+                ts.upload(key,**upload_pendings[key])
+                prog.progress(float(ind)/len(upload_pendings),f"{key}:{upload_pendings[key]}")
+        commit()
         st.rerun()
 
 @st.fragment
@@ -89,12 +89,12 @@ def func_default(df:pd.DataFrame,ts:sqlp.Table):
     if st.button('upload default'):
         display_process = 'default'
         @st.dialog(f'dialog {display_process}')
-        def process_edit_default():
+        def commit():
             prog = st.progress(0.,f'Progression {display_process}')
             for ind,key in enumerate(upload_pendings):
                 ts.set_default_value(key,upload_pendings[key])
                 prog.progress(float(ind)/len(upload_pendings),f"{key}:{upload_pendings[key]}")
-        process_edit_default()
+        commit()
         st.rerun()
 
 
