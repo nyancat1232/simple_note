@@ -36,7 +36,7 @@ def func_cell(df:pd.DataFrame,ts:sqlp.TableStructure):
         def process_cell():
             prog = st.progress(0.,'Upload cells')
             for ind,row_id in enumerate(recs):
-                ts.upload(id_row=row_id,**recs[row_id])
+                ts.upload(row_id,**recs[row_id])
                 prog.progress(float(ind)/len(recs),f'{row_id}:{recs[row_id]}')
         process_cell()
         st.rerun()
