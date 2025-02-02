@@ -2,7 +2,7 @@ import streamlit as st
 import pyplus.streamlit as stp
 import pyplus.sql as sqlp
 import pandas as pd
-from typing import Dict,Any
+from typing import Dict,Any,Callable
 
 ts:sqlp.TableStructure = st.session_state['selected_table']
 df:pd.DataFrame = st.session_state['selected_table_dataframe']
@@ -26,6 +26,21 @@ def get_comparison(df_new,df_old)->Dict[int,Dict[str,Any]]:
         recs[temp['id']][temp['variable']] = temp['_sn_value']
     return recs
 
+def set_progress(upload_pendings:Dict|str,func:Callable,display_process:str):
+    @st.dialog(f'dialog {display_process}')
+    def commit():
+        prog = st.progress(0.,f'Progression {display_process}')
+        for ind,key in enumerate(upload_pendings):
+            if type(upload_pendings[key]) == dict:
+                func(key,**upload_pendings[key])
+            elif type(upload_pendings[key]) == str:
+                func(key,upload_pendings[key])
+            else:
+                raise NotImplementedError('Exceptional type')
+            prog.progress(float(ind)/len(upload_pendings),f"{key}:{upload_pendings[key]}")
+    commit()
+    st.rerun()
+
 @st.fragment
 def func_cell(df:pd.DataFrame,ts:sqlp.TableStructure):
     df_edited = st.data_editor(df,disabled=identity,column_config=custom_configs_rw_def)
@@ -34,15 +49,9 @@ def func_cell(df:pd.DataFrame,ts:sqlp.TableStructure):
     upload_pendings 
 
     if st.button('upload'):
-        display_process = 'cell'
-        @st.dialog(f'dialog {display_process}')
-        def commit():
-            prog = st.progress(0.,f'Progression {display_process}')
-            for ind,key in enumerate(upload_pendings):
-                ts.upload(key,**upload_pendings[key])
-                prog.progress(float(ind)/len(upload_pendings),f"{key}:{upload_pendings[key]}")
-        commit()
-        st.rerun()
+        set_progress(upload_pendings=upload_pendings,
+                     func=ts.upload,
+                     display_process='cell')
 
 @st.fragment
 def func_replace(df:pd.DataFrame,ts:sqlp.TableStructure):
@@ -68,15 +77,9 @@ def func_replace(df:pd.DataFrame,ts:sqlp.TableStructure):
     upload_pendings 
 
     if st.button('upload replace'):
-        display_process = 'replacement of value'
-        @st.dialog(f'dialog {display_process}')
-        def commit():
-            prog = st.progress(0.,f'Progression {display_process}')
-            for ind,key in enumerate(upload_pendings):
-                ts.upload(key,**upload_pendings[key])
-                prog.progress(float(ind)/len(upload_pendings),f"{key}:{upload_pendings[key]}")
-        commit()
-        st.rerun()
+        set_progress(upload_pendings=upload_pendings,
+                     func=ts.upload,
+                     display_process='replacement')
 
 @st.fragment
 def func_default(df:pd.DataFrame,ts:sqlp.Table):
@@ -88,15 +91,9 @@ def func_default(df:pd.DataFrame,ts:sqlp.Table):
     upload_pendings
 
     if st.button('upload default'):
-        display_process = 'default'
-        @st.dialog(f'dialog {display_process}')
-        def commit():
-            prog = st.progress(0.,f'Progression {display_process}')
-            for ind,key in enumerate(upload_pendings):
-                ts.set_default_value(key,upload_pendings[key])
-                prog.progress(float(ind)/len(upload_pendings),f"{key}:{upload_pendings[key]}")
-        commit()
-        st.rerun()
+        set_progress(upload_pendings=upload_pendings,
+                     func=ts.set_default_value,
+                     display_process='default')
 
 
 tp = stp.TabsPlus(titles=['cell','replace','default'],layout='tab')
