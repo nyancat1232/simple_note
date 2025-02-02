@@ -95,11 +95,25 @@ def func_default(df:pd.DataFrame,ts:sqlp.Table):
                      func=ts.set_default_value,
                      display_process='default')
 
+@st.fragment
+def func_cell_rename(df:pd.DataFrame,ts:sqlp.Table):
+    pending = {key:key for key in df.columns.to_list()}
+    pending = st.data_editor(pending)
+    pending = {key:pending[key] for key in pending if key != pending[key]}
+    pending
 
-tp = stp.TabsPlus(titles=['cell','replace','default'],layout='tab')
+    if st.button('upload column rename'):
+        set_progress(upload_pendings=pending,
+                     func=ts.change_column_name,
+                     display_process='column rename')
+
+
+tp = stp.TabsPlus(titles=['cell','replace','default','rename'],layout='tab')
 with tp.cell:
     func_cell(df,ts)
 with tp.replace:
     func_replace(df,ts)
 with tp.default:
     func_default(df,ts)
+with tp.rename:
+    func_cell_rename(df,ts)
