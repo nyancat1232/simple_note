@@ -2,6 +2,7 @@ import streamlit as st
 import pyplus.streamlit as stp
 import pyplus.sql as sqlp
 import pandas as pd
+from typing import Dict,Any
 
 ts:sqlp.TableStructure = st.session_state['selected_table']
 df:pd.DataFrame = st.session_state['selected_table_dataframe']
@@ -9,7 +10,7 @@ custom_configs_rw_def = st.session_state['selected_table_column_config_rw_def']
 
 identity = ts.get_identity()
 
-def get_comparison(df_new,df_old):
+def get_comparison(df_new,df_old)->Dict[int,Dict[str,Any]]:
     def func_melt(df:pd.DataFrame):
         df_reset = df.copy().reset_index()
         return df_reset.melt(id_vars='id',value_name='_sn_value')
