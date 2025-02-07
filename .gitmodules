@@ -1,6 +1,0 @@
-[submodule "pyplus"]
-	path = pyplus
-	url = https://github.com/nyancat1232/pyplus.git
-[submodule "simple_note_funcs"]
-	path = simple_note_funcs
-	url = https://github.com/nyancat1232/simple_note_funcs.git
