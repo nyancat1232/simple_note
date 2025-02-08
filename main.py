@@ -9,6 +9,7 @@ from sqlalchemy import create_engine
 from typing import Literal
 import altair as alt
 import pytz
+import pyperclip
 
 debug = True
 
@@ -310,6 +311,14 @@ with st.sidebar:
                                  index=default_index,
                                  format_func=lambda x:f"{x['table_schema']}.{x['table_name']}"
                                 )
+    
+    @st.fragment
+    def copy_url():
+        if st.button('copy url'):
+            url = f"{st.context.headers['Origin']}/{pg.url_path}?table_schema={current_address['table_schema']}&table_name={current_address['table_name']}"
+            pyperclip.copy(url)
+            st.toast('Copied to clipboard')
+    copy_url()
     
     #add timezone selection
     all_timezones = pytz.all_timezones
