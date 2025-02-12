@@ -7,7 +7,7 @@ cffi==1.17.1
 charset-normalizer==3.4.1
 checkpoint @ git+https://github.com/nyancat1232/checkpoint_function.git@4020e5f83562b6a036cea8db40f524dfdd8144d6
 click==8.1.8
-cryptography==44.0.0
+cryptography==44.0.1
 gitdb==4.0.12
 GitPython==3.1.44
 greenlet==3.1.1
