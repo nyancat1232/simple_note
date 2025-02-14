@@ -315,7 +315,7 @@ with st.sidebar:
     def copy_url():
         if st.button('copy url'):
             url = f"{st.context.headers['Origin']}/{pg.url_path}?table_schema={current_address['table_schema']}&table_name={current_address['table_name']}"
-            st.json({'':url})
+            st.write(url)
     copy_url()
     
     #add timezone selection
