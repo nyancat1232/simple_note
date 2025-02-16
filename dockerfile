@@ -15,6 +15,7 @@ COPY new_page ./new_page
 COPY experiment ./experiment
 COPY table_editor ./table_editor
 COPY main.py ./
+COPY main_filter.py ./
 
 RUN pip3 install -r requirements.txt
 
