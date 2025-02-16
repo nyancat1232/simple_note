@@ -231,19 +231,16 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
     col_type = {col:col_expanded_tag[col]['display_type'] for col in col_expanded_tag}
     for col_foreign in dfs_foreign_tables:
         col_type[col_foreign] = 'sn_foreign'
-
-    def filter_rows(col_3:str):
-        match col_type[col_3]:
-            case 'sn_foreign':
-                return filter_rows_sn_foreign(df,dfs_foreign_tables,col_3)
-            case 'text'|'text_with_tag':
-                return filter_rows_text(df,col_3)
-                
+    
     tp = stp.TabsPlus(titles=col_expanded_tag,layout='tab')
     filt_rows={}
     for col in col_expanded_tag:
         with tp[col]:
-            filt_rows[col]=filter_rows(col)
+            match col_type[col]:
+                case 'sn_foreign':
+                    filt_rows[col] = filter_rows_sn_foreign(df,dfs_foreign_tables,col)
+                case 'text'|'text_with_tag':
+                    filt_rows[col] = filter_rows_text(df,col)
     try:
         return df[pd.concat(filt_rows,axis=1).all(axis=1)]
     except:
