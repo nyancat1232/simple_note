@@ -228,13 +228,11 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
                         f'select tags of {col_3}',
                         all_tags_list
                     )
-                    return sr_tags_extracted.apply(contains_tags,
-                                                    args=(selected_tags,logic)
-                                                  )
                 else:
-                    return sr_tags_extracted.apply(contains_tags,
-                                                    args=([],logic)
-                                                  )
+                    selected_tags = []
+                return sr_tags_extracted.apply(contains_tags,
+                                                args=(selected_tags,logic)
+                                                )
                 
     tp = stp.TabsPlus(titles=col_expanded_tag,layout='tab')
     filt_rows={}
