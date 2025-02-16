@@ -223,13 +223,13 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
                     .unique()
                     .tolist()
                 ) #find_all_tags
+
+                selected_tags = []
                 if len(all_tags_list)>0:
                     selected_tags = st.multiselect(
                         f'select tags of {col_3}',
                         all_tags_list
                     )
-                else:
-                    selected_tags = []
                 return sr_tags_extracted.apply(contains_tags,
                                                 args=(selected_tags,logic)
                                                 )
