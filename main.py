@@ -126,22 +126,22 @@ def skip_if_error(val,func):
     except:
         pass
 
-def filter_rows_sn_foreign(df:pd.DataFrame,dfs_foreign_tables:dict[str,sqlp.Table],col_3:str):
+def filter_rows_sn_foreign(df:pd.DataFrame,dfs_foreign_tables:dict[str,sqlp.Table],col_name:str):
     "If not select, select all."
     "If select, only show you selected"
-    rows=st.dataframe(dfs_foreign_tables[col_3].read_expand(),selection_mode='multi-row',on_select='rerun',key=f'filter_rows_{col_3}')['selection']['rows']
+    rows=st.dataframe(dfs_foreign_tables[col_name].read_expand(),selection_mode='multi-row',on_select='rerun',key=f'filter_rows_{col_name}')['selection']['rows']
     if len(rows)>0:
         filt_foreign_id=(
-            dfs_foreign_tables[col_3]
+            dfs_foreign_tables[col_name]
             .read_expand()
             .iloc[rows]
             .index
             .to_list()
         )
-        return df[col_3].apply(lambda val: val in filt_foreign_id)
-def filter_rows_text(df:pd.DataFrame,col_3:str,hashtag_init_symbol:str='#'):
+        return df[col_name].apply(lambda val: val in filt_foreign_id)
+def filter_rows_text(df:pd.DataFrame,col_name:str,hashtag_init_symbol:str='#'):
     sr_tags_original=(
-        df[col_3]
+        df[col_name]
         .str.split(hashtag_init_symbol)
         .apply(extract_tags)
         .apply(remove_spaces)
@@ -158,7 +158,7 @@ def filter_rows_text(df:pd.DataFrame,col_3:str,hashtag_init_symbol:str='#'):
             )
             sr_explode = sr_tags_original
             if max_depth>1:
-                depth_apply = st.slider(f'depth of {col_3}',1,max_depth)
+                depth_apply = st.slider(f'depth of {col_name}',1,max_depth)
                 filter_depth = lambda l:set(
                     ['/'.join(v.split('/')[:depth_apply]) for v in l]
                 )
@@ -174,7 +174,7 @@ def filter_rows_text(df:pd.DataFrame,col_3:str,hashtag_init_symbol:str='#'):
             )
 
             if ser_agg_count.max()>1:
-                exclude_counts= st.slider(f'exclude if the count of {col_3} is over',
+                exclude_counts= st.slider(f'exclude if the count of {col_name} is over',
                                         min_value=1,
                                         max_value=ser_agg_count.max(),
                                         value=ser_agg_count.max()
@@ -188,7 +188,7 @@ def filter_rows_text(df:pd.DataFrame,col_3:str,hashtag_init_symbol:str='#'):
                 base = (alt.Chart(df_count_tags)
                         .mark_arc()
                         .encode(
-                            alt.Color(field=col_3,type='nominal'),
+                            alt.Color(field=col_name,type='nominal'),
                             alt.Theta(field='num_of_tags',type='quantitative')
                         )
                 )
@@ -201,7 +201,7 @@ def filter_rows_text(df:pd.DataFrame,col_3:str,hashtag_init_symbol:str='#'):
         tag_preview()
 
     logic = 'and' if st.checkbox(
-                                f'{col_3} : Subtract rows that is not selected(True), Show row that is selected(False)',
+                                f'{col_name} : Subtract rows that is not selected(True), Show row that is selected(False)',
                                 True
                                 ) else 'or'
 
@@ -218,7 +218,7 @@ def filter_rows_text(df:pd.DataFrame,col_3:str,hashtag_init_symbol:str='#'):
     selected_tags = []
     if len(all_tags_list)>0:
         selected_tags = st.multiselect(
-            f'select tags of {col_3}',
+            f'select tags of {col_name}',
             all_tags_list
         )
     return sr_tags_extracted.apply(contains_tags,
