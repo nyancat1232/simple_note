@@ -2,9 +2,9 @@ import streamlit as st
 import pyplus.streamlit as stp
 import pyplus.sql as sqlp
 
-second_ts:sqlp.TableStructure = st.session_state['selected_table']
-df_with_tag = st.session_state['selected_table_dataframe']
-custom_configs_ro = st.session_state['selected_table_column_config_ro']
+second_ts:sqlp.TableStructure = st.session_state['global_selected_table']
+df_with_tag = st.session_state['global_selected_table_dataframe']
+custom_configs_ro = st.session_state['global_selected_table_column_config_ro']
 
 with st.sidebar:
     dtypes = second_ts.get_types_expanded().display_type.to_dict()

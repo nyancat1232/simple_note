@@ -328,10 +328,10 @@ selected_table = sqlp.TableStructure(schema_name=current_address['table_schema']
                                      engine=st.session_state['global_conn'].engine
                                     )
 
-st.session_state['selected_table'] = selected_table
-st.session_state['selected_table_dataframe']= column_process(selected_table)
-st.session_state['selected_table_column_config_ro']= iter_custom_column_configs(selected_table,mytimezone).readonly()
-st.session_state['selected_table_column_config_rw_def']= iter_custom_column_configs(selected_table,mytimezone).edit()
+st.session_state['global_selected_table'] = selected_table
+st.session_state['global_selected_table_dataframe']= column_process(selected_table)
+st.session_state['global_selected_table_column_config_ro']= iter_custom_column_configs(selected_table,mytimezone).readonly()
+st.session_state['global_selected_table_column_config_rw_def']= iter_custom_column_configs(selected_table,mytimezone).edit()
 
 if debug == True:
     if 'count' not in st.session_state:

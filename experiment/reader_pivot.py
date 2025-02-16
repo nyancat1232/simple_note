@@ -2,8 +2,8 @@ import streamlit as st
 import pyplus.streamlit as stp
 import pandas as pd
 
-selected_table = st.session_state['selected_table'] 
-df:pd.DataFrame = st.session_state['selected_table_dataframe']
+selected_table = st.session_state['global_selected_table'] 
+df:pd.DataFrame = st.session_state['global_selected_table_dataframe']
 
 @st.fragment
 def processing(df:pd.DataFrame):

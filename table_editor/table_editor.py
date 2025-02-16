@@ -10,8 +10,8 @@ def upload_button(func,label):
         func()
         st.rerun()
 
-ts_first:sqlp.TableStructure = st.session_state['selected_table']
-read_result= st.session_state['selected_table_dataframe']
+ts_first:sqlp.TableStructure = st.session_state['global_selected_table']
+read_result= st.session_state['global_selected_table_dataframe']
 read_result
 
 tp = stp.TabsPlus(layout='tab',titles=['change column name','change a column order'])

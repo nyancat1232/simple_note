@@ -2,8 +2,8 @@ import streamlit as st
 import pyplus.sql as sqlp
 
 "load"
-ts:sqlp.TableStructure = st.session_state['selected_table']
-df= st.session_state['selected_table_dataframe']
+ts:sqlp.TableStructure = st.session_state['global_selected_table']
+df= st.session_state['global_selected_table_dataframe']
 df
 
 "select"

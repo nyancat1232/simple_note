@@ -5,8 +5,8 @@ import pyplus.sql as sqlp
 
 "Need to implement second table selection"
 conn = st.session_state['global_conn']
-ts:sqlp.TableStructure = st.session_state['selected_table']
-df:pd.DataFrame = st.session_state['selected_table_dataframe']
+ts:sqlp.TableStructure = st.session_state['global_selected_table']
+df:pd.DataFrame = st.session_state['global_selected_table_dataframe']
 
 selected_column_left = st.dataframe(df,on_select='rerun',selection_mode='single-column')['selection']['columns']
 if not selected_column_left:
