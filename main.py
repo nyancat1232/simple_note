@@ -125,6 +125,105 @@ def skip_if_error(val,func):
         return func(val)
     except:
         pass
+
+def filter_rows_sn_foreign(df:pd.DataFrame,dfs_foreign_tables:dict[str,sqlp.Table],col_3:str):
+    "If not select, select all."
+    "If select, only show you selected"
+    rows=st.dataframe(dfs_foreign_tables[col_3].read_expand(),selection_mode='multi-row',on_select='rerun',key=f'filter_rows_{col_3}')['selection']['rows']
+    if len(rows)>0:
+        filt_foreign_id=(
+            dfs_foreign_tables[col_3]
+            .read_expand()
+            .iloc[rows]
+            .index
+            .to_list()
+        )
+        return df[col_3].apply(lambda val: val in filt_foreign_id)
+def filter_rows_text(df:pd.DataFrame,col_3:str,hashtag_init_symbol:str='#'):
+    sr_tags_original=(
+        df[col_3]
+        .str.split(hashtag_init_symbol)
+        .apply(extract_tags)
+        .apply(remove_spaces)
+    )
+    #Statistic
+    tp_statistic = stp.TabsPlus(titles=['count','tag_preview'],layout='column',hide_titles=False)
+    with tp_statistic.count:
+        @st.fragment
+        def statistic_counts():
+            max_depth = (
+                sr_tags_original
+                .apply(lambda l:len(l))
+                .max()
+            )
+            sr_explode = sr_tags_original
+            if max_depth>1:
+                depth_apply = st.slider(f'depth of {col_3}',1,max_depth)
+                filter_depth = lambda l:set(
+                    ['/'.join(v.split('/')[:depth_apply]) for v in l]
+                )
+                sr_explode = (
+                    sr_explode
+                    .apply(skip_if_error,args=(filter_depth,))
+                )
+            ser_agg_count = (
+                sr_explode
+                .explode()
+                .dropna()
+                .value_counts(ascending=True)
+            )
+
+            if ser_agg_count.max()>1:
+                exclude_counts= st.slider(f'exclude if the count of {col_3} is over',
+                                        min_value=1,
+                                        max_value=ser_agg_count.max(),
+                                        value=ser_agg_count.max()
+                                        )
+                ser_agg_count=ser_agg_count[ser_agg_count<=exclude_counts]
+
+                df_count_tags = (
+                    pd.DataFrame({'num_of_tags':ser_agg_count})
+                    .reset_index()
+                )
+                base = (alt.Chart(df_count_tags)
+                        .mark_arc()
+                        .encode(
+                            alt.Color(field=col_3,type='nominal'),
+                            alt.Theta(field='num_of_tags',type='quantitative')
+                        )
+                )
+                st.altair_chart(base)
+        statistic_counts()
+    with tp_statistic.tag_preview:
+        @st.fragment
+        def tag_preview():
+            pass
+        tag_preview()
+
+    logic = 'and' if st.checkbox(
+                                f'{col_3} : Subtract rows that is not selected(True), Show row that is selected(False)',
+                                True
+                                ) else 'or'
+
+    sr_tags_extracted=sr_tags_original.apply(duplicate_super_tags)
+    all_tags_list = (
+        sr_tags_extracted
+        .explode()
+        .dropna()
+        .sort_values()
+        .unique()
+        .tolist()
+    ) #find_all_tags
+
+    selected_tags = []
+    if len(all_tags_list)>0:
+        selected_tags = st.multiselect(
+            f'select tags of {col_3}',
+            all_tags_list
+        )
+    return sr_tags_extracted.apply(contains_tags,
+                                    args=(selected_tags,logic)
+                                    )
 def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
     df=ts.read_expand()
     dfs_foreign_tables=ts.get_foreign_tables()
@@ -136,103 +235,9 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
     def filter_rows(col_3:str):
         match col_type[col_3]:
             case 'sn_foreign':
-                "If not select, select all."
-                "If select, only show you selected"
-                rows=st.dataframe(dfs_foreign_tables[col_3].read_expand(),selection_mode='multi-row',on_select='rerun',key=f'filter_rows_{col_3}')['selection']['rows']
-                if len(rows)>0:
-                    filt_foreign_id=(
-                        dfs_foreign_tables[col_3]
-                        .read_expand()
-                        .iloc[rows]
-                        .index
-                        .to_list()
-                    )
-                    return df[col_3].apply(lambda val: val in filt_foreign_id)
+                return filter_rows_sn_foreign(df,dfs_foreign_tables,col_3)
             case 'text'|'text_with_tag':
-                sr_tags_original=(
-                    df[col_3]
-                    .str.split(hashtag_init_symbol)
-                    .apply(extract_tags)
-                    .apply(remove_spaces)
-                )
-                #Statistic
-                tp_statistic = stp.TabsPlus(titles=['count','tag_preview'],layout='column',hide_titles=False)
-                with tp_statistic.count:
-                    @st.fragment
-                    def statistic_counts():
-                        max_depth = (
-                            sr_tags_original
-                            .apply(lambda l:len(l))
-                            .max()
-                        )
-                        sr_explode = sr_tags_original
-                        if max_depth>1:
-                            depth_apply = st.slider(f'depth of {col_3}',1,max_depth)
-                            filter_depth = lambda l:set(
-                                ['/'.join(v.split('/')[:depth_apply]) for v in l]
-                            )
-                            sr_explode = (
-                                sr_explode
-                                .apply(skip_if_error,args=(filter_depth,))
-                            )
-                        ser_agg_count = (
-                            sr_explode
-                            .explode()
-                            .dropna()
-                            .value_counts(ascending=True)
-                        )
-
-                        if ser_agg_count.max()>1:
-                            exclude_counts= st.slider(f'exclude if the count of {col_3} is over',
-                                                    min_value=1,
-                                                    max_value=ser_agg_count.max(),
-                                                    value=ser_agg_count.max()
-                                                    )
-                            ser_agg_count=ser_agg_count[ser_agg_count<=exclude_counts]
-
-                            df_count_tags = (
-                                pd.DataFrame({'num_of_tags':ser_agg_count})
-                                .reset_index()
-                            )
-                            base = (alt.Chart(df_count_tags)
-                                    .mark_arc()
-                                    .encode(
-                                        alt.Color(field=col_3,type='nominal'),
-                                        alt.Theta(field='num_of_tags',type='quantitative')
-                                    )
-                            )
-                            st.altair_chart(base)
-                    statistic_counts()
-                with tp_statistic.tag_preview:
-                    @st.fragment
-                    def tag_preview():
-                        pass
-                    tag_preview()
-
-                logic = 'and' if st.checkbox(
-                                            f'{col_3} : Subtract rows that is not selected(True), Show row that is selected(False)',
-                                            True
-                                            ) else 'or'
-
-                sr_tags_extracted=sr_tags_original.apply(duplicate_super_tags)
-                all_tags_list = (
-                    sr_tags_extracted
-                    .explode()
-                    .dropna()
-                    .sort_values()
-                    .unique()
-                    .tolist()
-                ) #find_all_tags
-
-                selected_tags = []
-                if len(all_tags_list)>0:
-                    selected_tags = st.multiselect(
-                        f'select tags of {col_3}',
-                        all_tags_list
-                    )
-                return sr_tags_extracted.apply(contains_tags,
-                                                args=(selected_tags,logic)
-                                                )
+                return filter_rows_text(df,col_3)
                 
     tp = stp.TabsPlus(titles=col_expanded_tag,layout='tab')
     filt_rows={}
