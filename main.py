@@ -252,10 +252,10 @@ page_icon='📒'
 st.set_page_config(page_title=page_title,page_icon=page_icon,layout='wide')
 
 #Set global vars
-if 'conn' not in st.session_state:
-    st.session_state['conn'] = create_engine(os.environ['SN_ADDRESS'])
+if 'global_conn' not in st.session_state:
+    st.session_state['global_conn'] = create_engine(os.environ['SN_ADDRESS'])
 
-st.session_state['types']=['bigint',
+st.session_state['global_supported_types']=['bigint',
                            'double precision',
                            'text',
                            'date',
@@ -289,16 +289,16 @@ with st.sidebar:
     with st.form(key='create_table'):
         #Create table
         schema_name = st.selectbox('schema name',
-                                   sqlp.get_schema_list(st.session_state['conn'].engine)
+                                   sqlp.get_schema_list(st.session_state['global_conn'].engine)
                                    )
         table_name = st.text_input('table name')
         if st.form_submit_button(label='create table'):
-                (sqlp.SchemaStructure(schema_name,st.session_state['conn'].engine)
+                (sqlp.SchemaStructure(schema_name,st.session_state['global_conn'].engine)
                      .create_table(table_name)
                 )
 
     # Select address
-    all_tables= (sqlp.get_table_list(st.session_state['conn'].engine)
+    all_tables= (sqlp.get_table_list(st.session_state['global_conn'].engine)
                      .to_dict('records')
     )
     ## Accept query parameters
@@ -325,7 +325,7 @@ with st.sidebar:
 
 selected_table = sqlp.TableStructure(schema_name=current_address['table_schema'],
                                      table_name=current_address['table_name'],
-                                     engine=st.session_state['conn'].engine
+                                     engine=st.session_state['global_conn'].engine
                                     )
 
 st.session_state['selected_table'] = selected_table
@@ -343,5 +343,8 @@ if debug == True:
         st.session_state.pending_upload = []
 
     st.json(st.session_state,expanded=False)
+
+    if 'tester' in st.query_params:
+        st.json(st.query_params['tester'])
 
 pg.run()

@@ -4,7 +4,7 @@ import pandas as pd
 import pyplus.sql as sqlp
 
 "Need to implement second table selection"
-conn = st.session_state['conn']
+conn = st.session_state['global_conn']
 ts:sqlp.TableStructure = st.session_state['selected_table']
 df:pd.DataFrame = st.session_state['selected_table_dataframe']
 
@@ -16,10 +16,10 @@ else:
     selected_column_left = selected_column_left[0]
     override = True
 
-all_tables= sqlp.get_table_list(st.session_state['conn'].engine).to_dict('records')
+all_tables= sqlp.get_table_list(st.session_state['global_conn'].engine).to_dict('records')
 address_right=st.selectbox('select a second table',all_tables,format_func=lambda x:f"{x['table_schema']}/{x['table_name']}")
 
-ts_right = sqlp.TableStructure(schema_name=address_right['table_schema'],table_name=address_right['table_name'],engine=st.session_state['conn'].engine)
+ts_right = sqlp.TableStructure(schema_name=address_right['table_schema'],table_name=address_right['table_name'],engine=st.session_state['global_conn'].engine)
 df_right = ts_right.read()
 if override:
     selected_column_right = st.dataframe(df_right,on_select='rerun',selection_mode='single-column')['selection']['columns']

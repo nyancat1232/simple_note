@@ -3,10 +3,10 @@ import pyplus.sql as sqlp
 
 
 with st.sidebar:
-    all_tables= sqlp.get_table_list(st.session_state['conn'].engine).to_dict('records')
+    all_tables= sqlp.get_table_list(st.session_state['global_conn'].engine).to_dict('records')
     all_table_list = [".".join([row['table_schema'],row['table_name']]) for row in all_tables]
     current_address = st.selectbox('select address',all_table_list).split('.')
-    ts = sqlp.TableStructure(schema_name=current_address[0],table_name=current_address[1],engine=st.session_state['conn'].engine)
+    ts = sqlp.TableStructure(schema_name=current_address[0],table_name=current_address[1],engine=st.session_state['global_conn'].engine)
 
 
 "load"

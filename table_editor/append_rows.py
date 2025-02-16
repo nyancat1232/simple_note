@@ -90,7 +90,7 @@ def append_rows(df:pd.DataFrame,custom_configs_rw_def:dict):
 @st.fragment
 def append_columns():
     df = pd.DataFrame({'name':pd.Series(dtype=pd.StringDtype()),'type':pd.Series(dtype=pd.StringDtype())})
-    sttype = {'name':st.column_config.TextColumn('name'),'type':st.column_config.SelectboxColumn('type',options=st.session_state['types'])}
+    sttype = {'name':st.column_config.TextColumn('name'),'type':st.column_config.SelectboxColumn('type',options=st.session_state['global_supported_types'])}
     result = st.data_editor(df,num_rows='dynamic',column_config=sttype)
     result = {rec['name']:rec['type'] for rec in result.to_dict(orient='records')}
     result
@@ -104,11 +104,11 @@ def append_columns():
 
 @st.fragment
 def append_foreign_column():
-    all_tables= sqlp.get_table_list(st.session_state['conn'].engine).to_dict('records')
+    all_tables= sqlp.get_table_list(st.session_state['global_conn'].engine).to_dict('records')
     address_right=st.selectbox('select a second table',all_tables,format_func=lambda x:f"{x['table_schema']}/{x['table_name']}")
     new_column_name = st.text_input('New column name')
 
-    ts_right = sqlp.TableStructure(schema_name=address_right['table_schema'],table_name=address_right['table_name'],engine=st.session_state['conn'].engine)
+    ts_right = sqlp.TableStructure(schema_name=address_right['table_schema'],table_name=address_right['table_name'],engine=st.session_state['global_conn'].engine)
     df_right = ts_right.read()
     df_right
 
