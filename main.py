@@ -224,7 +224,7 @@ def filter_rows_text(df:pd.DataFrame,col_name:str,hashtag_init_symbol:str='#'):
     return sr_tags_extracted.apply(contains_tags,
                                     args=(selected_tags,logic)
                                     )
-def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
+def column_process(ts:sqlp.TableStructure):
     df=ts.read_expand()
     dfs_foreign_tables=ts.get_foreign_tables()
     col_expanded_tag=ts.get_types_expanded().to_dict('index')
