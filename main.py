@@ -155,16 +155,6 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
                     .apply(extract_tags)
                     .apply(remove_spaces)
                 )
-                sr_tags_extracted=sr_tags_original.apply(duplicate_super_tags)
-                all_tags_list = (
-                    sr_tags_extracted
-                    .explode()
-                    .dropna()
-                    .sort_values()
-                    .unique()
-                    .tolist()
-                ) #find_all_tags
-
                 #Statistic
                 tp_statistic = stp.TabsPlus(titles=['count','tag_preview'],layout='column',hide_titles=False)
                 with tp_statistic.count:
@@ -223,6 +213,16 @@ def column_process(ts:sqlp.TableStructure,hashtag_init_symbol:str='#'):
                                             f'{col_3} : Subtract rows that is not selected(True), Show row that is selected(False)',
                                             True
                                             ) else 'or'
+
+                sr_tags_extracted=sr_tags_original.apply(duplicate_super_tags)
+                all_tags_list = (
+                    sr_tags_extracted
+                    .explode()
+                    .dropna()
+                    .sort_values()
+                    .unique()
+                    .tolist()
+                ) #find_all_tags
                 if len(all_tags_list)>0:
                     selected_tags = st.multiselect(
                         f'select tags of {col_3}',
