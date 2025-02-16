@@ -10,7 +10,7 @@ from typing import Literal
 import altair as alt
 import pytz
 
-debug = True
+debug = True if 'SN_DEBUG' in os.environ  else False
 
 @cp.CheckPointFunctionDecoration
 def iter_custom_column_configs(ts:sqlp.TableStructure,mytz:str):
