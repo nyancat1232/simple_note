@@ -33,6 +33,14 @@ def select_deletion(df:pd.DataFrame,ts:sqlp.TableStructure):
             ts.delete_row(row)
         st.rerun()
 
-tp = stp.TabsPlus(titles=['row_col'])
+@st.fragment
+def delete_all(df:pd.DataFrame,ts:sqlp.TableStructure):
+    if st.button('delete all'):
+        ts.delete_table()
+        st.rerun()
+
+tp = stp.TabsPlus(titles=['row_col','all'])
 with tp.row_col:
     select_deletion(df,ts)
+with tp.all:
+    delete_all(df,ts)
