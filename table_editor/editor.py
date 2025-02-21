@@ -110,6 +110,7 @@ def func_cell_rename(df:pd.DataFrame,ts:sqlp.Table):
 @st.fragment
 def func_col_to_tag(df:pd.DataFrame,ts:sqlp.Table):
     new_name = st.text_input('name of column')
+    delete_existing = st.checkbox('delete existing columns')
     space_to_valid_tag = lambda s:str(s).replace(' ','_').replace('.','_').replace('/','_').replace('\n','_')
     selection = st.dataframe(df,selection_mode=['multi-column'],on_select='rerun')
     ser = (
@@ -127,6 +128,8 @@ def func_col_to_tag(df:pd.DataFrame,ts:sqlp.Table):
     if st.button('upload column to tag'):
         ts.append_column(**{new_name:'text'})
         ts.upload_dataframe(df)
+        if delete_existing:
+            ts.delete_columns(*selection['selection']['columns'])
         st.rerun()
 
 
