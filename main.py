@@ -130,7 +130,7 @@ pg = st.navigation({'main':[st.Page('table_editor/reader.py',title='reader'),
                     })
 
 with st.sidebar:
-    with st.form(key='create_table'):
+    with st.form(key='global_create_table'):
         #Create table
         schema_name = st.selectbox('schema name',
                                    sqlp.get_schema_list(st.session_state['global_conn'].engine)
