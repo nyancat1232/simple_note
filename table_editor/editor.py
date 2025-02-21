@@ -107,8 +107,30 @@ def func_cell_rename(df:pd.DataFrame,ts:sqlp.Table):
                      func=ts.change_column_name,
                      display_process='column rename')
 
+@st.fragment
+def func_col_to_tag(df:pd.DataFrame,ts:sqlp.Table):
+    new_name = st.text_input('name of column')
+    space_to_valid_tag = lambda s:str(s).replace(' ','_').replace('.','_').replace('/','_').replace('\n','_')
+    selection = st.dataframe(df,selection_mode=['multi-column'],on_select='rerun')
+    ser = (
+        df[selection['selection']['columns']]
+        .apply(lambda ser:ser.apply(lambda v:f"#{ser.name}/{space_to_valid_tag(v)}"))
+        .rename(columns=lambda s:f"#{s}")
+        .aggregate('sum',axis=1)
+    )
+    df = (
+        df
+        .assign(**{new_name:ser})
+        [[new_name]]
+    )
+    df
+    if st.button('upload column to tag'):
+        ts.append_column(**{new_name:'text'})
+        ts.upload_dataframe(df)
+        st.rerun()
 
-tp = stp.TabsPlus(titles=['cell','replace','default','rename'],layout='tab')
+
+tp = stp.TabsPlus(titles=['cell','replace','default','rename','col_to_tag'],layout='tab')
 with tp.cell:
     func_cell(df,ts)
 with tp.replace:
@@ -117,3 +139,5 @@ with tp.default:
     func_default(df,ts)
 with tp.rename:
     func_cell_rename(df,ts)
+with tp.col_to_tag:
+    func_col_to_tag(df,ts)
