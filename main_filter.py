@@ -24,7 +24,8 @@ def filter_rows_sn_foreign(df:pd.DataFrame,dfs_foreign_tables:dict[str,sqlp.Tabl
             .to_list()
         )
         return df[col_name].apply(lambda val: val in filt_foreign_id)
-def filter_rows_text(df:pd.DataFrame,col_name:str,hashtag_init_symbol:str='#'):
+
+def detect_tags(ser:pd.Series,hashtag_init_symbol:str='#'):
     def extract_tags(vals:list):
         try:
             match len(vals):
@@ -47,6 +48,13 @@ def filter_rows_text(df:pd.DataFrame,col_name:str,hashtag_init_symbol:str='#'):
             except:
                 return s
         return [apply_each(val) for val in vals]
+    return (
+        ser
+        .str.split(hashtag_init_symbol)
+        .apply(extract_tags)
+        .apply(remove_spaces)
+    )
+def filter_rows_text(df:pd.DataFrame,col_name:str):
     def duplicate_super_tags(vals:list,hashtag_sub_symbol:str='/'):
         def apply_each(s:str):
             if s is None:
@@ -78,9 +86,7 @@ def filter_rows_text(df:pd.DataFrame,col_name:str,hashtag_init_symbol:str='#'):
                 raise NotImplementedError('This logic is not implemented')
     sr_tags_original=(
         df[col_name]
-        .str.split(hashtag_init_symbol)
-        .apply(extract_tags)
-        .apply(remove_spaces)
+        .pipe(detect_tags)
     )
     #Statistic
     tp_statistic = stp.TabsPlus(titles=['count','tag_preview'],layout='column',hide_titles=False)
