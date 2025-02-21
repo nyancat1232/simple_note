@@ -183,9 +183,6 @@ if debug == True:
     else:
         st.session_state.count += 1
 
-    if 'pending_upload' not in st.session_state:
-        st.session_state.pending_upload = []
-
     st.json(st.session_state,expanded=False)
 
     if 'tester' in st.query_params:
