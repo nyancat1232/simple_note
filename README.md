@@ -8,8 +8,6 @@ Tables must have a primary key with a bigint type.
 ## Environment Variabl
 - SN_ADDRESS
     - An address of database.
-- SN_DEFAULT_TIMEZONE
-    - A default timezone of this app.
 
 ## Custom Database Types
 - url

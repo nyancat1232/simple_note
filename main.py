@@ -164,7 +164,7 @@ with st.sidebar:
     
     #add timezone selection
     all_timezones = pytz.all_timezones
-    default_timezone = all_timezones.index(os.environ['SN_DEFAULT_TIMEZONE'])
+    default_timezone = all_timezones.index(st.context.timezone)
     mytimezone = st.selectbox('Timezone setting',index=default_timezone,options=all_timezones)
 
 selected_table = sqlp.TableStructure(schema_name=current_address['table_schema'],
