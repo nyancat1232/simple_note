@@ -163,9 +163,11 @@ with st.sidebar:
     copy_url()
     
     #add timezone selection
-    all_timezones = pytz.all_timezones
-    default_timezone = all_timezones.index(st.context.timezone)
-    mytimezone = st.selectbox('Timezone setting',index=default_timezone,options=all_timezones)
+    #all_timezones = pytz.all_timezones
+    #default_timezone = all_timezones.index(st.context.timezone)
+    #mytimezone = st.selectbox('Timezone setting',index=default_timezone,options=all_timezones)
+    mytimezone = st.context.timezone 
+    mytimezone
 
 selected_table = sqlp.TableStructure(schema_name=current_address['table_schema'],
                                      table_name=current_address['table_name'],
