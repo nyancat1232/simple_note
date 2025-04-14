@@ -1,3 +1,6 @@
+> {!WARNING]
+> This application will be deprecated. New project will replace this project.
+
 # 📋Simple Note
 Simple Note(codename) is a table-based note-taking app that is based on Postgresql. You can easily create and use a table and foreign tables.
 
