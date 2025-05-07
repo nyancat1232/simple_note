@@ -30,3 +30,4 @@ Tables must have a primary key with a bigint type.
 - Expanding a Self-referencing column. 
 - Tag filter 
 - Using for any database of Postgresql. 
+
